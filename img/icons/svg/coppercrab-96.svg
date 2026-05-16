@@ -1,0 +1,43 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created using Karbon, part of Calligra: http://www.calligra.org/karbon -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="76.8pt" height="76.8pt">
+<defs/>
+<g id="layer0">
+  <rect id="shape0" transform="" fill="#1b3d2a" width="76.80000000000pt" height="76.80000000000pt" rx="11.20000000000pt" ry="11.20000000000pt"/>
+  <rect id="shape1" transform="translate(3, 3)" fill="none" stroke="#2d6644" stroke-width="1.00000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" width="72.00000000000pt" height="72.00000000000pt" rx="8.00000000000pt" ry="8.00000000000pt"/>
+  <path id="shape2" transform="translate(20, 20)" fill="none" stroke="#b87333" stroke-width="2.50000000000" stroke-linecap="round" stroke-linejoin="round" d="M14 12L14 0L0 0"/>
+  <path id="shape3" transform="translate(62, 20)" fill="none" stroke="#b87333" stroke-width="2.50000000000" stroke-linecap="round" stroke-linejoin="round" d="M0 12L0 0L14 0"/>
+  <path id="shape4" transform="translate(8, 38.5)" fill="none" stroke="#b87333" stroke-width="2.00000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M20 0L0 0"/>
+  <path id="shape5" transform="translate(8, 48.75)" fill="none" stroke="#b87333" stroke-width="2.00000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M20 0L6 0L6 13L0 13"/>
+  <path id="shape6" transform="translate(8, 56.5)" fill="none" stroke="#b87333" stroke-width="2.00000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M20 0L0 14"/>
+  <path id="shape7" transform="translate(68, 38.5)" fill="none" stroke="#b87333" stroke-width="2.00000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L20 0"/>
+  <path id="shape8" transform="translate(68, 48.75)" fill="none" stroke="#b87333" stroke-width="2.00000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L14 0L14 13L20 13"/>
+  <path id="shape9" transform="translate(68, 56.5)" fill="none" stroke="#b87333" stroke-width="2.00000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L20 14"/>
+  <circle id="shape10" transform="translate(11.5, 46.25)" r="2.00000000000pt" cx="2.00000000000pt" cy="2.00000000000pt" fill="#b87333" stroke="#1b3d2a" stroke-width="1.00000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+  <circle id="shape11" transform="translate(79.5, 46.25)" r="2.00000000000pt" cx="2.00000000000pt" cy="2.00000000000pt" fill="#b87333" stroke="#1b3d2a" stroke-width="1.00000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+  <rect id="shape12" transform="translate(26, 30)" fill="none" stroke="#4caf50" stroke-width="1.00000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" stroke-dasharray="3,2" width="35.20000000000pt" height="30.40000000000pt" rx="2.40000000000pt" ry="2.40000000000pt"/>
+  <rect id="shape13" transform="translate(28, 32)" fill="#243d2e" stroke="#b87333" stroke-width="1.80000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" width="32.00000000000pt" height="27.20000000000pt" rx="2.40000000000pt" ry="2.40000000000pt"/>
+  <path id="shape14" transform="translate(28, 32)" fill="none" stroke="#b87333" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 4C0 1.79086 1.79086 0 4 0"/>
+  <rect id="shape15" transform="translate(21, 36)" fill="#b87333" width="5.60000000000pt" height="4.00000000000pt" rx="1.20000000000pt" ry="1.20000000000pt"/>
+  <rect id="shape16" transform="translate(21, 46)" fill="#b87333" width="5.60000000000pt" height="4.00000000000pt" rx="1.20000000000pt" ry="1.20000000000pt"/>
+  <rect id="shape17" transform="translate(21, 56)" fill="#b87333" width="5.60000000000pt" height="4.00000000000pt" rx="1.20000000000pt" ry="1.20000000000pt"/>
+  <rect id="shape18" transform="translate(68, 36)" fill="#b87333" width="5.60000000000pt" height="4.00000000000pt" rx="1.20000000000pt" ry="1.20000000000pt"/>
+  <rect id="shape19" transform="translate(68, 46)" fill="#b87333" width="5.60000000000pt" height="4.00000000000pt" rx="1.20000000000pt" ry="1.20000000000pt"/>
+  <rect id="shape20" transform="translate(68, 56)" fill="#b87333" width="5.60000000000pt" height="4.00000000000pt" rx="1.20000000000pt" ry="1.20000000000pt"/>
+  <rect id="shape21" transform="translate(31, 27)" fill="#243d2e" stroke="#b87333" stroke-width="1.00000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" width="7.20000000000pt" height="4.80000000000pt" rx="1.20000000000pt" ry="1.20000000000pt"/>
+  <circle id="shape22" transform="translate(33, 27.5)" r="2.00000000000pt" cx="2.00000000000pt" cy="2.00000000000pt" fill="#00e676"/>
+  <rect id="shape23" transform="translate(56, 27)" fill="#243d2e" stroke="#b87333" stroke-width="1.00000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" width="7.20000000000pt" height="4.80000000000pt" rx="1.20000000000pt" ry="1.20000000000pt"/>
+  <circle id="shape24" transform="translate(58, 27.5)" r="2.00000000000pt" cx="2.00000000000pt" cy="2.00000000000pt" fill="#00e676"/>
+  <text id="shape25" fill="#c8e6c9" font-family="monospace" font-size="4.40000009537pt" text-anchor="middle" x="11.71093750000pt" y="3.03124800000pt" transform="translate(32.6582, 42.2109)"><tspan x="-14.6582"  y="3.78906">CopperCrab</tspan></text>
+  <text id="shape26" fill="#c8e6c9" opacity="0.70000000000" font-family="monospace" font-size="3.20000004768pt" text-anchor="middle" x="7.91406250000pt" y="2.18750400000pt" transform="translate(37.8926, 52.2656)"><tspan x="-9.89258"  y="2.73439">GCODE-GEN</tspan></text>
+  <circle id="shape27" transform="translate(4.5, 4.5)" r="2.80000000000pt" cx="2.80000000000pt" cy="2.80000000000pt" fill="#1b3d2a" stroke="#4a7c59" stroke-width="1.00000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+  <circle id="shape28" transform="translate(6.7, 6.7)" r="1.04000000000pt" cx="1.04000000000pt" cy="1.04000000000pt" fill="#b87333"/>
+  <circle id="shape29" transform="translate(84.5, 4.5)" r="2.80000000000pt" cx="2.80000000000pt" cy="2.80000000000pt" fill="#1b3d2a" stroke="#4a7c59" stroke-width="1.00000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+  <circle id="shape30" transform="translate(86.7, 6.7)" r="1.04000000000pt" cx="1.04000000000pt" cy="1.04000000000pt" fill="#b87333"/>
+  <circle id="shape31" transform="translate(4.5, 84.5)" r="2.80000000000pt" cx="2.80000000000pt" cy="2.80000000000pt" fill="#1b3d2a" stroke="#4a7c59" stroke-width="1.00000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+  <circle id="shape32" transform="translate(6.7, 86.7)" r="1.04000000000pt" cx="1.04000000000pt" cy="1.04000000000pt" fill="#b87333"/>
+  <circle id="shape33" transform="translate(84.5, 84.5)" r="2.80000000000pt" cx="2.80000000000pt" cy="2.80000000000pt" fill="#1b3d2a" stroke="#4a7c59" stroke-width="1.00000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+  <circle id="shape34" transform="translate(86.7, 86.7)" r="1.04000000000pt" cx="1.04000000000pt" cy="1.04000000000pt" fill="#b87333"/>
+ </g>
+</svg>

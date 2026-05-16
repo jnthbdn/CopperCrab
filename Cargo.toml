@@ -1,0 +1,19 @@
+[package]
+name = "coppercrab"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clipper2 = "0.5.4"
+directories = "6.0.0"
+eframe = "0.34.1"
+egui = { version = "0.34.1", features = ["serde"] }
+egui_extras = { version = "0.34.2", features = ["image", "all_loaders"] }
+env_logger = "0.11.10"
+gerber_parser = "0.4.0"
+image = { version = "0.25.10", features = ["png"] }
+log = "0.4.29"
+lyon = "1.0.19"
+rfd = "0.17.2"
+serde = { version = "1.0.228", features = ["derive"] }
+toml = "1.1.2"

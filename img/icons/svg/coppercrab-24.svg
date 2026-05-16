@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <rect x="0" y="0" width="24" height="24" rx="4" fill="#1b3d2a"/>
+  <rect x="1" y="1" width="22" height="22" rx="3" fill="none" stroke="#2d6644" stroke-width="0.8"/>
+  <!-- antennae traces -->
+  <path d="M 8 9 L 8 5 L 4 5" fill="none" stroke="#b87333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 16 9 L 16 5 L 20 5" fill="none" stroke="#b87333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- leg traces left -->
+  <path d="M 6 13 L 2 13" fill="none" stroke="#b87333" stroke-width="1.4" stroke-linecap="round"/>
+  <path d="M 6 17 L 2 17" fill="none" stroke="#b87333" stroke-width="1.4" stroke-linecap="round"/>
+  <!-- leg traces right -->
+  <path d="M 18 13 L 22 13" fill="none" stroke="#b87333" stroke-width="1.4" stroke-linecap="round"/>
+  <path d="M 18 17 L 22 17" fill="none" stroke="#b87333" stroke-width="1.4" stroke-linecap="round"/>
+  <!-- chip body -->
+  <rect x="6" y="9" width="12" height="12" rx="2" fill="#243d2e" stroke="#b87333" stroke-width="1.5"/>
+  <!-- left pins -->
+  <rect x="4" y="11" width="2" height="2.5" rx="0.5" fill="#b87333"/>
+  <rect x="4" y="16" width="2" height="2.5" rx="0.5" fill="#b87333"/>
+  <!-- right pins -->
+  <rect x="18" y="11" width="2" height="2.5" rx="0.5" fill="#b87333"/>
+  <rect x="18" y="16" width="2" height="2.5" rx="0.5" fill="#b87333"/>
+  <!-- LED eyes -->
+  <circle cx="9.5" cy="8" r="2" fill="#00e676"/>
+  <circle cx="14.5" cy="8" r="2" fill="#00e676"/>
+  <!-- mounting holes -->
+  <circle cx="3" cy="3" r="1.5" fill="#1b3d2a" stroke="#4a7c59" stroke-width="0.8"/>
+  <circle cx="21" cy="3" r="1.5" fill="#1b3d2a" stroke="#4a7c59" stroke-width="0.8"/>
+  <circle cx="3" cy="21" r="1.5" fill="#1b3d2a" stroke="#4a7c59" stroke-width="0.8"/>
+  <circle cx="21" cy="21" r="1.5" fill="#1b3d2a" stroke="#4a7c59" stroke-width="0.8"/>
+</svg>

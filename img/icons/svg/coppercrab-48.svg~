@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <rect x="0" y="0" width="48" height="48" rx="8" fill="#1b3d2a"/>
+  <rect x="2" y="2" width="44" height="44" rx="6" fill="none" stroke="#2d6644" stroke-width="1"/>
+  <!-- traces antennae -->
+  <path d="M 17 16 L 17 10 L 10 10" fill="none" stroke="#b87333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 31 16 L 31 10 L 38 10" fill="none" stroke="#b87333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- traces legs left -->
+  <path d="M 13 24 L 4 24" fill="none" stroke="#b87333" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M 13 30 L 6 30 L 6 38 L 4 38" fill="none" stroke="#b87333" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- traces legs right -->
+  <path d="M 35 24 L 44 24" fill="none" stroke="#b87333" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M 35 30 L 42 30 L 42 38 L 44 38" fill="none" stroke="#b87333" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- chip body -->
+  <rect x="13" y="16" width="22" height="20" rx="3" fill="#243d2e" stroke="#b87333" stroke-width="1.8"/>
+  <path d="M 13 20 A 4 4 0 0 1 17 16" fill="none" stroke="#b87333" stroke-width="1.5"/>
+  <!-- left pins -->
+  <rect x="9" y="19" width="4" height="4" rx="1" fill="#b87333"/>
+  <rect x="9" y="27" width="4" height="4" rx="1" fill="#b87333"/>
+  <!-- right pins -->
+  <rect x="35" y="19" width="4" height="4" rx="1" fill="#b87333"/>
+  <rect x="35" y="27" width="4" height="4" rx="1" fill="#b87333"/>
+  <!-- LEDs eyes -->
+  <circle cx="19" cy="14" r="3" fill="#00e676"/>
+  <circle cx="29" cy="14" r="3" fill="#00e676"/>
+  <!-- mounting holes -->
+  <circle cx="5" cy="5" r="2.5" fill="#1b3d2a" stroke="#4a7c59" stroke-width="1"/>
+  <circle cx="5" cy="5" r="1" fill="#b87333"/>
+  <circle cx="43" cy="5" r="2.5" fill="#1b3d2a" stroke="#4a7c59" stroke-width="1"/>
+  <circle cx="43" cy="5" r="1" fill="#b87333"/>
+  <circle cx="5" cy="43" r="2.5" fill="#1b3d2a" stroke="#4a7c59" stroke-width="1"/>
+  <circle cx="5" cy="43" r="1" fill="#b87333"/>
+  <circle cx="43" cy="43" r="2.5" fill="#1b3d2a" stroke="#4a7c59" stroke-width="1"/>
+  <circle cx="43" cy="43" r="1" fill="#b87333"/>
+</svg>

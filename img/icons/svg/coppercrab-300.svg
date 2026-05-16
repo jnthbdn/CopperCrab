@@ -1,0 +1,88 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created using Karbon, part of Calligra: http://www.calligra.org/karbon -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="240pt" height="224pt">
+<defs/>
+<g id="layer0">
+  <rect id="shape0" transform="" fill="#1b3d2a" width="240.00000000000pt" height="224.00000000000pt" rx="8.00000000000pt" ry="8.00000000000pt"/>
+  <rect id="shape1" transform="translate(6, 6)" fill="none" stroke="#2d6644" stroke-width="1.20000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" width="230.40000000000pt" height="214.40000000000pt" rx="5.60000000000pt" ry="5.60000000000pt"/>
+  <g id="group0" transform="translate(-2.8, -2.8)" fill="none" opacity="0.70000000000">
+   <path id="shape2" transform="translate(32.8, 2.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L0 280"/>
+   <path id="shape3" transform="translate(62.8, 2.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L0 280"/>
+   <path id="shape4" transform="translate(92.8, 2.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L0 280"/>
+   <path id="shape5" transform="translate(122.8, 2.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L0 280"/>
+   <path id="shape6" transform="translate(152.8, 2.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L0 280"/>
+   <path id="shape7" transform="translate(182.8, 2.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L0 280"/>
+   <path id="shape8" transform="translate(212.8, 2.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L0 280"/>
+   <path id="shape9" transform="translate(242.8, 2.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L0 280"/>
+   <path id="shape10" transform="translate(272.8, 2.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L0 280"/>
+   <path id="shape11" transform="translate(2.8, 32.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L300 0"/>
+   <path id="shape12" transform="translate(2.8, 62.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L300 0"/>
+   <path id="shape13" transform="translate(2.8, 92.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L300 0"/>
+   <path id="shape14" transform="translate(2.8, 122.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L300 0"/>
+   <path id="shape15" transform="translate(2.8, 152.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L300 0"/>
+   <path id="shape16" transform="translate(2.8, 182.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L300 0"/>
+   <path id="shape17" transform="translate(2.8, 212.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L300 0"/>
+   <path id="shape18" transform="translate(2.8, 242.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L300 0"/>
+   <path id="shape19" transform="translate(2.8, 272.8)" fill="#000000" stroke="#253f2e" stroke-width="0.60000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L300 0"/>
+  </g>
+  <path id="shape20" transform="translate(30, 30)" fill="none" stroke="#b87333" stroke-width="3.00000000000" stroke-linecap="round" stroke-linejoin="round" d="M66 66L66 38L30 38L30 0L0 0"/>
+  <path id="shape21" transform="translate(204, 30)" fill="none" stroke="#b87333" stroke-width="3.00000000000" stroke-linecap="round" stroke-linejoin="round" d="M0 66L0 38L36 38L36 0L66 0"/>
+  <path id="shape22" transform="translate(30, 122)" fill="none" stroke="#b87333" stroke-width="2.50000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M60 0L0 0"/>
+  <path id="shape23" transform="translate(30, 139.5)" fill="none" stroke="#b87333" stroke-width="2.50000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M60 0L30 0L30 14.5394L0 14.6978"/>
+  <path id="shape24" transform="translate(30, 158.25)" fill="none" stroke="#b87333" stroke-width="2.50000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M60 0L30 0L30 13.4542L0 13.6126"/>
+  <path id="shape25" transform="translate(30, 175.75)" fill="none" stroke="#b87333" stroke-width="2.50000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M60 0L30 0L0 48"/>
+  <path id="shape26" transform="translate(210, 122)" fill="none" stroke="#b87333" stroke-width="2.50000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L60 0"/>
+  <path id="shape27" transform="translate(210, 139.5)" fill="none" stroke="#b87333" stroke-width="2.50000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L30 0L30 12.4807L60 12.7975"/>
+  <path id="shape28" transform="translate(210, 158.25)" fill="none" stroke="#b87333" stroke-width="2.50000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L30 0L30 13.6126L60 13.7709"/>
+  <path id="shape29" transform="translate(210, 175.75)" fill="none" stroke="#b87333" stroke-width="2.50000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L30 0L60 48"/>
+  <path id="shape30" transform="translate(120, 222)" fill="none" stroke="#b87333" stroke-width="2.00000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L0 28L30 28L60 28L60 0"/>
+  <path id="shape31" transform="translate(150, 250)" fill="none" stroke="#b87333" stroke-width="2.00000000000" stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L0 20"/>
+  <g id="group1" transform="translate(51.75, 59.75)" fill="none">
+   <circle id="shape32" transform="translate(3.25, 3.25)" r="4.00000000000pt" cx="4.00000000000pt" cy="4.00000000000pt" fill="#b87333" stroke="#1b3d2a" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+   <circle id="shape34" transform="translate(3.58333, 77.1082)" r="4.00000000000pt" cx="4.00000000000pt" cy="4.00000000000pt" fill="#b87333" stroke="#1b3d2a" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+   <circle id="shape35" transform="translate(3.58333, 93.1083)" r="4.00000000000pt" cx="4.00000000000pt" cy="4.00000000000pt" fill="#b87333" stroke="#1b3d2a" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+   <circle id="shape36" transform="translate(183.25, 3.25)" r="4.00000000000pt" cx="4.00000000000pt" cy="4.00000000000pt" fill="#b87333" stroke="#1b3d2a" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+   <circle id="shape38" transform="translate(183.583, 75.1082)" r="4.00000000000pt" cx="4.00000000000pt" cy="4.00000000000pt" fill="#b87333" stroke="#1b3d2a" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+   <circle id="shape39" transform="translate(183.583, 97.1082)" r="4.00000000000pt" cx="4.00000000000pt" cy="4.00000000000pt" fill="#b87333" stroke="#1b3d2a" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+   <circle id="shape40" transform="translate(93.25, 185.25)" r="4.00000000000pt" cx="4.00000000000pt" cy="4.00000000000pt" fill="#b87333" stroke="#1b3d2a" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+  </g>
+  <rect id="shape41" transform="translate(88, 98)" fill="none" stroke="#4caf50" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" stroke-dasharray="4,2" width="99.20000000000pt" height="83.20000000000pt" rx="4.00000000000pt" ry="4.00000000000pt"/>
+  <rect id="shape42" transform="translate(96, 106)" fill="#243d2e" stroke="#b87333" stroke-width="2.20000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" width="86.40000000000pt" height="70.40000000000pt" rx="3.20000000000pt" ry="3.20000000000pt"/>
+  <path id="shape43" transform="translate(96, 106)" fill="none" stroke="#b87333" stroke-width="2.00000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 9C0 4.02944 4.02944 0 9 0"/>
+  <rect id="shape44" transform="translate(82, 118)" fill="#b87333" width="11.20000000000pt" height="6.40000000000pt" rx="1.60000000000pt" ry="1.60000000000pt"/>
+  <rect id="shape45" transform="translate(82, 136)" fill="#b87333" width="11.20000000000pt" height="6.40000000000pt" rx="1.60000000000pt" ry="1.60000000000pt"/>
+  <rect id="shape46" transform="translate(82, 154)" fill="#b87333" width="11.20000000000pt" height="6.40000000000pt" rx="1.60000000000pt" ry="1.60000000000pt"/>
+  <rect id="shape47" transform="translate(82, 172)" fill="#b87333" width="11.20000000000pt" height="6.40000000000pt" rx="1.60000000000pt" ry="1.60000000000pt"/>
+  <rect id="shape48" transform="translate(204, 118)" fill="#b87333" width="11.20000000000pt" height="6.40000000000pt" rx="1.60000000000pt" ry="1.60000000000pt"/>
+  <rect id="shape49" transform="translate(204, 136)" fill="#b87333" width="11.20000000000pt" height="6.40000000000pt" rx="1.60000000000pt" ry="1.60000000000pt"/>
+  <rect id="shape50" transform="translate(204, 154)" fill="#b87333" width="11.20000000000pt" height="6.40000000000pt" rx="1.60000000000pt" ry="1.60000000000pt"/>
+  <rect id="shape51" transform="translate(204, 172)" fill="#b87333" width="11.20000000000pt" height="6.40000000000pt" rx="1.60000000000pt" ry="1.60000000000pt"/>
+  <rect id="shape52" transform="translate(102, 94)" fill="#243d2e" stroke="#b87333" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" width="12.80000000000pt" height="8.00000000000pt" rx="1.60000000000pt" ry="1.60000000000pt"/>
+  <circle id="shape53" transform="translate(106, 95)" r="3.20000000000pt" cx="3.20000000000pt" cy="3.20000000000pt" fill="#00e676"/>
+  <rect id="shape54" transform="translate(182, 94)" fill="#243d2e" stroke="#b87333" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" width="12.80000000000pt" height="8.00000000000pt" rx="1.60000000000pt" ry="1.60000000000pt"/>
+  <circle id="shape55" transform="translate(186, 95)" r="3.20000000000pt" cx="3.20000000000pt" cy="3.20000000000pt" fill="#00e676"/>
+  <rect id="shape56" transform="translate(88, 72)" fill="#243d2e" stroke="#b87333" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" width="12.80000000000pt" height="17.60000000000pt" rx="2.40000000000pt" ry="2.40000000000pt"/>
+  <path id="shape57" transform="translate(90, 80)" fill="#000000" stroke="#b87333" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L12 0"/>
+  <path id="shape58" transform="translate(90, 84)" fill="#000000" stroke="#b87333" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L12 0"/>
+  <rect id="shape59" transform="translate(196, 72)" fill="#243d2e" stroke="#b87333" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" width="12.80000000000pt" height="17.60000000000pt" rx="2.40000000000pt" ry="2.40000000000pt"/>
+  <path id="shape60" transform="translate(198, 80)" fill="#000000" stroke="#b87333" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L12 0"/>
+  <path id="shape61" transform="translate(198, 84)" fill="#000000" stroke="#b87333" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" d="M0 0L12 0"/>
+  <text id="shape62" fill="#c8e6c9" font-family="monospace" font-size="8.80000019073pt" text-anchor="middle" x="26.41406250000pt" y="6.84375000000pt" transform="translate(116.084, 135.195)"><tspan x="-66.084"  y="8.55469">CopperCrab</tspan></text>
+  <text id="shape63" fill="#c8e6c9" opacity="0.70000000000" font-family="monospace" font-size="6.40000009537pt" text-anchor="middle" x="19.38281250000pt" y="4.35937500000pt" transform="translate(124.708, 153.301)"><tspan x="-48.457"  y="5.44922">MCU-GCODE-1</tspan></text>
+  <text id="shape66" fill="#c8e6c9" opacity="0.60000000000" font-family="monospace" font-size="7.19999980927pt" x="0.00000000000pt" y="5.00000000000pt" transform="translate(70, 115.75)"><tspan x="0"  y="6.25">1</tspan></text>
+  <text id="shape67" fill="#c8e6c9" opacity="0.60000000000" font-family="monospace" font-size="7.19999980927pt" x="0.00000000000pt" y="5.00000000000pt" transform="translate(218, 115.75)"><tspan x="0"  y="6.25">5</tspan></text>
+  <rect id="shape68" transform="translate(120, 56)" fill="#243d2e" stroke="#b87333" stroke-width="1.00000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" width="16.00000000000pt" height="6.40000000000pt" rx="1.60000000000pt" ry="1.60000000000pt"/>
+  <text id="shape69" fill="#c8e6c9" opacity="0.50000000000" font-family="monospace" font-size="5.59999990463pt" text-anchor="middle" x="3.07812500000pt" y="4.28125000000pt" transform="translate(122.696, 57.6484)"><tspan x="-7.69532"  y="5.35156">R1</tspan></text>
+  <rect id="shape70" transform="translate(155, 56)" fill="#243d2e" stroke="#b87333" stroke-width="1.00000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000" width="16.00000000000pt" height="6.40000000000pt" rx="1.60000000000pt" ry="1.60000000000pt"/>
+  <text id="shape71" fill="#c8e6c9" opacity="0.50000000000" font-family="monospace" font-size="5.59999990463pt" text-anchor="middle" x="3.23437500000pt" y="4.34375000000pt" transform="translate(158.086, 57.5703)"><tspan x="-8.08594"  y="5.42969">C2</tspan></text>
+  <circle id="shape72" transform="translate(12, 12)" r="4.80000000000pt" cx="4.80000000000pt" cy="4.80000000000pt" fill="#1b3d2a" stroke="#4a7c59" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+  <circle id="shape73" transform="translate(15.5, 15.5)" r="2.00000000000pt" cx="2.00000000000pt" cy="2.00000000000pt" fill="#b87333"/>
+  <circle id="shape74" transform="translate(276, 12)" r="4.80000000000pt" cx="4.80000000000pt" cy="4.80000000000pt" fill="#1b3d2a" stroke="#4a7c59" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+  <circle id="shape75" transform="translate(279.5, 15.5)" r="2.00000000000pt" cx="2.00000000000pt" cy="2.00000000000pt" fill="#b87333"/>
+  <circle id="shape76" transform="translate(12, 256)" r="4.80000000000pt" cx="4.80000000000pt" cy="4.80000000000pt" fill="#1b3d2a" stroke="#4a7c59" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+  <circle id="shape77" transform="translate(15.5, 259.5)" r="2.00000000000pt" cx="2.00000000000pt" cy="2.00000000000pt" fill="#b87333"/>
+  <circle id="shape78" transform="translate(276, 256)" r="4.80000000000pt" cx="4.80000000000pt" cy="4.80000000000pt" fill="#1b3d2a" stroke="#4a7c59" stroke-width="1.50000000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2.00000000000"/>
+  <circle id="shape79" transform="translate(279.5, 259.5)" r="2.00000000000pt" cx="2.00000000000pt" cy="2.00000000000pt" fill="#b87333"/>
+ </g>
+</svg>
