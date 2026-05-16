@@ -1,0 +1,217 @@
+name: Releases
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: windows-cargo-${{ hashFiles('Cargo.lock') }}
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-binary
+          path: target/release/coppercrab.exe
+
+  build-linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev \
+            libxdo-dev \
+            libxcb-render0-dev \
+            libxcb-shape0-dev \
+            libxcb-xfixes0-dev \
+            libxkbcommon-dev \
+            libssl-dev \
+            fuse \
+            libfuse2
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: linux-cargo-${{ hashFiles('Cargo.lock') }}
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Create AppImage
+        run: |
+          # Download appimagetool
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+
+          # Build AppDir structure
+          mkdir -p AppDir/usr/bin
+          mkdir -p AppDir/usr/share/applications
+          mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
+
+          cp target/release/coppercrab AppDir/usr/bin/
+          cp img/icons/png/coppercrab-300.png AppDir/usr/share/icons/hicolor/256x256/apps/coppercrab.png
+          cp img/icons/png/coppercrab-300.png AppDir/coppercrab.png
+
+          # Desktop file
+          cat > AppDir/usr/share/applications/coppercrab.desktop << EOF
+          [Desktop Entry]
+          Name=CopperCrab
+          Exec=coppercrab
+          Icon=coppercrab
+          Type=Application
+          Categories=Engineering;Electronics;
+          Comment=PCB CAM software for CNC isolation routing
+          EOF
+
+          cp AppDir/usr/share/applications/coppercrab.desktop AppDir/coppercrab.desktop
+
+          # Build AppImage
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir CopperCrab-${{ github.ref_name }}-x86_64.AppImage
+
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-appimage
+          path: CopperCrab-*.AppImage
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: macos-cargo-${{ hashFiles('Cargo.lock') }}
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Create .app bundle
+        run: |
+          APP="CopperCrab.app"
+          mkdir -p "$APP/Contents/MacOS"
+          mkdir -p "$APP/Contents/Resources"
+
+          cp target/release/coppercrab "$APP/Contents/MacOS/"
+
+          cat > "$APP/Contents/Info.plist" << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleName</key>
+            <string>CopperCrab</string>
+            <key>CFBundleExecutable</key>
+            <string>coppercrab</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.jnthbdn.coppercrab</string>
+            <key>CFBundleVersion</key>
+            <string>${{ github.ref_name }}</string>
+            <key>CFBundleShortVersionString</key>
+            <string>${{ github.ref_name }}</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+          </dict>
+          </plist>
+          EOF
+
+          # Create DMG
+          hdiutil create -volname "CopperCrab" \
+            -srcfolder "$APP" \
+            -ov -format UDZO \
+            "CopperCrab-${{ github.ref_name }}-macos.dmg"
+
+      - name: Upload DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-dmg
+          path: CopperCrab-*.dmg
+
+  release:
+    needs: [build-windows, build-linux, build-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-binary
+          path: artifacts/windows/
+
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-appimage
+          path: artifacts/linux/
+
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-dmg
+          path: artifacts/macos/
+
+      - name: Conventional Changelog
+        id: changelog
+        uses: Helmisek/conventional-changelog-generator@v1.0.6-release
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          template-path: ".github/CHANGELOG.tpl.md"
+          commit-types: "feat:Features 🎉,fix:Bug Fixes 🐛,chore:Chores 🧹,docs:Documentation 📖,perf:Performance ⏱,test:Tests 🛠,revert:Revert ⏪,ci:CI 📦,refactor:Refactor ♻️"
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          makeLatest: true
+          draft: false
+          body: ${{ steps.changelog.outputs.changelog }}
+          artifacts: |
+            artifacts/windows/coppercrab.exe
+            artifacts/linux/CopperCrab-*.AppImage
+            artifacts/macos/CopperCrab-*.dmg
