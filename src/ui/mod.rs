@@ -995,7 +995,7 @@ impl eframe::App for CopperCrabApp {
 
         egui::Panel::left("left_panel")
             .resizable(false)
-            .exact_size(250.0)
+            .min_size(250.0)
             .show_inside(ui, |ui| {
                 self.ui_left(ui);
             });
