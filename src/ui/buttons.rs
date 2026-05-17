@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use egui::{Color32, Layout, RichText};
 
 use crate::{
-    core::{parser::load_gerber, toolpath::ToolpathGenerator},
+    core::{parser::gerber::load_gerber, toolpath::ToolpathGenerator},
     ui::colors::{
         ACCENT, ACCENT_BORDER, ACCENT_TEXT, BG_TERTIARY, BORDER_DEFAULT, ERROR, SUCCESS,
         TEXT_PRIMARY, WARNING,
