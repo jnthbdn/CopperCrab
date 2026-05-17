@@ -857,8 +857,13 @@ impl CopperCrabApp {
                 return;
             }
 
-            let mut gcode_file = PathBuf::from(self.files.output_folder.as_ref().unwrap());
-            gcode_file.push("isolation.nc");
+            let gcode_file = self
+                .files
+                .output_folder
+                .as_ref()
+                .unwrap()
+                .join("isolation.nc");
+
             match std::fs::write(&gcode_file, gcode) {
                 Ok(_) => log::info!("Isolation gcode write to {}", gcode_file.to_string_lossy()),
                 Err(e) => log::error!("Failed to write isolation gcode file. {e}"),
@@ -883,8 +888,12 @@ impl CopperCrabApp {
                 return;
             }
 
-            let mut gcode_file = PathBuf::from(self.files.output_folder.as_ref().unwrap());
-            gcode_file.push("outline.nc");
+            let gcode_file = self
+                .files
+                .output_folder
+                .as_ref()
+                .unwrap()
+                .join("outline.nc");
             match std::fs::write(&gcode_file, gcode) {
                 Ok(_) => log::info!("Outline gcode write to {}", gcode_file.to_string_lossy()),
                 Err(e) => log::error!("Failed to write outline gcode file. {e}"),
