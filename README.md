@@ -41,18 +41,18 @@ CopperCrab is a desktop application that takes Gerber and Excellon files as inpu
 
 ## Dependencies
 
-| Crate                | Purpose                                                         |
-| -------------------- | --------------------------------------------------------------- |
-| `eframe` / `egui`    | Native desktop GUI framework                                    |
-| `egui_extras`        | Image loading support for egui                                  |
-| `clipper2`           | Polygon boolean operations and offsetting (toolpath generation) |
-| `lyon`               | Polygon tessellation for concave shape rendering                |
-| `gerber_parser`      | Gerber RS-274X file parsing                                     |
-| `rfd`                | Native file dialog (open/save)                                  |
-| `serde` + `toml`     | Tool library and config serialization                           |
-| `log` + `env_logger` | Logging facade and console output                               |
-| `image`              | PNG image loading                                               |
-| `directories`        | Platform-appropriate config/data directories                    |
+| Crate                                                                                       | Purpose                                                         |
+| ------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| [`eframe`](https://crates.io/crates/eframe) / [`egui`](https://crates.io/crates/egui)       | Native desktop GUI framework                                    |
+| [`egui_extras`](https://crates.io/crates/egui_extras)                                       | Image loading support for egui                                  |
+| [`clipper2`](https://crates.io/crates/clipper2)                                             | Polygon boolean operations and offsetting (toolpath generation) |
+| [`lyon`](https://crates.io/crates/lyon)                                                     | Polygon tessellation for concave shape rendering                |
+| [`gerber_parser`](https://crates.io/crates/gerber_parser)                                   | Gerber RS-274X file parsing                                     |
+| [`rfd`](https://crates.io/crates/rfd)                                                       | Native file dialog (open/save)                                  |
+| [`serde`](https://crates.io/crates/serde) + [`toml`](https://crates.io/crates/toml)         | Tool library and config serialization                           |
+| [`log`](https://crates.io/crates/log) + [`env_logger`](https://crates.io/crates/env_logger) | Logging facade and console output                               |
+| [`image`](https://crates.io/crates/image)                                                   | PNG image loading                                               |
+| [`directories`](https://crates.io/crates/directories)                                       | Platform-appropriate config/data directories                    |
 
 ---
 
