@@ -36,6 +36,7 @@ CopperCrab is a desktop application that takes Gerber and Excellon files as inpu
 - [ ] **Unit tests** — parser and toolpath generator need proper test coverage
 - [x] **CI/CD pipeline** — no automated build or test workflow yet
 - [ ] **Nice icons** - display nice icon on linux (Is windows/mac ok ?)
+- [ ] **Move to (0, 0)** - Move the traces to place the bottom-left PCB vertex to (0, 0).
 
 ---
 
