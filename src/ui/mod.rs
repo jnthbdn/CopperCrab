@@ -15,6 +15,7 @@ use crate::{
     },
     logger::LogEntry,
     ui::{
+        app_config::AppConfig,
         buttons::{button, button_primary, pick_gerber_file, toggle},
         canvas::{draw_axes, draw_paths, draw_paths_stroke},
         colors::*,
@@ -26,6 +27,7 @@ use crate::{
     },
 };
 
+pub mod app_config;
 mod buttons;
 mod canvas;
 mod colors;
@@ -37,7 +39,6 @@ mod tool_library;
 
 const PICK_TOOL: &str = "Pick a tool";
 const TOOLS_FILENAME: &str = "tools.toml";
-const LAST_CONFIG_FILENAME: &str = "last_config.toml";
 
 #[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
 enum SelectedTool {
@@ -66,8 +67,8 @@ struct ContextTools {
     drill_tool: SelectedTool,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-struct ContextParameters {
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub(crate) struct ContextParameters {
     z_safe: f64,
     z_finish: f64,
     isolation_depth: f64,
@@ -81,8 +82,8 @@ struct ContextParameters {
     export_drill: bool,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-struct ContextLayer {
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub(crate) struct ContextLayer {
     show_copper: bool,
     show_outline: bool,
     show_copper_toolpaths: bool,
@@ -109,32 +110,21 @@ struct CanvasState {
     rect: egui::Rect,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug)]
 pub struct CopperCrabApp {
-    #[serde(skip)]
     files: ContextFiles,
-
-    #[serde(skip)]
     tools: ContextTools,
-
     parameters: ContextParameters,
-
     layers: ContextLayer,
 
-    #[serde(skip)]
     canvas: CanvasState,
-
-    #[serde(skip)]
     tool_library_ui: ToolLibraryUi,
 
-    #[serde(skip)]
     status_bar: StatusBar,
 
-    #[serde(skip)]
     log_buffer: Arc<Mutex<VecDeque<LogEntry>>>,
 
-    #[serde(skip)]
-    config_folder: PathBuf,
+    app_config: AppConfig,
 }
 
 impl Default for ContextParameters {
@@ -189,58 +179,31 @@ impl CopperCrabApp {
     pub fn new(
         cc: &eframe::CreationContext<'_>,
         log_buffer: Arc<Mutex<VecDeque<LogEntry>>>,
+        app_config: AppConfig,
         config_folder: PathBuf,
     ) -> Self {
         let mut tools_file = PathBuf::from(&config_folder);
         tools_file.push(TOOLS_FILENAME);
-
-        let mut last_config_file = PathBuf::from(&config_folder);
-        last_config_file.push(LAST_CONFIG_FILENAME);
 
         cc.egui_ctx.global_style_mut(|style| {
             style.visuals.override_text_color = Some(TEXT_PRIMARY);
             style.spacing.button_padding = egui::vec2(10.0, 4.0);
         });
 
-        let mut s = Self {
+        Self {
             files: Default::default(),
             tools: ContextTools {
-                tool_library: ToolLibrary::new(tools_file.clone()),
+                tool_library: ToolLibrary::new(&config_folder),
                 ..Default::default()
             },
-            parameters: Default::default(),
-            layers: Default::default(),
+            parameters: app_config.context_parameter.clone(),
+            layers: app_config.context_layer.clone(),
             canvas: Default::default(),
             tool_library_ui: Default::default(),
             status_bar: Default::default(),
             log_buffer: log_buffer,
-            config_folder,
-        };
-
-        s.load_parameters(&last_config_file);
-
-        s
-    }
-
-    fn load_parameters(&mut self, path: &Path) {
-        match std::fs::read_to_string(path)
-            .ok()
-            .and_then(|s| toml::from_str::<Self>(&s).ok())
-        {
-            Some(load) => {
-                self.parameters = load.parameters;
-                self.layers = load.layers;
-            }
-            None => {
-                log::warn!("Failed to load last configuration.");
-            }
-        };
-    }
-
-    fn save_parameters(&self, path: &Path) -> Result<(), Box<dyn std::error::Error>> {
-        let content = toml::to_string_pretty(self)?;
-        std::fs::write(path, content)?;
-        Ok(())
+            app_config,
+        }
     }
 
     fn ui_left(&mut self, ui: &mut egui::Ui) {
@@ -990,6 +953,10 @@ impl CopperCrabApp {
 
 impl eframe::App for CopperCrabApp {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
+        let screen_rect = ui.ctx().viewport_rect();
+        self.app_config.window_width = screen_rect.width();
+        self.app_config.window_height = screen_rect.height();
+
         self.status_bar.show(ui);
         panel_logs(ui, &self.log_buffer);
 
@@ -1019,15 +986,9 @@ impl eframe::App for CopperCrabApp {
     }
 
     fn on_exit(&mut self) {
-        let mut param_path = PathBuf::from(&self.config_folder);
-        param_path.push(LAST_CONFIG_FILENAME);
-        log::info!(
-            "Saving parameters to {}",
-            param_path.as_os_str().to_string_lossy()
-        );
-        if let Err(e) = self.save_parameters(&param_path) {
-            log::error!("Failed to save parameters: {}", e);
-        }
+        self.app_config.context_layer = self.layers.clone();
+        self.app_config.context_parameter = self.parameters.clone();
+        self.app_config.save();
     }
 }
 

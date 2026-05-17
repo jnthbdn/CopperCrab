@@ -3,7 +3,11 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use crate::{dirs::get_config_dir, logger::MultiLogger, ui::CopperCrabApp};
+use crate::{
+    dirs::get_config_dir,
+    logger::MultiLogger,
+    ui::{CopperCrabApp, app_config::AppConfig},
+};
 
 use eframe;
 
@@ -39,6 +43,8 @@ fn main() {
         }
     }
 
+    let app_config = AppConfig::new(&config_folder);
+
     let native_options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_title("CopperCrab")
@@ -48,7 +54,7 @@ fn main() {
                 ))
                 .unwrap(),
             )
-            .with_inner_size([1200.0, 700.0]),
+            .with_inner_size([app_config.window_width, app_config.window_height]),
         ..eframe::NativeOptions::default()
     };
     let _ = eframe::run_native(
@@ -56,7 +62,12 @@ fn main() {
         native_options,
         Box::new(|cc| {
             egui_extras::install_image_loaders(&cc.egui_ctx);
-            Ok(Box::new(CopperCrabApp::new(cc, log_buffer, config_folder)))
+            Ok(Box::new(CopperCrabApp::new(
+                cc,
+                log_buffer,
+                app_config,
+                config_folder,
+            )))
         }),
     );
 }

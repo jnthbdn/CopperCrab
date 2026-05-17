@@ -25,7 +25,7 @@ impl fmt::Display for ToolpathError {
 
 impl std::error::Error for ToolpathError {}
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ToolpathGenerator {
     pub traces: Paths,
 }
