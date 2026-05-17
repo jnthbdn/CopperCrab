@@ -57,6 +57,41 @@ CopperCrab is a desktop application that takes Gerber and Excellon files as inpu
 
 ---
 
+## Known Limitations
+
+CopperCrab is functional but still in early development. The following limitations are known and some are planned to be addressed in future versions.
+
+### Gerber parsing
+
+- **Arc primitives** — arcs are parsed and converted to polygons via point approximation. Very tight arcs with few segments may show slight deviation from the original geometry.
+- **Aperture macros** — complex aperture macros (`%AMOC8*%` and similar) are not fully supported. Most standard KiCad/Eagle exports work fine, but exotic macros may produce incorrect geometry.
+- **Negative polarity** (`%LPD*%` / `%LPC*%`) — layer polarity switching (used for cutouts in copper pours) is not handled. Gerber files using `%LPC*%` (clear polarity) will render and machine incorrectly.
+- **Step and repeat** (`%SR*%`) — panelized boards using the step-and-repeat block are not supported.
+
+### Units
+
+- **Inch Gerber files** — files declared as `%MOIN*%` are parsed but the unit conversion to mm has not been fully validated. Results may be incorrect for inch-unit boards.
+
+### Toolpath generation
+
+- **Bottom copper layer** — only the top copper layer is supported. Two-sided PCBs require flipping the board manually and generating a second pass.
+- **Copper pours / filled zones** — large filled copper areas generate a very high number of polygons and may be slow to process or render.
+- **Toolpath ordering** — paths are not optimized for travel distance. The CNC may make unnecessary long rapid moves between cuts. A nearest-neighbor sort is planned.
+- **No DRC** — there is no design rule check. If your isolation depth is too shallow or your tool too wide, CopperCrab will not warn you that traces may be shorted.
+
+### G-code
+
+- **GRBL only** — only the GRBL dialect is currently exported. LinuxCNC and Mach3 support is planned.
+- **No spindle ramp-up** — the spindle is started (`M3`) and the tool immediately moves to the first cut position. Some machines benefit from a short dwell (`G4`) after spindle start.
+- **No tool change** — isolation, outline, and drill G-code are exported as separate files. Multi-tool workflows with automatic tool changers are not supported.
+
+### Platform
+
+- **Wayland icon** — the application icon does not display correctly on KDE Wayland. A `.desktop` file with the icon path is required as a workaround.
+- **macOS notarization** — the macOS binary is unsigned. Gatekeeper will show a security warning on first launch. Right-click → Open to bypass it.
+
+---
+
 ## Building from Source
 
 ### Prerequisites
