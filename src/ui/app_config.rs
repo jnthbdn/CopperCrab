@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::ui::{ContextLayer, ContextParameters};
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct AppConfig {
     #[serde(skip)]
     file_path: PathBuf,
@@ -39,6 +39,18 @@ impl AppConfig {
                 Err(e) => log::error!("Failed to write app config file: {e}"),
             },
             Err(e) => log::error!("Failed to write app config file: {e}"),
+        }
+    }
+}
+
+impl Default for AppConfig {
+    fn default() -> Self {
+        Self {
+            file_path: Default::default(),
+            window_height: default_height(),
+            window_width: default_width(),
+            context_parameter: Default::default(),
+            context_layer: Default::default(),
         }
     }
 }
