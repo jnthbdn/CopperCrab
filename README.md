@@ -34,7 +34,8 @@ CopperCrab is a desktop application that takes Gerber and Excellon files as inpu
 - [ ] **LinuxCNC and Mach3 G-code dialects** — currently only GRBL is supported
 - [x] **App config persistence** — window size and last used folder  not yet saved between sessions
 - [ ] **Unit tests** — parser and toolpath generator need proper test coverage
-- [ ] **CI/CD pipeline** — no automated build or test workflow yet
+- [x] **CI/CD pipeline** — no automated build or test workflow yet
+- [ ] **Nice icons** - display nice icon on linux (Is windows/mac ok ?)
 
 ---
 
