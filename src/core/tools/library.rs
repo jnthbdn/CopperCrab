@@ -22,7 +22,8 @@ impl ToolLibrary {
         Ok(())
     }
 
-    pub fn new(tool_file: PathBuf) -> Self {
+    pub fn new(config_folder: &Path) -> Self {
+        let tool_file = config_folder.join("tools.toml");
         let mut s = Self::load(&tool_file).unwrap_or_else(|_| {
             log::warn!("Tool library not found or empty.");
             Self::default()

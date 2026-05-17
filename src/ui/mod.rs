@@ -1,6 +1,6 @@
 use std::{
     collections::VecDeque,
-    path::{Path, PathBuf},
+    path::PathBuf,
     sync::{Arc, Mutex},
 };
 
@@ -38,7 +38,6 @@ mod status_bar;
 mod tool_library;
 
 const PICK_TOOL: &str = "Pick a tool";
-const TOOLS_FILENAME: &str = "tools.toml";
 
 #[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
 enum SelectedTool {
@@ -182,9 +181,6 @@ impl CopperCrabApp {
         app_config: AppConfig,
         config_folder: PathBuf,
     ) -> Self {
-        let mut tools_file = PathBuf::from(&config_folder);
-        tools_file.push(TOOLS_FILENAME);
-
         cc.egui_ctx.global_style_mut(|style| {
             style.visuals.override_text_color = Some(TEXT_PRIMARY);
             style.spacing.button_padding = egui::vec2(10.0, 4.0);
