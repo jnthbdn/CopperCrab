@@ -403,6 +403,7 @@ impl CopperCrabApp {
                             .speed(0.1)
                             .suffix(" mm"),
                     )
+                    .on_hover_text("Distance above the PCB where the tool moves at rapid speed between cuts. Must be high enough to clear any clamps or board edges.")
                     .changed()
                 {
                     self.status_bar.set_need_regenerate(true);
@@ -417,6 +418,7 @@ impl CopperCrabApp {
                             .speed(0.1)
                             .suffix(" mm"),
                     )
+                    .on_hover_text("Final Z position after the program ends. Usually higher than Z-safe to allow easy workpiece removal.")
                     .changed()
                 {
                     self.status_bar.set_need_regenerate(true);
@@ -451,6 +453,7 @@ impl CopperCrabApp {
                             .speed(0.01)
                             .suffix(" mm"),
                     )
+                    .on_hover_text("Depth of the isolation cut into the copper layer. Deeper = wider cut (V-bit). Typical range: 0.05mm to 0.2mm for PCB copper.")
                     .changed()
                 {
                     self.status_bar.set_need_regenerate(true);
@@ -468,6 +471,7 @@ impl CopperCrabApp {
                             .range(1..=50)
                             .speed(1),
                     )
+                    .on_hover_text("Number of isolation passes around each trace. More passes = wider clearance between traces. Minimum 1.")
                     .changed()
                 {
                     self.status_bar.set_need_regenerate(true);
@@ -482,6 +486,7 @@ impl CopperCrabApp {
                             .speed(1)
                             .suffix(" %"),
                     )
+                    .on_hover_text("Overlap between consecutive isolation passes, as a percentage of the cutting width. 0% = passes are adjacent, 50% = each pass overlaps the previous by half.")
                     .changed()
                 {
                     self.status_bar.set_need_regenerate(true);
@@ -506,6 +511,7 @@ impl CopperCrabApp {
                             .speed(0.1)
                             .suffix(" mm"),
                     )
+                    .on_hover_text("Total PCB thickness. The end mill will cut all the way through this depth to separate the board from the substrate. Typical FR4: 1.6mm.")
                     .changed()
                 {
                     self.status_bar.set_need_regenerate(true);
