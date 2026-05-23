@@ -10,13 +10,14 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     core::{
-        toolpath::{ToolpathGenerator, generate_isolation_gcode},
+        DrillLayer,
+        toolpath::{ToolpathGenerator, generate_drill_gcode, generate_isolation_gcode},
         tools::{CncTool, library::ToolLibrary},
     },
     logger::LogEntry,
     ui::{
         app_config::AppConfig,
-        buttons::{button, button_primary, pick_gerber_file, toggle},
+        buttons::{button, button_primary, pick_drill_file, pick_gerber_file, toggle},
         canvas::{draw_axes, draw_paths, draw_paths_stroke},
         colors::*,
         labels::title_label,
@@ -55,6 +56,7 @@ struct ContextFiles {
     output_folder: Option<PathBuf>,
     gerber_copper_path: Option<PathBuf>,
     gerber_outline_path: Option<PathBuf>,
+    drill_path: Option<PathBuf>,
 }
 
 #[derive(Debug, Default, Serialize, Deserialize)]
@@ -75,6 +77,7 @@ pub(crate) struct ContextParameters {
     isolation_passes: u32,
     isolation_overlap: f64,
     drill_peck_step: f64,
+    drill_depth: f64,
     outline_depth: f64,
 
     export_isolation: bool,
@@ -101,6 +104,9 @@ pub(crate) struct ContextLayer {
 
     #[serde(skip)]
     outline: Option<Vec<Paths>>,
+
+    #[serde(skip)]
+    drill: Option<DrillLayer>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -136,6 +142,7 @@ impl Default for ContextParameters {
             isolation_passes: 2,
             isolation_overlap: 50.0,
             drill_peck_step: 0.5,
+            drill_depth: 2.0,
             outline_depth: 2.0,
 
             export_isolation: true,
@@ -158,6 +165,7 @@ impl Default for ContextLayer {
             outline_generator: None,
             isolation: None,
             outline: None,
+            drill: None,
         }
     }
 }
@@ -241,6 +249,13 @@ impl CopperCrabApp {
             self.status_bar.set_need_regenerate(true);
             self.center_view_to_board();
         }
+
+        pick_drill_file(
+            ui,
+            &mut self.files.drill_path,
+            &mut self.layers.drill,
+            "Choose drill file",
+        );
     }
 
     fn ui_left_tools(&mut self, ui: &mut egui::Ui) {
@@ -301,27 +316,18 @@ impl CopperCrabApp {
         // Drill — DrillBit only
         ui.add_space(4.0);
         ui.label("Drill tool");
-        if ui
-            .add_enabled_ui(false, |ui| {
-                egui::ComboBox::from_id_salt("drill_tool")
-                    .selected_text(self.drill_tool_name())
-                    .width(ui.available_width())
-                    .show_ui(ui, |ui| {
-                        for (i, drill_bit) in self.tools.tool_library.drill_bits.iter().enumerate()
-                        {
-                            ui.selectable_value(
-                                &mut self.tools.drill_tool,
-                                SelectedTool::Drill(i),
-                                drill_bit.to_string(),
-                            );
-                        }
-                    })
-            })
-            .response
-            .changed()
-        {
-            self.status_bar.set_need_regenerate(true);
-        }
+        egui::ComboBox::from_id_salt("drill_tool")
+            .selected_text(self.drill_tool_name())
+            .width(ui.available_width())
+            .show_ui(ui, |ui| {
+                for (i, drill_bit) in self.tools.tool_library.drill_bits.iter().enumerate() {
+                    ui.selectable_value(
+                        &mut self.tools.drill_tool,
+                        SelectedTool::Drill(i),
+                        drill_bit.to_string(),
+                    );
+                }
+            });
 
         ui.add_space(16.0);
         if button_primary(ui, "Tool Library...", true).clicked() {
@@ -347,9 +353,8 @@ impl CopperCrabApp {
             ACCENT,
             &mut self.layers.show_outline_toolpaths,
         );
-        ui.add_enabled_ui(false, |ui| {
-            Self::layer_row(ui, "Drill", ERROR, &mut self.layers.show_drill);
-        });
+
+        Self::layer_row(ui, "Drill", TEXT_PRIMARY, &mut self.layers.show_drill);
     }
 
     fn layer_row(ui: &mut egui::Ui, label: &str, color: egui::Color32, visible: &mut bool) {
@@ -529,17 +534,23 @@ impl CopperCrabApp {
             .striped(true)
             .show(ui, |ui| {
                 ui.label("Drill Peck step");
-                if ui
-                    .add(
-                        egui::DragValue::new(&mut self.parameters.drill_peck_step)
-                            .range(0.1..=10.0)
-                            .speed(0.1)
-                            .suffix(" mm"),
-                    )
-                    .changed()
-                {
-                    self.status_bar.set_need_regenerate(true);
-                }
+                ui.add(
+                    egui::DragValue::new(&mut self.parameters.drill_peck_step)
+                        .range(0.1..=10.0)
+                        .speed(0.1)
+                        .suffix(" mm"),
+                )
+                .on_hover_text("Depth increment per peck. The drill plunges this distance, retracts to clear chips, then plunges again. Smaller values = safer for thin drills, but slower. Typical: 0.3mm to 0.8mm.");
+                ui.end_row();
+
+                ui.label("Drill detpth");
+                ui.add(
+                    egui::DragValue::new(&mut self.parameters.drill_depth)
+                        .range(0.1..=20.0)
+                        .speed(0.1)
+                        .suffix(" mm"),
+                )
+                .on_hover_text("Total drilling depth in mm. Should be slightly greater than the PCB thickness to ensure the drill breaks through completely. Typical FR4 1.6mm board: set to 1.8mm to 2.0mm.");
                 ui.end_row();
             });
     }
@@ -588,9 +599,7 @@ impl CopperCrabApp {
             &mut self.parameters.export_isolation,
         );
         Self::export_row(ui, "Outline toolpaths", &mut self.parameters.export_outline);
-        ui.add_enabled_ui(false, |ui| {
-            Self::export_row(ui, "Drill", &mut self.parameters.export_drill);
-        });
+        Self::export_row(ui, "Drill", &mut self.parameters.export_drill);
 
         ui.add_space(16.0);
         ui.add_enabled_ui(
@@ -660,6 +669,18 @@ impl CopperCrabApp {
             if let Some(v) = &self.layers.outline {
                 for p in v {
                     draw_paths_stroke(&painter, p, &transform, WARNING, 1.0);
+                }
+            }
+        }
+
+        if self.layers.show_drill {
+            if let Some(drill_layer) = &self.layers.drill {
+                for hole in &drill_layer.holes {
+                    painter.circle_filled(
+                        transform.to_screen(hole.x, hole.y),
+                        (hole.diameter / 2.0) as f32 * self.canvas.zoom,
+                        TEXT_PRIMARY,
+                    );
                 }
             }
         }
@@ -906,9 +927,31 @@ impl CopperCrabApp {
             }
         }
 
-        // if self.parameters.export_drill {
-        //     log::error!("Todo...");
-        // }
+        if self.parameters.export_drill
+            && self.layers.drill.is_some()
+            && self.tools.drill_tool != SelectedTool::None
+        {
+            let gcode;
+            if let SelectedTool::Drill(id) = self.tools.drill_tool {
+                gcode = generate_drill_gcode(
+                    self.layers.drill.as_ref().unwrap(),
+                    &self.tools.tool_library.drill_bits[id],
+                    self.parameters.drill_depth,
+                    self.parameters.z_safe,
+                    self.parameters.z_safe,
+                    self.parameters.drill_peck_step,
+                );
+            } else {
+                log::error!("Bad drill tool!");
+                return;
+            }
+
+            let gcode_file = self.files.output_folder.as_ref().unwrap().join("drill.nc");
+            match std::fs::write(&gcode_file, gcode) {
+                Ok(_) => log::info!("Drill gcode write to {}", gcode_file.to_string_lossy()),
+                Err(e) => log::error!("Failed to write drill gcode file. {e}"),
+            }
+        }
     }
 
     fn center_view_to_board(&mut self) {
