@@ -230,7 +230,7 @@ impl CopperCrabApp {
             ui,
             &mut self.files.gerber_copper_path,
             &mut self.layers.isolation_generator,
-            &["gbr", "ger", "gtl"],
+            &["gbr", "ger", "gtl", "gbl"],
             "Choose copper file",
             false,
         ) {
@@ -242,7 +242,7 @@ impl CopperCrabApp {
             ui,
             &mut self.files.gerber_outline_path,
             &mut self.layers.outline_generator,
-            &["gbr", "ger", "gto"],
+            &["gbr", "ger", "gto", "gko"],
             "Choose outline file",
             true,
         ) {
