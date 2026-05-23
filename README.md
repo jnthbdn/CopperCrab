@@ -29,7 +29,7 @@ CopperCrab is a desktop application that takes Gerber and Excellon files as inpu
 ## Roadmap / TODO
 
 - [ ] **Inch support** — Gerber files in imperial units are parsed but not yet fully handled
-- [ ] **Excellon / drill file support** — drill file parsing and G83 peck drilling G-code generation
+- [x] **Excellon / drill file support** — drill file parsing and G83 peck drilling G-code generation
 - [ ] **i18n / translation files** — UI strings are hardcoded in English, `rust-i18n` integration planned
 - [ ] **LinuxCNC and Mach3 G-code dialects** — currently only GRBL is supported
 - [x] **App config persistence** — window size and last used folder  not yet saved between sessions
@@ -69,6 +69,26 @@ CopperCrab is functional but still in early development. The following limitatio
 - **Aperture macros** — complex aperture macros (`%AMOC8*%` and similar) are not fully supported. Most standard KiCad/Eagle exports work fine, but exotic macros may produce incorrect geometry.
 - **Negative polarity** (`%LPD*%` / `%LPC*%`) — layer polarity switching (used for cutouts in copper pours) is not handled. Gerber files using `%LPC*%` (clear polarity) will render and machine incorrectly.
 - **Step and repeat** (`%SR*%`) — panelized boards using the step-and-repeat block are not supported.
+
+### Excellon / drill files
+
+The Excellon parser is functional for standard KiCad exports but has several limitations:
+
+**What is supported:**
+- Metric unit declaration (`METRIC`)
+- Tool definitions with decimal diameter (`T1C0.800`)
+- Absolute decimal coordinates (`X142.0Y-67.92`)
+- Tool selection between hole sequences
+- KiCad attribute comments (`#@! TF.*`, `#@! TA.*`) — silently ignored
+
+**What is not supported:**
+- **Inch unit** (`INCH`) — files in imperial units are not handled
+- **Integer coordinates** — some exporters omit the decimal point and use a scale factor (e.g. `X14200Y-6792` with `FMAT,1`). These will be parsed incorrectly.
+- **Routed slots** — `G85` slot commands and `G00`/`G01` moves between holes are ignored; only point drill hits are extracted
+- **Repeat command** (`R`) — `X...Y...R5` style repeated holes are not expanded
+- **NPTH files** — non-plated through-hole files must be imported separately and are treated identically to PTH files
+- **Peck drilling cycles** (`G81`, `G82`, `G83`) — drill cycle commands in the body are ignored; only coordinates are read
+- **Coordinate offset** (`OFFSET`) — global offset declarations are not applied
 
 ### Units
 
