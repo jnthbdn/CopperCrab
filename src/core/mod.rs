@@ -31,3 +31,16 @@ pub struct PcbLayer {
     pub unit: LayerUnit,
     pub traces: Vec<PcbTrace>,
 }
+
+#[allow(unused)]
+#[derive(Debug, Clone)]
+pub struct DrillHole {
+    pub x: f64,
+    pub y: f64,
+    pub diameter: f64,
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct DrillLayer {
+    pub holes: Vec<DrillHole>,
+}

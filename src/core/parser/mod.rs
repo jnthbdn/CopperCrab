@@ -1,12 +1,12 @@
 use core::fmt;
 
+pub mod excellon;
 pub mod gerber;
 
 #[derive(Debug)]
 pub enum ParseError {
     Io(std::io::Error),
     Gerber(String),
-    Excellon(String),
 }
 
 impl fmt::Display for ParseError {
@@ -14,7 +14,6 @@ impl fmt::Display for ParseError {
         match self {
             ParseError::Io(e) => write!(f, "IO error: {}", e),
             ParseError::Gerber(msg) => write!(f, "Gerber parse error: {}", msg),
-            ParseError::Excellon(msg) => write!(f, "Excellon parse error: {}", msg),
         }
     }
 }
