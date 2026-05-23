@@ -3,7 +3,11 @@ use std::path::PathBuf;
 use egui::{Color32, Layout, RichText};
 
 use crate::{
-    core::{parser::gerber::load_gerber, toolpath::ToolpathGenerator},
+    core::{
+        DrillLayer,
+        parser::{excellon::load_excellon, gerber::load_gerber},
+        toolpath::ToolpathGenerator,
+    },
     ui::colors::{
         ACCENT, ACCENT_BORDER, ACCENT_TEXT, BG_TERTIARY, BORDER_DEFAULT, ERROR, SUCCESS,
         TEXT_PRIMARY, WARNING,
@@ -196,4 +200,62 @@ pub fn pick_gerber_file(
         });
 
     changed
+}
+
+pub fn pick_drill_file(
+    ui: &mut egui::Ui,
+    drill_path: &mut Option<PathBuf>,
+    drill_layer: &mut Option<DrillLayer>,
+    default_text: &str,
+) {
+    egui::Grid::new(format!("pickfile_grid_{}", default_text))
+        .num_columns(3)
+        .min_col_width(0.0)
+        .show(ui, |ui| {
+            ui.set_min_width(ui.available_width());
+
+            let file_label = drill_path
+                .as_ref()
+                .and_then(|p| p.file_name())
+                .and_then(|n| n.to_str())
+                .unwrap_or(default_text);
+
+            let file_label_path = drill_path
+                .as_ref()
+                .and_then(|n| n.to_str())
+                .unwrap_or(default_text);
+
+            ui.colored_label(
+                if drill_layer.is_some() {
+                    SUCCESS
+                } else {
+                    WARNING
+                },
+                "■",
+            );
+
+            if ui.link(file_label).on_hover_text(file_label_path).clicked() {
+                if let Some(path) = rfd::FileDialog::new()
+                    .add_filter("Excellon", &["drl", "txt"])
+                    .pick_file()
+                {
+                    match load_excellon(&path) {
+                        Ok(layer) => {
+                            *drill_path = Some(path);
+                            *drill_layer = Some(layer);
+                        }
+                        Err(e) => log::error!("Failed to load excellon file: {e}"),
+                    }
+                }
+            }
+
+            if drill_layer.is_some() {
+                ui.with_layout(Layout::right_to_left(egui::Align::Min), |ui| {
+                    if button_danger(ui, "🗑", false).clicked() {
+                        *drill_path = None;
+                        *drill_layer = None;
+                    }
+                });
+            }
+        });
 }
