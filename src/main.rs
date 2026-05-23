@@ -16,6 +16,8 @@ mod dirs;
 mod logger;
 mod ui;
 
+const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 fn main() {
     let log_buffer = Arc::new(Mutex::new(VecDeque::new()));
     let logger = MultiLogger::new(log_buffer.clone());
@@ -47,7 +49,7 @@ fn main() {
 
     let native_options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_title("CopperCrab")
+            .with_title(format!("CopperCrab - v{VERSION}"))
             .with_icon(
                 eframe::icon_data::from_png_bytes(include_bytes!(
                     "../img/icons/png/coppercrab-300.png"
@@ -55,6 +57,7 @@ fn main() {
                 .unwrap(),
             )
             .with_inner_size([app_config.window_width, app_config.window_height]),
+        // .with_inner_size([1200.0, 700.0]),
         ..eframe::NativeOptions::default()
     };
     let _ = eframe::run_native(
