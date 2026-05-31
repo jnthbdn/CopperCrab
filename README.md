@@ -30,7 +30,7 @@ CopperCrab is a desktop application that takes Gerber and Excellon files as inpu
 
 - [ ] **Inch support** — Gerber files in imperial units are parsed but not yet fully handled
 - [x] **Excellon / drill file support** — drill file parsing and G83 peck drilling G-code generation
-- [ ] **i18n / translation files** — UI strings are hardcoded in English, `rust-i18n` integration planned
+- [x] **i18n / translation files** — UI strings are hardcoded in English, `rust-i18n` integration planned
 - [ ] **LinuxCNC and Mach3 G-code dialects** — currently only GRBL is supported
 - [x] **App config persistence** — window size and last used folder  not yet saved between sessions
 - [ ] **Unit tests** — parser and toolpath generator need proper test coverage
@@ -173,18 +173,17 @@ Click **Tool Library...** in the left panel to open the tool manager. You can ad
 ---
 
 ## Contributing
-
+ 
 Contributions are welcome — bug reports, feature requests, and pull requests alike.
-
+ 
 ### Getting started
-
+ 
 1. Fork the repository
 2. Create a branch: `git checkout -b feat/my-feature`
 3. Make your changes, keeping the KISS principle in mind — the `core` crate must stay UI-independent
 4. Open a pull request with a clear description of what changed and why
-
 ### Architecture overview
-
+ 
 ```
 src/
 ├── core/           # Business logic — no UI dependencies
@@ -194,11 +193,36 @@ src/
 │   └── tools/      # CncTool trait, VBit / EndMill / DrillBit, ToolLibrary
 └── ui/             # egui frontend — only depends on core
 ```
-
+ 
 The `core` crate exposes no egui types. If you are adding a new feature, implement the logic in `core` first with no UI, then wire it up in `ui`.
-
+ 
+### Adding a new language
+ 
+CopperCrab uses [`rust-i18n`](https://github.com/longbridgeapp/rust-i18n) for translations. All strings live in a single YAML file per locale under `locales/`.
+ 
+1. Copy `locales/en.yaml` and name it after the [BCP 47](https://en.wikipedia.org/wiki/IETF_language_tag) language tag — e.g. `locales/de.yaml` for German, `locales/zh-TW.yaml` for Traditional Chinese.
+2. Translate every value in the file. Leave the keys untouched — only translate the values:
+```yaml
+ui.button.cancel:
+  en: "Cancel"
+  de: "Abbrechen"   # ← your translation here
+```
+ 
+3. Register the new locale in `src/ui/mod.rs` by adding it to the `AVAILABLE_LOCALE` constant:
+```rust
+const AVAILABLE_LOCALE: &[(&str, &str)] = &[
+    ("en", "English"),
+    ("fr", "Français"),
+    ("de", "Deutsch"),  // ← add your language here
+];
+```
+ 
+4. Build and test: `cargo run` — open Preferences and switch to your language to verify everything looks correct.
+5. Open a pull request with the new `.yaml` file and the updated `AVAILABLE_LOCALE`. No Rust knowledge required — translation contributions are very welcome!
+> **Tip:** strings using `%{variable}` are interpolated at runtime. Keep the `%{...}` placeholders as-is and only translate the surrounding text.
+ 
 ### Code style
-
+ 
 - Standard `rustfmt` formatting (`cargo fmt`)
 - Log with the `log` facade (`log::info!`, `log::warn!`, etc.) — never `println!`
 - English for all code, comments, and log messages
