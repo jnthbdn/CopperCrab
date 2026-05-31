@@ -17,6 +17,9 @@ pub struct AppConfig {
     #[serde(default = "default_height")]
     pub window_width: f32,
 
+    #[serde(default = "default_locale")]
+    pub app_locale: String,
+
     pub context_parameter: ContextParameters,
     pub context_layer: ContextLayer,
 }
@@ -57,6 +60,7 @@ impl Default for AppConfig {
             file_path: Default::default(),
             window_height: default_height(),
             window_width: default_width(),
+            app_locale: sys_locale::get_locale().unwrap_or("en".to_string()),
             context_parameter: Default::default(),
             context_layer: Default::default(),
         }
@@ -69,4 +73,8 @@ fn default_width() -> f32 {
 
 fn default_height() -> f32 {
     700.0
+}
+
+fn default_locale() -> String {
+    "en".to_string()
 }
