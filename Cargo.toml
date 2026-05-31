@@ -15,5 +15,7 @@ image = { version = "0.25.10", features = ["png"] }
 log = "0.4.29"
 lyon = "1.0.19"
 rfd = "0.17.2"
+rust-i18n = { version = "4.0.0", features = ["log-miss-tr"] }
 serde = { version = "1.0.228", features = ["derive"] }
+sys-locale = "0.3.2"
 toml = "1.1.2"

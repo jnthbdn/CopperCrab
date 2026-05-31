@@ -1,0 +1,465 @@
+_version: 2
+
+app_config.error.fail_save:
+  en: "Failed to write app config file: %{e}"
+  fr: "Échec de l'écriture du fichier de configuration : %{e}"
+
+app_config.info.saved:
+  en: "App config saved to: %{path}"
+  fr: "Configuration sauvegardée : %{path}"
+
+excellon.info.load_file:
+  en: "Loading Excellon: %{path}"
+  fr: "Chargement Excellon : %{path}"
+
+excellon.info.loaded:
+  en: "Excellon loaded: %{holes} holes"
+  fr: "Excellon chargé : %{holes} trous"
+
+gerber.error.offset_circule_mode:
+  en: "Offset position is mandatory with (Counter) Clockwise interpolation mode"
+  fr: "La position d'offset est obligatoire en mode d'interpolation (anti-)horaire"
+
+gerber.info.generate_layer:
+  en: "Generating layer"
+  fr: "Génération du calque"
+
+gerber.info.load_file:
+  en: "Loading file '%{path}'"
+  fr: "Chargement du fichier '%{path}'"
+
+gerber.info.loaded:
+  en: "Gerber file loaded"
+  fr: "Fichier Gerber chargé"
+
+gerber.warn.G_unsupported:
+  en: "Unsupported '%{function}'"
+  fr: "'%{function}' non supporté"
+
+gerber.warn.aperture_unsupported:
+  en: "Unsupported '%{function}' aperture"
+  fr: "Ouverture '%{function}' non supportée"
+
+gerber.warn.deprecated:
+  en: "GCode '%{function}' is deprecated since December 2012."
+  fr: "Le GCode '%{function}' est déprécié depuis décembre 2012."
+
+gerber.warn.extended_unsupported:
+  en: "Unsupported extended command '%{function}'"
+  fr: "Commande étendue '%{function}' non supportée"
+
+library.debug.loaded:
+  en: "Tool library loaded from %{path}"
+  fr: "Bibliothèque d'outils chargée depuis %{path}"
+
+library.debug.save_path:
+  en: "Saving library to %{path}"
+  fr: "Sauvegarde de la bibliothèque vers %{path}"
+
+library.info.saved:
+  en: "Tool library saved"
+  fr: "Bibliothèque d'outils sauvegardée"
+
+library.warn.no_library:
+  en: "Tool library not found or empty."
+  fr: "Bibliothèque d'outils introuvable ou vide."
+
+main.error.create_config_folder:
+  en: "Failed to create config directory: %{e}"
+  fr: "Échec de la création du dossier de configuration : %{e}"
+
+main.error.get_config_folder:
+  en: "Failed to fetch the config folder !"
+  fr: "Impossible de récupérer le dossier de configuration !"
+
+main.info.config_dir:
+  en: "Config dir: %{path}"
+  fr: "Dossier de configuration : %{path}"
+
+main.info.create_config_folder:
+  en: "Config directory created"
+  fr: "Dossier de configuration créé"
+
+ui.tool.pick:
+  en: "Pick a tool"
+  fr: "Choisir un outil"
+
+toolpath.info.build_path:
+  en: "Build path from layer"
+  fr: "Construction des chemins depuis le calque"
+
+ui.button.cancel:
+  en: "Cancel"
+  fr: "Annuler"
+
+ui.button.clear_logs:
+  en: "Clear logs"
+  fr: "Effacer les logs"
+
+ui.button.close:
+  en: "Close"
+  fr: "Fermer"
+
+ui.button.export_files:
+  en: "Export files"
+  fr: "Exporter les fichiers"
+
+ui.button.generate_toolpath:
+  en: "Generate toolpaths"
+  fr: "Générer les chemins d'outil"
+
+ui.button.library.add_drill:
+  en: "+ Add Drill"
+  fr: "+ Ajouter un foret"
+
+ui.button.library.add_end_mill:
+  en: "+ Add End-mill"
+  fr: "+ Ajouter une fraise"
+
+ui.button.library.add_vbit:
+  en: "+ Add V-Bit"
+  fr: "+ Ajouter un V-Bit"
+
+ui.button.save:
+  en: "Save"
+  fr: "Sauvegarder"
+
+ui.button.tool_library:
+  en: "Open Tool library"
+  fr: "Ouvrir la bibliothèque d'outils"
+
+ui.error.bad_drill_tool:
+  en: "Bad drill tool!"
+  fr: "Outil de perçage invalide !"
+
+ui.error.bad_isolation_tool:
+  en: "Bad isolation tool!"
+  fr: "Outil d'isolation invalide !"
+
+ui.error.bad_outline_tool:
+  en: "Bad outline tool!"
+  fr: "Outil de contour invalide !"
+
+ui.error.fail_write_drill:
+  en: "Failed to write drill gcode file: %{e}"
+  fr: "Échec de l'écriture du fichier G-code de perçage : %{e}"
+
+ui.error.fail_write_isolation:
+  en: "Failed to write isolation gcode file: %{e}"
+  fr: "Échec de l'écriture du fichier G-code d'isolation : %{e}"
+
+ui.error.fail_write_outline:
+  en: "Failed to write outline gcode file: %{e}"
+  fr: "Échec de l'écriture du fichier G-code de contour : %{e}"
+
+ui.excellon.error.fail_load:
+  en: "Failed to load excellon file: %{e}"
+  fr: "Échec du chargement du fichier Excellon : %{e}"
+
+ui.files.pick_copper:
+  en: "Pick copper file"
+  fr: "Choisir le fichier cuivre"
+
+ui.files.pick_drill:
+  en: "Pick drill file"
+  fr: "Choisir le fichier de perçage"
+
+ui.files.pick_outline:
+  en: "Pick outline file"
+  fr: "Choisir le fichier de contour"
+
+ui.files.title:
+  en: "Files"
+  fr: "Fichiers"
+
+ui.info.drill_write:
+  en: "Drill gcode write to %{path}"
+  fr: "G-code de perçage écrit dans %{path}"
+
+ui.info.isolation_write:
+  en: "Isolation gcode write to %{path}"
+  fr: "G-code d'isolation écrit dans %{path}"
+
+ui.info.outline_write:
+  en: "Outline gcode write to %{path}"
+  fr: "G-code de contour écrit dans %{path}"
+
+ui.label.click_to_enlarge:
+  en: "Click to enlarge"
+  fr: "Cliquer pour agrandir"
+
+ui.label.export_drill:
+  en: "Drill file"
+  fr: "Fichier de perçage"
+
+ui.label.export_isolation_toolpath:
+  en: "Isolation toolpath"
+  fr: "Chemin d'isolation"
+
+ui.label.export_outline_toolpath:
+  en: "Outline toolpath"
+  fr: "Chemin de contour"
+
+ui.label.exports:
+  en: "Exports"
+  fr: "Exports"
+
+ui.label.layer.copper_toolpath:
+  en: "Isolation toolpaths"
+  fr: "Chemins d'isolation"
+
+ui.label.layer.copper:
+  en: "Copper"
+  fr: "Cuivre"
+
+ui.label.layer.drill:
+  en: "Drill holes"
+  fr: "Trous de perçage"
+
+ui.label.layer.outline_toolpath:
+  en: "Outline toolpaths"
+  fr: "Chemins de contour"
+
+ui.label.layer.title:
+  en: "Layers"
+  fr: "Calques"
+
+ui.label.library.angle:
+  en: "Angle"
+  fr: "Angle"
+
+ui.label.library.default_drill_name:
+  en: "New drill"
+  fr: "Nouveau foret"
+
+ui.label.library.default_end_mill_name:
+  en: "New end-mill"
+  fr: "Nouvelle fraise"
+
+ui.label.library.default_vbit_name:
+  en: "New V-Bit"
+  fr: "Nouveau V-Bit"
+
+ui.label.library.diameter:
+  en: "Diameter"
+  fr: "Diamètre"
+
+ui.label.library.drill:
+  en: "Drill"
+  fr: "Foret"
+
+ui.label.library.end_mill:
+  en: "End-mill"
+  fr: "Fraise"
+
+ui.label.library.feed_rate:
+  en: "Feed rate"
+  fr: "Vitesse d'avance"
+
+ui.label.library.max_depth:
+  en: "Max depth"
+  fr: "Prof. max."
+
+ui.label.library.name:
+  en: "Name"
+  fr: "Nom"
+
+ui.label.library.plunge_rate:
+  en: "Plunge rate"
+  fr: "Vitesse de plongée"
+
+ui.label.library.short_diameter:
+  en: "dia."
+  fr: "dia."
+
+ui.label.library.spindle_speed:
+  en: "Spindle speed"
+  fr: "Vitesse broche"
+
+ui.label.library.tip:
+  en: "Tip"
+  fr: "Pointe"
+
+ui.label.library.tip_diameter:
+  en: "Tip diameter"
+  fr: "Diamètre de pointe"
+
+ui.label.library.vbit:
+  en: "V-Bit"
+  fr: "V-Bit"
+
+ui.label.logs:
+  en: "Logs"
+  fr: "Logs"
+
+ui.label.parameters.common.final_z:
+  en: "Final Z"
+  fr: "Z final"
+
+ui.label.parameters.common.safe_z:
+  en: "Safe Z"
+  fr: "Z sécurité"
+
+ui.label.parameters.common.title:
+  en: "Common parameters"
+  fr: "Paramètres communs"
+
+ui.label.parameters.drill.drill_depth:
+  en: "Drill depth"
+  fr: "Profondeur de perçage"
+
+ui.label.parameters.drill.drill_peck:
+  en: "Drill peck step"
+  fr: "Pas de débourrage"
+
+ui.label.parameters.drill.title:
+  en: "Drill parameters"
+  fr: "Paramètres de perçage"
+
+ui.label.parameters.isolation.depth:
+  en: "Isolation depth"
+  fr: "Profondeur d'isolation"
+
+ui.label.parameters.isolation.depth_result:
+  en: "Cutting width"
+  fr: "Largeur de coupe"
+
+ui.label.parameters.isolation.overlap:
+  en: "Overlap"
+  fr: "Recouvrement"
+
+ui.label.parameters.isolation.passes:
+  en: "Passes"
+  fr: "Passes"
+
+ui.label.parameters.isolation.title:
+  en: "Isolation parameters"
+  fr: "Paramètres d'isolation"
+
+ui.label.parameters.outline.depth:
+  en: "Depth"
+  fr: "Profondeur"
+
+ui.label.parameters.outline.title:
+  en: "Outline parameters"
+  fr: "Paramètres de contour"
+
+ui.label.select_output_folder:
+  en: "Select output folder"
+  fr: "Choisir le dossier de sortie"
+
+ui.select_tool.drill:
+  en: "Drill tool"
+  fr: "Outil de perçage"
+
+ui.select_tool.isolation:
+  en: "Isolation tool"
+  fr: "Outil d'isolation"
+
+ui.select_tool.outline:
+  en: "Outline tool"
+  fr: "Outil de contour"
+
+ui.select_tool.title:
+  en: "Tools"
+  fr: "Outils"
+
+ui.status_bar.mouse:
+  en: "Mouse"
+  fr: "Souris"
+
+ui.status_bar.toolpath_up_to_date:
+  en: "Toolpath up to date"
+  fr: "Chemins à jour"
+
+ui.status_bar.toolpaths_outdated:
+  en: "Toolpath outdated"
+  fr: "Chemins obsolètes"
+
+ui.toolpath.error.fail_generate:
+  en: "Fail to generator toolpath: %{e}"
+  fr: "Échec de la génération des chemins d'outil : %{e}"
+
+ui.toolpath.error.fail_load:
+  en: "Failed to load gerber: %{e}"
+  fr: "Échec du chargement du fichier Gerber : %{e}"
+
+ui.tooltip.library.angle:
+  en: "Opening angle of the V in degrees. Determines cutting width based on depth. Typical values: 10°, 30°, 60° or 90°"
+  fr: "Angle d'ouverture du V en degrés. Détermine la largeur de coupe en fonction de la profondeur. Valeurs typiques : 10°, 30°, 60° ou 90°"
+
+ui.tooltip.library.diameter:
+  en: "Tool diameter. Directly corresponds to the cutting width for end mills, and hole diameter for drill bits"
+  fr: "Diamètre de l'outil. Correspond directement à la largeur de coupe pour les fraises, et au diamètre du trou pour les forets"
+
+ui.tooltip.library.feed_rate:
+  en: "XY movement speed during cutting in mm/min. Too high a value degrades cut quality and risks breaking the tool"
+  fr: "Vitesse de déplacement XY pendant la coupe en mm/min. Une valeur trop élevée dégrade la qualité de coupe et risque de casser l'outil"
+
+ui.tooltip.library.max_depth:
+  en: "Maximum depth per pass. The G-code generator automatically splits into multiple passes if the total depth exceeds this value"
+  fr: "Profondeur maximale par passe. Le générateur G-code découpe automatiquement en plusieurs passes si la profondeur totale dépasse cette valeur"
+
+ui.tooltip.library.name:
+  en: "Name displayed in the tool library"
+  fr: "Nom affiché dans la bibliothèque d'outils"
+
+ui.tooltip.library.plunge_rate:
+  en: "Z plunge speed in mm/min. Should be significantly lower than feed_rate to protect the tool when entering the material"
+  fr: "Vitesse de plongée en Z en mm/min. Doit être significativement plus faible que la vitesse d'avance pour préserver l'outil lors de l'entrée dans la matière"
+
+ui.tooltip.library.spindle_speed:
+  en: "Spindle rotation speed in RPM. V-bit: ~20000, End mill: ~15000, Drill: ~8000. Depends on tool diameter and material"
+  fr: "Vitesse de rotation de la broche en RPM. V-bit : ~20000, Fraise : ~15000, Foret : ~8000. Dépend du diamètre de l'outil et du matériau"
+
+ui.tooltip.library.tip_diameter:
+  en: "Diameter of the V-bit tip. A 0.0mm tip is theoretical — in practice 0.1mm minimum to avoid breakage"
+  fr: "Diamètre de la pointe du V-bit. Une pointe à 0.0mm est théorique — en pratique 0.1mm minimum pour éviter la casse"
+
+ui.tooltip.parameters.common.final_z:
+  en: "Final Z position after the program ends. Usually higher than Z-safe to allow easy workpiece removal."
+  fr: "Position Z finale après la fin du programme. Généralement plus haute que le Z de sécurité pour faciliter le retrait de la pièce."
+
+ui.tooltip.parameters.common.safe_z:
+  en: "Distance above the PCB where the tool moves at rapid speed between cuts. Must be high enough to clear any clamps or board edges."
+  fr: "Hauteur au-dessus du PCB où l'outil se déplace en rapide entre les coupes. Doit être suffisamment haute pour dégager les brides et les bords du circuit."
+
+ui.tooltip.parameters.drill_depth:
+  en: "Total drilling depth in mm. Should be slightly greater than the PCB thickness to ensure the drill breaks through completely. Typical FR4 1.6mm board: set to 1.8mm to 2.0mm."
+  fr: "Profondeur de perçage totale en mm. Doit être légèrement supérieure à l'épaisseur du PCB pour s'assurer que le foret perce complètement. PCB FR4 1.6mm typique : régler à 1.8mm ou 2.0mm."
+
+ui.tooltip.parameters.drill_peck:
+  en: "Depth increment per peck. The drill plunges this distance, retracts to clear chips, then plunges again. Smaller values = safer for thin drills, but slower. Typical: 0.3mm to 0.8mm."
+  fr: "Incrément de profondeur par débourrage. Le foret plonge de cette distance, remonte pour évacuer les copeaux, puis replonge. Des valeurs plus faibles = plus sûr pour les petits forets, mais plus lent. Typique : 0.3mm à 0.8mm."
+
+ui.tooltip.parameters.isolation.depth:
+  en: "Depth of the isolation cut into the copper layer. Deeper = wider cut (V-bit). Typical range: 0.05mm to 0.2mm for PCB copper."
+  fr: "Profondeur de la coupe d'isolation dans la couche de cuivre. Plus profond = coupe plus large (V-bit). Plage typique : 0.05mm à 0.2mm pour le cuivre de PCB."
+
+ui.tooltip.parameters.isolation.overlap:
+  en: "Overlap between consecutive isolation passes, as a percentage of the cutting width. 0% = passes are adjacent, 50% = each pass overlaps the previous by half."
+  fr: "Recouvrement entre les passes d'isolation consécutives, en pourcentage de la largeur de coupe. 0% = passes adjacentes, 50% = chaque passe recouvre la précédente de moitié."
+
+ui.tooltip.parameters.isolation.passes:
+  en: "Number of isolation passes around each trace. More passes = wider clearance between traces. Minimum 1."
+  fr: "Nombre de passes d'isolation autour de chaque piste. Plus de passes = dégagement plus large entre les pistes. Minimum 1."
+
+ui.tooltip.parameters.outline.depth:
+  en: "Total PCB thickness. The end mill will cut all the way through this depth to separate the board from the substrate. Typical FR4: 1.6mm."
+  fr: "Épaisseur totale du PCB. La fraise découpera sur toute cette profondeur pour séparer le circuit du substrat. FR4 typique : 1.6mm."
+
+ui.warn.fail_save_library:
+  en: "Unable to save the tool library: %{e}"
+  fr: "Impossible de sauvegarder la bibliothèque d'outils : %{e}"
+
+ui.warn.no_isolation_toolpath:
+  en: "No file/tool selected for isolation toolpath. Skip."
+  fr: "Aucun fichier/outil sélectionné pour le chemin d'isolation. Ignoré."
+
+ui.warn.no_outline_toolpath:
+  en: "No file/tool selected for outline toolpath. Skip."
+  fr: "Aucun fichier/outil sélectionné pour le chemin de contour. Ignoré."
+
+ui.warn.no_output_folder:
+  en: "No output folder selected."
+  fr: "Aucun dossier de sortie sélectionné."
