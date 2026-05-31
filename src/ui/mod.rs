@@ -40,8 +40,8 @@ mod pcb_transform;
 mod status_bar;
 mod tool_library;
 
-const PICK_TOOL: &str = "Pick a tool";
 const TOOLS_FILENAME: &str = "tools.toml";
+const AVAILABLE_LOCALE: [(&str, &str); 2] = [("en", "English"), ("fr", "Français")];
 
 #[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
 enum SelectedTool {
@@ -1068,7 +1068,7 @@ impl eframe::App for CopperCrabApp {
         self.app_config.window_width = screen_rect.width();
         self.app_config.window_height = screen_rect.height();
 
-        self.status_bar.show(ui);
+        self.status_bar.show(ui, &mut self.app_config.app_locale);
         panel_logs(ui, &self.log_buffer);
 
         egui::Panel::left("left_panel")

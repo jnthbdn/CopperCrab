@@ -30,6 +30,8 @@ fn main() {
     log::set_boxed_logger(Box::new(logger)).unwrap();
     log::set_max_level(max_level);
 
+    rust_i18n::set_locale(&sys_locale::get_locale().unwrap_or("en".to_string()));
+
     let config_folder = match get_config_dir() {
         Some(f) => f,
         None => {
@@ -59,6 +61,8 @@ fn main() {
     }
 
     let app_config = AppConfig::new(&config_folder);
+
+    rust_i18n::set_locale(&app_config.app_locale);
 
     let native_options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
