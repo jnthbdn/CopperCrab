@@ -1,5 +1,7 @@
 use egui::{Layout, RichText, Sense};
 
+use rust_i18n::t;
+
 use crate::{
     core::tools::{drill::DrillBit, endmill::EndMill, library::ToolLibrary, vbit::VBit},
     ui::buttons::{button, button_danger, button_primary},
@@ -32,7 +34,7 @@ impl ToolEditor {
         Self {
             editing_index: None,
             tool_type: ToolType::VBit,
-            name: "New V-Bit".to_string(),
+            name: t!("ui.label.library.default_vbit_name").to_string(),
             angle_deg: 60.0,
             tip_diameter: 0.1,
             diameter: 1.0,
@@ -62,7 +64,7 @@ impl ToolEditor {
         Self {
             editing_index: None,
             tool_type: ToolType::EndMill,
-            name: "New End Mill".to_string(),
+            name: t!("ui.label.library.default_end_mill_name").to_string(),
             angle_deg: 0.0,
             tip_diameter: 0.0,
             diameter: 1.0,
@@ -92,7 +94,7 @@ impl ToolEditor {
         Self {
             editing_index: None,
             tool_type: ToolType::DrillBit,
-            name: "New Drill Bit".to_string(),
+            name: t!("ui.label.library.default_drill_name").to_string(),
             angle_deg: 0.0,
             tip_diameter: 0.0,
             diameter: 0.8,
@@ -145,10 +147,10 @@ impl ToolLibraryUi {
                         ui.set_min_height(ui.available_height());
                         ui.columns(3, |columns| {
                             // V-Bits
-                            columns[0].label("V-Bits");
+                            columns[0].label(t!("ui.label.library.vbit"));
                             columns[0].separator();
 
-                            if button_primary(&mut columns[0], "+ Add V-Bit", true).clicked() {
+                            if button_primary(&mut columns[0], &t!("ui.button.library.add_vbit").to_string(), /*"+ Add V-Bit",*/ true).clicked() {
                                 self.tool_editor = Some(ToolEditor::new_vbit());
                             }
                             let mut to_delete = None;
@@ -156,7 +158,7 @@ impl ToolLibraryUi {
                                 columns[0].horizontal(|ui| {
                                     ui.label(egui::RichText::new(&vbit.name).strong());
                                     ui.label(format!("{}°", vbit.angle_deg));
-                                    ui.label(format!("tip: {}mm", vbit.tip_diameter));
+                                    ui.label(format!("{}: {}mm",t!("ui.label.library.tip"), vbit.tip_diameter));
                                     ui.with_layout(
                                         egui::Layout::right_to_left(egui::Align::Center),
                                         |ui| {
@@ -176,17 +178,17 @@ impl ToolLibraryUi {
                             }
 
                             // End Mills
-                            columns[1].label("End Mills");
+                            columns[1].label(t!("ui.label.library.end_mill"));
                             columns[1].separator();
 
-                            if button_primary(&mut columns[1], "+ Add End Mill", true).clicked() {
+                            if button_primary(&mut columns[1], &t!("ui.button.library.add_end_mill").to_string(), /*"+ Add End Mill"*/ true).clicked() {
                                 self.tool_editor = Some(ToolEditor::new_end_mill());
                             }
                             let mut to_delete = None;
                             for (i, end_mill) in tool_library.end_mills.iter().enumerate() {
                                 columns[1].horizontal(|ui| {
                                     ui.label(egui::RichText::new(&end_mill.name).strong());
-                                    ui.label(format!("dia: {}mm", end_mill.diameter));
+                                    ui.label(format!("{}: {}mm", t!("ui.label.library.short_diameter"), end_mill.diameter));
                                     ui.with_layout(
                                         egui::Layout::right_to_left(egui::Align::Center),
                                         |ui| {
@@ -206,17 +208,27 @@ impl ToolLibraryUi {
                             }
 
                             // Drill Bits
-                            columns[2].label("Drill Bits");
+                            columns[2].label(t!("ui.label.library.drill"));
                             columns[2].separator();
 
-                            if button_primary(&mut columns[2], "+ Add Drill Bit", true).clicked() {
+                            if button_primary(
+                                &mut columns[2],
+                                &t!("ui.button.library.add_drill").to_string(), /*"+ Add Drill Bit"*/
+                                true,
+                            )
+                            .clicked()
+                            {
                                 self.tool_editor = Some(ToolEditor::new_drill_bit());
                             }
                             let mut to_delete = None;
                             for (i, drill_bit) in tool_library.drill_bits.iter().enumerate() {
                                 columns[2].horizontal(|ui| {
                                     ui.label(egui::RichText::new(&drill_bit.name).strong());
-                                    ui.label(format!("dia: {}mm", drill_bit.diameter));
+                                    ui.label(format!(
+                                        "{}: {}mm",
+                                        t!("ui.label.library.short_diameter"),
+                                        drill_bit.diameter
+                                    ));
                                     ui.with_layout(
                                         egui::Layout::right_to_left(egui::Align::Center),
                                         |ui| {
@@ -237,7 +249,7 @@ impl ToolLibraryUi {
                         });
                     });
                     ui.with_layout(Layout::right_to_left(egui::Align::Min), |ui| {
-                        if button_primary(ui, "Close", false).clicked() {
+                        if button_primary(ui, &t!("ui.button.close").to_string(), false).clicked() {
                             *open = false;
                         }
                     });
@@ -262,101 +274,105 @@ impl ToolLibraryUi {
                             .num_columns(2)
                             .striped(true)
                             .show(ui, |ui| {
-                                ui.label("Name");
+                                ui.label(t!("ui.label.library.name"));
                                 ui.text_edit_singleline(&mut editor.name)
-                                    .on_hover_text("Name displayed in the tool library");
+                                    .on_hover_text(t!("ui.tooltip.library.name"));
                                 ui.end_row();
 
                                 match editor.tool_type {
                                     ToolType::VBit => {
-                                        ui.label("Angle");
+                                        ui.label(t!("ui.label.library.angle"));
                                         ui.add(
                                             egui::DragValue::new(&mut editor.angle_deg)
                                                 .range(10.0..=180.0)
                                                 .suffix(" °"),
                                         )
-                                        .on_hover_text("Opening angle of the V in degrees. Determines cutting width based on depth. Typical values: 10°, 30°, 60° or 90°");
+                                        .on_hover_text(t!("ui.tooltip.library.angle"));
                                         ui.end_row();
 
-                                        ui.label("Tip diameter");
+                                        ui.label(t!("ui.label.library.tip_diameter"));
                                         ui.add(
                                             egui::DragValue::new(&mut editor.tip_diameter)
                                                 .speed(0.01)
                                                 .suffix(" mm"),
                                         )
-                                        .on_hover_text("Diameter of the V-bit tip. A 0.0mm tip is theoretical — in practice 0.1mm minimum to avoid breakage");
+                                        .on_hover_text(t!("ui.tooltip.library.tip_diameter"));
                                         ui.end_row();
                                     }
                                     ToolType::EndMill | ToolType::DrillBit => {
-                                        ui.label("Diameter");
+                                        ui.label(t!("ui.label.library.diameter"));
                                         ui.add(
                                             egui::DragValue::new(&mut editor.diameter)
                                                 .speed(0.01)
                                                 .suffix(" mm"),
                                         )
-                                        .on_hover_text("Tool diameter. Directly corresponds to the cutting width for end mills, and hole diameter for drill bits");
+                                        .on_hover_text(t!("ui.tooltip.library.diameter"));
 
                                         ui.end_row();
                                     }
                                 }
 
-                                ui.label("Max depth");
+                                ui.label(t!("ui.label.library.max_depth"));
                                 ui.add(
                                     egui::DragValue::new(&mut editor.max_depth)
                                         .speed(0.01)
                                         .suffix(" mm"),
                                 )
-                                .on_hover_text("Maximum depth per pass. The G-code generator automatically splits into multiple passes if the total depth exceeds this value");
+                                .on_hover_text(t!("ui.tooltip.library.max_depth"));
                                 ui.end_row();
 
                                 if editor.tool_type != ToolType::DrillBit {
-                                    ui.label("Feed rate");
+                                    ui.label(t!("ui.label.library.feed_rate"));
                                     ui.add(
                                         egui::DragValue::new(&mut editor.feed_rate)
                                             .speed(1.0)
                                             .suffix(" mm/min"),
                                     )
-                                    .on_hover_text("XY movement speed during cutting in mm/min. Too high a value degrades cut quality and risks breaking the tool");
+                                    .on_hover_text(t!("ui.tooltip.library.feed_rate"));
                                     ui.end_row();
                                 }
 
-                                ui.label("Plunge rate");
+                                ui.label(t!("ui.label.library.plunge_rate"));
                                 ui.add(
                                     egui::DragValue::new(&mut editor.plunge_rate)
                                         .speed(1.0)
                                         .suffix(" mm/min"),
                                 )
-                                .on_hover_text("Z plunge speed in mm/min. Should be significantly lower than feed_rate to protect the tool when entering the material");
+                                .on_hover_text(t!("ui.tooltip.library.plunge_rate"));
                                 ui.end_row();
 
-                                ui.label("Spindle speed");
+                                ui.label(t!("ui.label.library.spindle_speed"));
                                 ui.add(
                                     egui::DragValue::new(&mut editor.spindle_speed)
                                         .range(0..=100_000)
                                         .speed(1.0)
                                         .suffix(" RPM"),
                                 )
-                                .on_hover_text("Spindle rotation speed in RPM. V-bit: ~20000, End mill: ~15000, Drill: ~8000. Depends on tool diameter and material");
+                                .on_hover_text(t!("ui.tooltip.library.spindle_speed"));
                                 ui.end_row();
                             });
 
                         if editor.tool_type == ToolType::VBit {
                             ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
-
                                 ui.set_max_width(0.0);
                                 ui.set_min_width(0.0);
 
-                                if ui.add(egui::Image::new(IMG_VBIT.clone() )
-                                        .fit_to_original_size(
-                                        if self.img_vbit_big_scale { 1.0 } else { 0.5 }
-                                        )
-                                        .sense(Sense::click() )
+                                if ui
+                                    .add(
+                                        egui::Image::new(IMG_VBIT.clone())
+                                            .fit_to_original_size(if self.img_vbit_big_scale {
+                                                1.0
+                                            } else {
+                                                0.5
+                                            })
+                                            .sense(Sense::click()),
                                     )
-                                    .clicked() {
+                                    .clicked()
+                                {
                                     self.img_vbit_big_scale = !self.img_vbit_big_scale;
                                 }
 
-                                ui.label(RichText::new("Click to enlarge").italics());
+                                ui.label(RichText::new(t!("ui.label.click_to_enlarge")).italics());
                                 ui.shrink_width_to_current();
                                 ui.request_repaint();
                             });
@@ -369,7 +385,7 @@ impl ToolLibraryUi {
 
                     ui.separator();
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), |ui| {
-                        if button_primary(ui, "Save", false).clicked() {
+                        if button_primary(ui, &t!("ui.button.save").to_string(), false).clicked() {
                             if let Some(editor) = &self.tool_editor {
                                 match editor.tool_type {
                                     ToolType::VBit => {
@@ -418,11 +434,14 @@ impl ToolLibraryUi {
                                 self.tool_editor = None;
 
                                 if let Err(e) = tool_library.save() {
-                                    log::warn!("Unable to save the tool library. {e}");
+                                    log::warn!(
+                                        "{}",
+                                        t!("ui.warn.fail_save_library", e = e.to_string())
+                                    );
                                 };
                             }
                         }
-                        if button(ui, "Cancel", false).clicked() {
+                        if button(ui, &t!("ui.button.cancel").to_string(), false).clicked() {
                             self.tool_editor = None;
                         }
                     });

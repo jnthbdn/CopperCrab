@@ -1,5 +1,7 @@
 use std::path::{Path, PathBuf};
 
+use rust_i18n::t;
+
 use serde::{Deserialize, Serialize};
 
 use crate::ui::{ContextLayer, ContextParameters};
@@ -35,10 +37,16 @@ impl AppConfig {
     pub fn save(&mut self) {
         match toml::to_string_pretty(self) {
             Ok(content) => match std::fs::write(&self.file_path, content) {
-                Ok(()) => log::info!("App config saved to: {}", self.file_path.to_string_lossy()),
-                Err(e) => log::error!("Failed to write app config file: {e}"),
+                Ok(()) => log::info!(
+                    "{}",
+                    t!(
+                        "app_config.info.saved",
+                        path = self.file_path.to_string_lossy()
+                    )
+                ),
+                Err(e) => log::error!("{}", t!("app_config.error.fail_save", e = e.to_string())),
             },
-            Err(e) => log::error!("Failed to write app config file: {e}"),
+            Err(e) => log::error!("{}", t!("app_config.error.fail_save", e = e.to_string())),
         }
     }
 }

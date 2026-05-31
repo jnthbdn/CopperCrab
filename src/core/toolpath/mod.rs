@@ -2,6 +2,8 @@ use clipper2::{EndType, FillRule, JoinType, Paths};
 
 use std::fmt::{self, Write};
 
+use rust_i18n::t;
+
 use crate::core::{
     DrillLayer, PcbLayer, Primitive,
     toolpath::helpers::{arc_to_path, circle_to_path, rectangle_to_path, segment_to_path},
@@ -34,7 +36,7 @@ pub struct ToolpathGenerator {
 
 impl ToolpathGenerator {
     pub fn new(layer: &PcbLayer, is_outline: bool) -> Result<Self, ToolpathError> {
-        log::info!("Build path from layer");
+        log::info!("{}", t!("toolpath.info.build_path"));
         let mut traces: Vec<Paths> = Vec::new();
         let mut s: Self;
 

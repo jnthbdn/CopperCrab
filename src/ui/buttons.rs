@@ -1,5 +1,7 @@
 use std::path::PathBuf;
 
+use rust_i18n::t;
+
 use egui::{Color32, Layout, RichText};
 
 use crate::{
@@ -176,13 +178,18 @@ pub fn pick_gerber_file(
                             match ToolpathGenerator::new(&layer, is_outline) {
                                 Ok(generator) => *toolpath_generator = Some(generator),
                                 Err(e) => {
-                                    log::error!("{}", e);
+                                    log::error!(
+                                        "{}",
+                                        t!("ui.toolpath.error.fail_generate", e = e.to_string())
+                                    );
                                     *gerber_path = None;
                                     *toolpath_generator = None;
                                 }
                             };
                         }
-                        Err(e) => log::error!("Failed to load gerber: {}", e),
+                        Err(e) => {
+                            log::error!("{}", t!("ui.toolpath.error.fail_load", e = e.to_string()))
+                        }
                     }
                     changed = true;
                 }
@@ -244,7 +251,9 @@ pub fn pick_drill_file(
                             *drill_path = Some(path);
                             *drill_layer = Some(layer);
                         }
-                        Err(e) => log::error!("Failed to load excellon file: {e}"),
+                        Err(e) => {
+                            log::error!("{}", t!("ui.excellon.error.fail_load", e = e.to_string()))
+                        }
                     }
                 }
             }

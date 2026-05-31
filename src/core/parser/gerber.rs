@@ -1,5 +1,7 @@
 use std::{fs::File, io::BufReader, path::Path};
 
+use rust_i18n::t;
+
 use gerber_parser::{
     GerberDoc,
     gerber_types::{
@@ -15,20 +17,22 @@ use crate::core::{
 };
 
 pub fn load_gerber(path: &Path) -> Result<PcbLayer, ParseError> {
-    log::info!("Loading file '{}'", path.to_string_lossy());
+    log::info!(
+        "{}",
+        t!("gerber.info.load_file", path = path.to_string_lossy())
+    );
     let file = File::open(path).map_err(ParseError::Io)?;
     let reader = BufReader::new(file);
 
-    log::info!("Parse file");
     let gerber_doc =
         gerber_parser::parse(reader).map_err(|(_, err)| ParseError::Gerber(err.to_string()))?;
 
     let mut layer = PcbLayer::default();
 
-    log::info!("Generating layer");
+    log::info!("{}", t!("gerber.info.generate_layer"));
     generate_layer(&gerber_doc, &mut layer)?;
 
-    log::info!("Gerber file loaded");
+    log::info!("{}", t!("gerber.info.loaded"));
     Ok(layer)
 }
 
@@ -63,7 +67,7 @@ fn generate_layer(gerber_doc: &GerberDoc, layer: &mut PcbLayer) -> Result<(), Pa
                                 | InterpolationMode::CounterclockwiseCircular => {
                                     if let Some(coord) = coordinate_offset {
                                         if coord.x.is_none() || coord.y.is_none() {
-                                            return Err(ParseError::Gerber("Offset position is mandatory with (Counter) Clockwise interpolation mode".to_string()));
+                                            // return Err(ParseError::Gerber("Offset position is mandatory with (Counter) Clockwise interpolation mode".to_string()));
                                         } else {
                                             primitives.push(Primitive::Arc(Arc {
                                                 start: position.clone(),
@@ -77,7 +81,9 @@ fn generate_layer(gerber_doc: &GerberDoc, layer: &mut PcbLayer) -> Result<(), Pa
                                             }));
                                         }
                                     } else {
-                                        return Err(ParseError::Gerber("Offset position is mandatory with (Counter) Clockwise interpolation mode".to_string()));
+                                        return Err(ParseError::Gerber(
+                                            t!("gerber.error.offset_circule_mode").into(),
+                                        ));
                                     }
                                 }
                             };
@@ -113,25 +119,37 @@ fn generate_layer(gerber_doc: &GerberDoc, layer: &mut PcbLayer) -> Result<(), Pa
                     }
 
                     GCode::RegionMode(_) => {
-                        log::warn!("\tUnsupported 'Region Mode'")
+                        log::warn!(
+                            "\t{}",
+                            t!("gerber.warn.G_unsupported", function = "Region Mode")
+                        )
                     }
 
                     GCode::QuadrantMode(_quadrant_mode) => {
-                        log::warn!("\tUnsupported 'QuadrantMode'")
+                        log::warn!(
+                            "\t{}",
+                            t!("gerber.warn.G_unsupported", function = "Quadrant Mode")
+                        )
                     }
 
                     GCode::Comment(_) => (),
 
                     GCode::Unit(_) => {
-                        log::warn!("\tGCode 'Unit' is deprecated since December 2012.")
+                        log::warn!("\t{}", t!("gerber.warn.deprecated", function = "Unit"))
                     }
 
                     GCode::CoordinateMode(_) => {
-                        log::warn!("\tGCode 'CoordinateMode' is deprecated since December 2012.")
+                        log::warn!(
+                            "\t{}",
+                            t!("gerber.warn.deprecated", function = "Coordinate Mode")
+                        )
                     }
 
                     GCode::SelectAperture => {
-                        log::warn!("\tGCode 'SelectAperture' is deprecated since December 2012.")
+                        log::warn!(
+                            "\t{}",
+                            t!("gerber.warn.deprecated", function = "Select Aperture")
+                        )
                     }
                 },
 
@@ -152,7 +170,6 @@ fn parse_extended_command(cmd: &ExtendedCode, layer: &mut PcbLayer) {
     match cmd {
         ExtendedCode::CoordinateFormat(_) => {
             // Nothing to do...
-            // log::warn!("\tUnsupported extended command 'CoordinateFormat'")
         }
         ExtendedCode::Unit(unit) => {
             layer.unit = match unit {
@@ -163,79 +180,165 @@ fn parse_extended_command(cmd: &ExtendedCode, layer: &mut PcbLayer) {
 
         ExtendedCode::ApertureDefinition(_) => {
             // Nothing to do...
-            // log::warn!("\tUnsupported extended command 'ApertureDefinition'")
         }
 
         ExtendedCode::ApertureMacro(_) => {
-            log::warn!("\tUnsupported extended command 'ApertureMacro'")
+            log::warn!(
+                "\t{}",
+                t!(
+                    "gerber.warn.extended_unsupported",
+                    function = "ApertureMacro"
+                )
+            )
         }
 
         ExtendedCode::LoadPolarity(_) => {
-            log::warn!("\tUnsupported extended command 'LoadPolarity'")
+            log::warn!(
+                "\t{}",
+                t!(
+                    "gerber.warn.extended_unsupported",
+                    function = "LoadPolarity"
+                )
+            )
         }
 
         ExtendedCode::LoadMirroring(_) => {
-            log::warn!("\tUnsupported extended command 'LoadMirroring'")
+            log::warn!(
+                "\t{}",
+                t!(
+                    "gerber.warn.extended_unsupported",
+                    function = "LoadMirroring"
+                )
+            )
         }
 
         ExtendedCode::LoadRotation(_) => {
-            log::warn!("\tUnsupported extended command 'LoadRotation'")
+            log::warn!(
+                "\t{}",
+                t!(
+                    "gerber.warn.extended_unsupported",
+                    function = "LoadRotation"
+                )
+            )
         }
 
         ExtendedCode::LoadScaling(_) => {
-            log::warn!("\tUnsupported extended command 'LoadScaling'")
+            log::warn!(
+                "\t{}",
+                t!("gerber.warn.extended_unsupported", function = "LoadScaling")
+            )
         }
 
         ExtendedCode::StepAndRepeat(_) => {
-            log::warn!("\tUnsupported extended command 'StepAndRepeat'")
+            log::warn!(
+                "\t{}",
+                t!(
+                    "gerber.warn.extended_unsupported",
+                    function = "StepAndRepeat"
+                )
+            )
         }
 
         ExtendedCode::ApertureBlock(_) => {
-            log::warn!("\tUnsupported extended command 'ApertureBlock'")
+            log::warn!(
+                "\t{}",
+                t!(
+                    "gerber.warn.extended_unsupported",
+                    function = "ApertureBlock"
+                )
+            )
         }
 
         ExtendedCode::FileAttribute(_) => {
-            log::warn!("\tUnsupported extended command 'FileAttribute'")
+            log::warn!(
+                "\t{}",
+                t!(
+                    "gerber.warn.extended_unsupported",
+                    function = "FileAttribute"
+                )
+            )
         }
 
         ExtendedCode::ObjectAttribute(_) => {
-            log::warn!("\tUnsupported extended command 'ObjectAttribute'")
+            log::warn!(
+                "\t{}",
+                t!(
+                    "gerber.warn.extended_unsupported",
+                    function = "ObjectAttribute"
+                )
+            )
         }
 
         ExtendedCode::ApertureAttribute(_) => {
-            log::warn!("\tUnsupported extended command 'ApertureAttribute'")
+            log::warn!(
+                "\t{}",
+                t!(
+                    "gerber.warn.extended_unsupported",
+                    function = "ApertureAttribute"
+                )
+            )
         }
 
         ExtendedCode::DeleteAttribute(_) => {
-            log::warn!("\tUnsupported extended command 'DeleteAttribute'")
+            log::warn!(
+                "\t{}",
+                t!(
+                    "gerber.warn.extended_unsupported",
+                    function = "DeleteAttribute"
+                )
+            )
         }
 
         ExtendedCode::MirrorImage(_) => {
-            log::warn!("\tUnsupported extended command 'MirrorImage'")
+            log::warn!(
+                "\t{}",
+                t!("gerber.warn.extended_unsupported", function = "MirrorImage")
+            )
         }
 
         ExtendedCode::OffsetImage(_) => {
-            log::warn!("\tUnsupported extended command 'OffsetImage'")
+            log::warn!(
+                "\t{}",
+                t!("gerber.warn.extended_unsupported", function = "OffsetImage")
+            )
         }
 
         ExtendedCode::ScaleImage(_) => {
-            log::warn!("\tUnsupported extended command 'ScaleImage'")
+            log::warn!(
+                "\t{}",
+                t!("gerber.warn.extended_unsupported", function = "ScaleImage")
+            )
         }
 
         ExtendedCode::RotateImage(_) => {
-            log::warn!("\tUnsupported extended command 'RotateImage'")
+            log::warn!(
+                "\t{}",
+                t!("gerber.warn.extended_unsupported", function = "RotateImage")
+            )
         }
 
         ExtendedCode::ImagePolarity(_) => {
-            log::warn!("\tUnsupported extended command 'ImagePolarity'")
+            log::warn!(
+                "\t{}",
+                t!(
+                    "gerber.warn.extended_unsupported",
+                    function = "ImagePolarity"
+                )
+            )
         }
 
         ExtendedCode::AxisSelect(_) => {
-            log::warn!("\tUnsupported extended command 'AxisSelect'")
+            log::warn!(
+                "\t{}",
+                t!("gerber.warn.extended_unsupported", function = "AxisSelect")
+            )
         }
 
         ExtendedCode::ImageName(_) => {
-            log::warn!("\tUnsupported extended command 'ImageName'")
+            log::warn!(
+                "\t{}",
+                t!("gerber.warn.extended_unsupported", function = "ImageName")
+            )
         }
     }
 }
@@ -289,17 +392,26 @@ fn aperture_to_primitive(aperture: &Aperture, position: &Point2d) -> Option<Prim
         })),
 
         Aperture::Obround(_rectangular) => {
-            log::warn!("Unsupported 'Obround' aperture");
+            log::warn!(
+                "{}",
+                t!("gerber.warn.aperture_unsupported", function = "Obround")
+            );
             None
         }
 
         Aperture::Polygon(_polygon) => {
-            log::warn!("Unsupported 'Polygon' aperture");
+            log::warn!(
+                "{}",
+                t!("gerber.warn.aperture_unsupported", function = "Polygon")
+            );
             None
         }
 
         Aperture::Macro(_, _macro_decimals) => {
-            log::warn!("Unsupported 'Macro' aperture");
+            log::warn!(
+                "{}",
+                t!("gerber.warn.aperture_unsupported", function = "Macro")
+            );
             None
         }
     }
@@ -313,17 +425,26 @@ fn width_from_aperture(aperture: Option<&Aperture>) -> f64 {
             Aperture::Rectangle(rectangular) => rectangular.x.max(rectangular.y),
 
             Aperture::Obround(_rectangular) => {
-                log::warn!("Unsupported 'Obround' aperture");
+                log::warn!(
+                    "{}",
+                    t!("gerber.warn.aperture_unsupported", function = "Obround")
+                );
                 0.0
             }
 
             Aperture::Polygon(_polygon) => {
-                log::warn!("Unsupported 'Polygon' aperture");
+                log::warn!(
+                    "{}",
+                    t!("gerber.warn.aperture_unsupported", function = "Polygon")
+                );
                 0.0
             }
 
             Aperture::Macro(_, _macro_decimals) => {
-                log::warn!("Unsupported 'Macro' aperture");
+                log::warn!(
+                    "{}",
+                    t!("gerber.warn.aperture_unsupported", function = "Macro")
+                );
                 0.0
             }
         }

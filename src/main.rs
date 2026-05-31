@@ -3,6 +3,8 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+use rust_i18n::t;
+
 use crate::{
     dirs::get_config_dir,
     logger::MultiLogger,
@@ -18,6 +20,8 @@ mod ui;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
+rust_i18n::i18n!("locales", fallback = "en");
+
 fn main() {
     let log_buffer = Arc::new(Mutex::new(VecDeque::new()));
     let logger = MultiLogger::new(log_buffer.clone());
@@ -29,19 +33,28 @@ fn main() {
     let config_folder = match get_config_dir() {
         Some(f) => f,
         None => {
-            log::error!("Failed to fetch the config folder !");
+            log::error!("{}", t!("main.error.get_config_folder"));
             return;
         }
     };
 
-    log::info!("Config dir: {:?}", config_folder);
+    log::info!(
+        "{}",
+        t!(
+            "main.info.config_dir",
+            path = config_folder.to_string_lossy()
+        )
+    );
 
     if false == config_folder.exists() {
         if let Err(e) = std::fs::create_dir_all(&config_folder) {
-            log::error!("Failed to create config directory ({e})");
+            log::error!(
+                "{}",
+                t!("main.error.create_config_folder", e = e.to_string())
+            );
             return;
         } else {
-            log::info!("Create config directory !");
+            log::info!("{}", t!("main.info.create_config_folder"));
         }
     }
 

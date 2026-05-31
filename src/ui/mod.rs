@@ -4,6 +4,8 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+use rust_i18n::t;
+
 use clipper2::Paths;
 use egui::{RichText, Vec2};
 use serde::{Deserialize, Serialize};
@@ -223,7 +225,7 @@ impl CopperCrabApp {
     }
 
     fn ui_left_file(&mut self, ui: &mut egui::Ui) {
-        title_label(ui, "Files", false);
+        title_label(ui, &t!("ui.files.title"), false);
         ui.separator();
 
         if pick_gerber_file(
@@ -231,7 +233,7 @@ impl CopperCrabApp {
             &mut self.files.gerber_copper_path,
             &mut self.layers.isolation_generator,
             &["gbr", "ger", "gtl", "gbl"],
-            "Choose copper file",
+            &t!("ui.files.pick_copper"),
             false,
         ) {
             self.status_bar.set_need_regenerate(true);
@@ -243,7 +245,7 @@ impl CopperCrabApp {
             &mut self.files.gerber_outline_path,
             &mut self.layers.outline_generator,
             &["gbr", "ger", "gto", "gko"],
-            "Choose outline file",
+            &t!("ui.files.pick_outline"),
             true,
         ) {
             self.status_bar.set_need_regenerate(true);
@@ -254,21 +256,21 @@ impl CopperCrabApp {
             ui,
             &mut self.files.drill_path,
             &mut self.layers.drill,
-            "Choose drill file",
+            &t!("ui.files.pick_drill"),
         );
     }
 
     fn ui_left_tools(&mut self, ui: &mut egui::Ui) {
-        title_label(ui, "Tools", true);
+        title_label(ui, &t!("ui.select_tool.title"), true);
         ui.separator();
 
         // Isolation — VBit or EndMill
-        ui.label("Isolation tool");
+        ui.label(t!("ui.select_tool.isolation"));
         if egui::ComboBox::from_id_salt("isolation_tool")
             .selected_text(self.isolation_tool_name())
             .width(ui.available_width())
             .show_ui(ui, |ui| {
-                ui.label(RichText::new("V-Bits").color(TEXT_SECONDARY));
+                ui.label(RichText::new(t!("ui.label.library.vbit")).color(TEXT_SECONDARY));
                 for (i, vbit) in self.tools.tool_library.vbits.iter().enumerate() {
                     ui.selectable_value(
                         &mut self.tools.isolation_tool,
@@ -277,7 +279,7 @@ impl CopperCrabApp {
                     );
                 }
 
-                ui.label(RichText::new("End mills").color(TEXT_SECONDARY));
+                ui.label(RichText::new(t!("ui.label.library.end_mill")).color(TEXT_SECONDARY));
                 for (i, end_mill) in self.tools.tool_library.end_mills.iter().enumerate() {
                     ui.selectable_value(
                         &mut self.tools.isolation_tool,
@@ -294,7 +296,7 @@ impl CopperCrabApp {
 
         // Outline — EndMill only
         ui.add_space(4.0);
-        ui.label("Outline tool");
+        ui.label(t!("ui.select_tool.outline"));
         if egui::ComboBox::from_id_salt("outline_tool")
             .selected_text(self.outline_tool_name())
             .width(ui.available_width())
@@ -315,7 +317,7 @@ impl CopperCrabApp {
 
         // Drill — DrillBit only
         ui.add_space(4.0);
-        ui.label("Drill tool");
+        ui.label(t!("ui.select_tool.drill"));
         egui::ComboBox::from_id_salt("drill_tool")
             .selected_text(self.drill_tool_name())
             .width(ui.available_width())
@@ -330,31 +332,41 @@ impl CopperCrabApp {
             });
 
         ui.add_space(16.0);
-        if button_primary(ui, "Tool Library...", true).clicked() {
+        if button_primary(ui, &t!("ui.button.tool_library"), true).clicked() {
             self.tools.tool_library_open = true;
         }
     }
 
     fn ui_left_layers(&mut self, ui: &mut egui::Ui) {
-        title_label(ui, "Layers", true);
+        title_label(ui, &t!("ui.label.layer.title"), true);
         ui.separator();
 
-        Self::layer_row(ui, "Copper", COPPER, &mut self.layers.show_copper);
         Self::layer_row(
             ui,
-            "Copper Toolpaths",
+            &t!("ui.label.layer.copper"),
+            COPPER,
+            &mut self.layers.show_copper,
+        );
+        Self::layer_row(
+            ui,
+            &t!("ui.label.layer.copper_toolpath"),
             SUCCESS,
             &mut self.layers.show_copper_toolpaths,
         );
         Self::layer_row(ui, "Outline", WARNING, &mut self.layers.show_outline);
         Self::layer_row(
             ui,
-            "Outline Toolpaths",
+            &t!("ui.label.layer.outline_toolpath"),
             ACCENT,
             &mut self.layers.show_outline_toolpaths,
         );
 
-        Self::layer_row(ui, "Drill", TEXT_PRIMARY, &mut self.layers.show_drill);
+        Self::layer_row(
+            ui,
+            &t!("ui.label.layer.drill"),
+            TEXT_PRIMARY,
+            &mut self.layers.show_drill,
+        );
     }
 
     fn layer_row(ui: &mut egui::Ui, label: &str, color: egui::Color32, visible: &mut bool) {
@@ -382,7 +394,9 @@ impl CopperCrabApp {
                     || (self.files.gerber_outline_path.is_some()
                         && self.tools.outline_tool != SelectedTool::None),
                 |ui| {
-                    if button_primary(ui, "Run toolpath generation", true).clicked() {
+                    if button_primary(ui, &t!("ui.button.generate_toolpath").to_string(), true)
+                        .clicked()
+                    {
                         self.run_toolpath_generation();
                     }
                 },
@@ -393,14 +407,18 @@ impl CopperCrabApp {
     }
 
     fn ui_right_parameters_common(&mut self, ui: &mut egui::Ui) {
-        title_label(ui, "Common parameters", false);
+        title_label(
+            ui,
+            &t!("ui.label.parameters.common.title").to_string(),
+            false,
+        );
         ui.separator();
 
         egui::Grid::new("common_parameter_grid")
             .num_columns(2)
             .striped(true)
             .show(ui, |ui| {
-                ui.label("Z-Safe");
+                ui.label(t!("ui.label.parameters.common.safe_z"));
                 if ui
                     .add(
                         egui::DragValue::new(&mut self.parameters.z_safe)
@@ -408,14 +426,14 @@ impl CopperCrabApp {
                             .speed(0.1)
                             .suffix(" mm"),
                     )
-                    .on_hover_text("Distance above the PCB where the tool moves at rapid speed between cuts. Must be high enough to clear any clamps or board edges.")
+                    .on_hover_text(t!("ui.tooltip.parameters.common.safe_z"))
                     .changed()
                 {
                     self.status_bar.set_need_regenerate(true);
                 }
                 ui.end_row();
 
-                ui.label("Z-Finish");
+                ui.label(t!("ui.label.parameters.common.final_z"));
                 if ui
                     .add(
                         egui::DragValue::new(&mut self.parameters.z_finish)
@@ -423,7 +441,7 @@ impl CopperCrabApp {
                             .speed(0.1)
                             .suffix(" mm"),
                     )
-                    .on_hover_text("Final Z position after the program ends. Usually higher than Z-safe to allow easy workpiece removal.")
+                    .on_hover_text(t!("ui.tooltip.parameters.common.final_z"))
                     .changed()
                 {
                     self.status_bar.set_need_regenerate(true);
@@ -433,7 +451,11 @@ impl CopperCrabApp {
     }
 
     fn ui_right_parameters_isolation(&mut self, ui: &mut egui::Ui) {
-        title_label(ui, "Isolation parameters", true);
+        title_label(
+            ui,
+            &t!("ui.label.parameters.isolation.title").to_string(),
+            true,
+        );
         ui.separator();
 
         let iso_width = match self.tools.isolation_tool {
@@ -450,7 +472,7 @@ impl CopperCrabApp {
             .num_columns(2)
             .striped(true)
             .show(ui, |ui| {
-                ui.label("Isolation depth");
+                ui.label(t!("ui.label.parameters.isolation.depth"));
                 if ui
                     .add(
                         egui::DragValue::new(&mut self.parameters.isolation_depth)
@@ -458,32 +480,39 @@ impl CopperCrabApp {
                             .speed(0.01)
                             .suffix(" mm"),
                     )
-                    .on_hover_text("Depth of the isolation cut into the copper layer. Deeper = wider cut (V-bit). Typical range: 0.05mm to 0.2mm for PCB copper.")
+                    .on_hover_text(t!("ui.tooltip.parameters.isolation.depth"))
                     .changed()
                 {
                     self.status_bar.set_need_regenerate(true);
                 }
                 ui.end_row();
 
-                ui.label(RichText::new("\t> Cutting width").color(TEXT_SECONDARY));
+                //Cutting width
+                ui.label(
+                    RichText::new(format!(
+                        "\t> {}",
+                        t!("ui.label.parameters.isolation.depth_result")
+                    ))
+                    .color(TEXT_SECONDARY),
+                );
                 ui.label(RichText::new(format!("{:.2} mm", iso_width)).color(TEXT_SECONDARY));
                 ui.end_row();
 
-                ui.label("Passes");
+                ui.label(t!("ui.label.parameters.isolation.passes"));
                 if ui
                     .add(
                         egui::DragValue::new(&mut self.parameters.isolation_passes)
                             .range(1..=50)
                             .speed(1),
                     )
-                    .on_hover_text("Number of isolation passes around each trace. More passes = wider clearance between traces. Minimum 1.")
+                    .on_hover_text(t!("ui.tooltip.parameters.isolation.passes"))
                     .changed()
                 {
                     self.status_bar.set_need_regenerate(true);
                 }
                 ui.end_row();
 
-                ui.label("Overlap");
+                ui.label(t!("ui.label.parameters.isolation.overlap"));
                 if ui
                     .add(
                         egui::DragValue::new(&mut self.parameters.isolation_overlap)
@@ -491,7 +520,7 @@ impl CopperCrabApp {
                             .speed(1)
                             .suffix(" %"),
                     )
-                    .on_hover_text("Overlap between consecutive isolation passes, as a percentage of the cutting width. 0% = passes are adjacent, 50% = each pass overlaps the previous by half.")
+                    .on_hover_text(t!("ui.tooltip.parameters.isolation.overlap"))
                     .changed()
                 {
                     self.status_bar.set_need_regenerate(true);
@@ -501,14 +530,18 @@ impl CopperCrabApp {
     }
 
     fn ui_right_parameters_outline(&mut self, ui: &mut egui::Ui) {
-        title_label(ui, "Outline parameters", true);
+        title_label(
+            ui,
+            &t!("ui.label.parameters.outline.title").to_string(),
+            true,
+        );
         ui.separator();
 
         egui::Grid::new("outline_parameter_grid")
             .num_columns(2)
             .striped(true)
             .show(ui, |ui| {
-                ui.label("PCB thickness");
+                ui.label(t!("ui.label.parameters.outline.depth"));
                 if ui
                     .add(
                         egui::DragValue::new(&mut self.parameters.outline_depth)
@@ -516,7 +549,7 @@ impl CopperCrabApp {
                             .speed(0.1)
                             .suffix(" mm"),
                     )
-                    .on_hover_text("Total PCB thickness. The end mill will cut all the way through this depth to separate the board from the substrate. Typical FR4: 1.6mm.")
+                    .on_hover_text(t!("ui.tooltip.parameters.outline.depth"))
                     .changed()
                 {
                     self.status_bar.set_need_regenerate(true);
@@ -526,37 +559,37 @@ impl CopperCrabApp {
     }
 
     fn ui_right_parameters_drill(&mut self, ui: &mut egui::Ui) {
-        title_label(ui, "Drill parameters", true);
+        title_label(ui, &t!("ui.label.parameters.drill.title").to_string(), true);
         ui.separator();
 
         egui::Grid::new("drill_parameter_grid")
             .num_columns(2)
             .striped(true)
             .show(ui, |ui| {
-                ui.label("Drill Peck step");
+                ui.label(t!("ui.label.parameters.drill.drill_peck"));
                 ui.add(
                     egui::DragValue::new(&mut self.parameters.drill_peck_step)
                         .range(0.1..=10.0)
                         .speed(0.1)
                         .suffix(" mm"),
                 )
-                .on_hover_text("Depth increment per peck. The drill plunges this distance, retracts to clear chips, then plunges again. Smaller values = safer for thin drills, but slower. Typical: 0.3mm to 0.8mm.");
+                .on_hover_text(t!("ui.tooltip.parameters.drill_peck"));
                 ui.end_row();
 
-                ui.label("Drill detpth");
+                ui.label(t!("ui.label.parameters.drill.drill_depth"));
                 ui.add(
                     egui::DragValue::new(&mut self.parameters.drill_depth)
                         .range(0.1..=20.0)
                         .speed(0.1)
                         .suffix(" mm"),
                 )
-                .on_hover_text("Total drilling depth in mm. Should be slightly greater than the PCB thickness to ensure the drill breaks through completely. Typical FR4 1.6mm board: set to 1.8mm to 2.0mm.");
+                .on_hover_text(t!("ui.tooltip.parameters.drill_depth"));
                 ui.end_row();
             });
     }
 
     fn ui_right_export(&mut self, ui: &mut egui::Ui) {
-        title_label(ui, "Exports", true);
+        title_label(ui, &t!("ui.label.exports").to_string(), true);
         ui.separator();
 
         ui.horizontal(|ui| {
@@ -565,15 +598,15 @@ impl CopperCrabApp {
                 .output_folder
                 .as_ref()
                 .and_then(|p| p.file_name())
-                .and_then(|n| n.to_str())
-                .unwrap_or("Select output folder");
+                .and_then(|n| Some(n.to_string_lossy()))
+                .unwrap_or(t!("ui.label.select_output_folder"));
 
             let output_dir = self
                 .files
                 .output_folder
                 .as_ref()
-                .and_then(|n| n.to_str())
-                .unwrap_or("Select output folder");
+                .and_then(|n| Some(n.to_string_lossy()))
+                .unwrap_or(t!("ui.label.select_output_folder"));
 
             ui.colored_label(
                 if self.files.output_folder.is_some() {
@@ -595,17 +628,25 @@ impl CopperCrabApp {
 
         Self::export_row(
             ui,
-            "Isolation toolpaths",
+            &t!("ui.label.export_isolation_toolpath").to_string(),
             &mut self.parameters.export_isolation,
         );
-        Self::export_row(ui, "Outline toolpaths", &mut self.parameters.export_outline);
-        Self::export_row(ui, "Drill", &mut self.parameters.export_drill);
+        Self::export_row(
+            ui,
+            &t!("ui.label.export_outline_toolpath").to_string(),
+            &mut self.parameters.export_outline,
+        );
+        Self::export_row(
+            ui,
+            &t!("ui.label.export_drill").to_string(),
+            &mut self.parameters.export_drill,
+        );
 
         ui.add_space(16.0);
         ui.add_enabled_ui(
             !self.status_bar.is_need_regenerate() && self.files.output_folder.is_some(),
             |ui| {
-                if button_primary(ui, "Export files", true).clicked() {
+                if button_primary(ui, &t!("ui.button.export_files").to_string(), true).clicked() {
                     self.export_to_gcode();
                 }
             },
@@ -765,23 +806,23 @@ impl CopperCrabApp {
                 .tool_library
                 .vbits
                 .get(*id)
-                .map_or(PICK_TOOL.into(), |v| v.to_string()),
+                .map_or(t!("ui.tool.pick").into(), |v| v.to_string()),
 
             SelectedTool::EndMill(id) => self
                 .tools
                 .tool_library
                 .end_mills
                 .get(*id)
-                .map_or(PICK_TOOL.into(), |v| v.to_string()),
+                .map_or(t!("ui.tool.pick").into(), |v| v.to_string()),
 
             SelectedTool::Drill(id) => self
                 .tools
                 .tool_library
                 .drill_bits
                 .get(*id)
-                .map_or(PICK_TOOL.into(), |v| v.to_string()),
+                .map_or(t!("ui.tool.pick").into(), |v| v.to_string()),
 
-            SelectedTool::None => PICK_TOOL.into(),
+            SelectedTool::None => t!("ui.tool.pick").into(),
         }
     }
 
@@ -815,13 +856,13 @@ impl CopperCrabApp {
                         self.parameters.isolation_overlap / 100.0,
                     ));
                 } else {
-                    log::error!("Bad isolation tool !");
+                    log::error!("{}", t!("ui.error.bad_isolation_tool"));
                     self.layers.isolation = None;
                     return;
                 }
             }
         } else {
-            log::warn!("No file/tool selected for isolation toolpath. Skip.");
+            log::warn!("{}", t!("ui.warn.no_isolation_toolpath"));
         }
 
         if self.files.gerber_outline_path.is_some() && self.tools.outline_tool != SelectedTool::None
@@ -840,13 +881,13 @@ impl CopperCrabApp {
                         self.parameters.isolation_overlap / 100.0,
                     ));
                 } else {
-                    log::error!("Bad outline tool !");
+                    log::error!("{}", t!("ui.error.bad_outline_tool"));
                     self.layers.outline = None;
                     return;
                 }
             }
         } else {
-            log::warn!("No file/tool selected for outline toolpath. Skip.");
+            log::warn!("{}", t!("ui.warn.no_outline_toolpath"));
         }
 
         self.status_bar.set_need_regenerate(false);
@@ -854,7 +895,7 @@ impl CopperCrabApp {
 
     fn export_to_gcode(&self) {
         if self.files.output_folder.is_none() {
-            log::warn!("No output folder selected.");
+            log::warn!("{}", t!("ui.warn.no_output_folder"));
             return;
         }
 
@@ -880,7 +921,7 @@ impl CopperCrabApp {
                     self.parameters.z_safe,
                 );
             } else {
-                log::error!("Bad isolation tool!");
+                log::error!("{}", t!("ui.error.bad_isolation_tool"));
                 return;
             }
 
@@ -892,8 +933,14 @@ impl CopperCrabApp {
                 .join("isolation.nc");
 
             match std::fs::write(&gcode_file, gcode) {
-                Ok(_) => log::info!("Isolation gcode write to {}", gcode_file.to_string_lossy()),
-                Err(e) => log::error!("Failed to write isolation gcode file. {e}"),
+                Ok(_) => log::info!(
+                    "{}",
+                    t!(
+                        "ui.info.isolation_write",
+                        path = gcode_file.to_string_lossy()
+                    )
+                ),
+                Err(e) => log::error!("{}", t!("ui.error.fail_write_isolation", e = e.to_string())),
             }
         }
 
@@ -911,7 +958,7 @@ impl CopperCrabApp {
                     self.parameters.z_safe,
                 );
             } else {
-                log::error!("Bad outline tool!");
+                log::error!("{}", t!("ui.error.bad_outline_tool"));
                 return;
             }
 
@@ -922,8 +969,11 @@ impl CopperCrabApp {
                 .unwrap()
                 .join("outline.nc");
             match std::fs::write(&gcode_file, gcode) {
-                Ok(_) => log::info!("Outline gcode write to {}", gcode_file.to_string_lossy()),
-                Err(e) => log::error!("Failed to write outline gcode file. {e}"),
+                Ok(_) => log::info!(
+                    "{}",
+                    t!("ui.info.outline_write", path = gcode_file.to_string_lossy())
+                ),
+                Err(e) => log::error!("{}", t!("ui.error.fail_write_outline", e = e.to_string())),
             }
         }
 
@@ -942,14 +992,17 @@ impl CopperCrabApp {
                     self.parameters.drill_peck_step,
                 );
             } else {
-                log::error!("Bad drill tool!");
+                log::error!("{}", t!("ui.error.bad_drill_tool"));
                 return;
             }
 
             let gcode_file = self.files.output_folder.as_ref().unwrap().join("drill.nc");
             match std::fs::write(&gcode_file, gcode) {
-                Ok(_) => log::info!("Drill gcode write to {}", gcode_file.to_string_lossy()),
-                Err(e) => log::error!("Failed to write drill gcode file. {e}"),
+                Ok(_) => log::info!(
+                    "{}",
+                    t!("ui.info.drill_write", path = gcode_file.to_string_lossy())
+                ),
+                Err(e) => log::error!("{}", t!("ui.error.fail_write_drill", e = e.to_string())),
             }
         }
     }
@@ -1027,7 +1080,7 @@ impl eframe::App for CopperCrabApp {
 
         egui::Panel::right("right_panel")
             .resizable(false)
-            .exact_size(200.0)
+            .min_size(200.0)
             .show_inside(ui, |ui| {
                 self.ui_right(ui);
             });

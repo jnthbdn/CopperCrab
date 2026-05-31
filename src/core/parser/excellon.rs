@@ -1,11 +1,16 @@
 use std::collections::HashMap;
 use std::path::Path;
 
+use rust_i18n::t;
+
 use crate::core::parser::ParseError;
 use crate::core::{DrillHole, DrillLayer};
 
 pub fn load_excellon(path: &Path) -> Result<DrillLayer, ParseError> {
-    log::info!("Loading Excellon: {}", path.display());
+    log::info!(
+        "{}",
+        t!("excellon.info.load_file", path = path.display().to_string())
+    );
 
     let content = std::fs::read_to_string(path)?;
     let mut tools: HashMap<u32, f64> = HashMap::new();
@@ -41,11 +46,6 @@ pub fn load_excellon(path: &Path) -> Result<DrillLayer, ParseError> {
         if line.starts_with('T') {
             if let Ok(id) = line[1..].parse::<u32>() {
                 current_tool_diameter = tools.get(&id).copied();
-                log::debug!(
-                    "Tool T{} selected — diameter: {:?}mm",
-                    id,
-                    current_tool_diameter
-                );
             }
             continue;
         }
@@ -66,7 +66,7 @@ pub fn load_excellon(path: &Path) -> Result<DrillLayer, ParseError> {
         }
     }
 
-    log::info!("Excellon loaded: {} holes", holes.len());
+    log::info!("{}", t!("excellon.info.loaded", holes = holes.len()));
     Ok(DrillLayer { holes })
 }
 
