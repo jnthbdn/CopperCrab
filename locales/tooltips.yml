@@ -1,0 +1,80 @@
+_version: 2
+
+ui.tooltip.library.angle:
+  en: "Opening angle of the V in degrees. Determines cutting width based on depth. Typical values: 10°, 30°, 60° or 90°"
+  fr: "Angle d'ouverture du V en degrés. Détermine la largeur de coupe en fonction de la profondeur. Valeurs typiques : 10°, 30°, 60° ou 90°"
+
+ui.tooltip.library.diameter:
+  en: "Tool diameter. Directly corresponds to the cutting width for end mills, and hole diameter for drill bits"
+  fr: "Diamètre de l'outil. Correspond directement à la largeur de coupe pour les fraises, et au diamètre du trou pour les forets"
+
+ui.tooltip.library.feed_rate:
+  en: "XY movement speed during cutting in mm/min. Too high a value degrades cut quality and risks breaking the tool"
+  fr: "Vitesse de déplacement XY pendant la coupe en mm/min. Une valeur trop élevée dégrade la qualité de coupe et risque de casser l'outil"
+
+ui.tooltip.library.max_depth:
+  en: "Maximum depth per pass. The G-code generator automatically splits into multiple passes if the total depth exceeds this value"
+  fr: "Profondeur maximale par passe. Le générateur G-code découpe automatiquement en plusieurs passes si la profondeur totale dépasse cette valeur"
+
+ui.tooltip.library.name:
+  en: "Name displayed in the tool library"
+  fr: "Nom affiché dans la bibliothèque d'outils"
+
+ui.tooltip.library.plunge_rate:
+  en: "Z plunge speed in mm/min. Should be significantly lower than feed_rate to protect the tool when entering the material"
+  fr: "Vitesse de plongée en Z en mm/min. Doit être significativement plus faible que la vitesse d'avance pour préserver l'outil lors de l'entrée dans la matière"
+
+ui.tooltip.library.spindle_speed:
+  en: "Spindle rotation speed in RPM. V-bit: ~20000, End mill: ~15000, Drill: ~8000. Depends on tool diameter and material"
+  fr: "Vitesse de rotation de la broche en RPM. V-bit : ~20000, Fraise : ~15000, Foret : ~8000. Dépend du diamètre de l'outil et du matériau"
+
+ui.tooltip.library.tip_diameter:
+  en: "Diameter of the V-bit tip. A 0.0mm tip is theoretical — in practice 0.1mm minimum to avoid breakage"
+  fr: "Diamètre de la pointe du V-bit. Une pointe à 0.0mm est théorique — en pratique 0.1mm minimum pour éviter la casse"
+
+ui.tooltip.parameters.common.final_z:
+  en: "Final Z position after the program ends. Usually higher than Z-safe to allow easy workpiece removal."
+  fr: "Position Z finale après la fin du programme. Généralement plus haute que le Z de sécurité pour faciliter le retrait de la pièce."
+
+ui.tooltip.parameters.common.safe_z:
+  en: "Distance above the PCB where the tool moves at rapid speed between cuts. Must be high enough to clear any clamps or board edges."
+  fr: "Hauteur au-dessus du PCB où l'outil se déplace en rapide entre les coupes. Doit être suffisamment haute pour dégager les brides et les bords du circuit."
+
+ui.tooltip.parameters.drill_depth:
+  en: "Total drilling depth in mm. Should be slightly greater than the PCB thickness to ensure the drill breaks through completely. Typical FR4 1.6mm board: set to 1.8mm to 2.0mm."
+  fr: "Profondeur de perçage totale en mm. Doit être légèrement supérieure à l'épaisseur du PCB pour s'assurer que le foret perce complètement. PCB FR4 1.6mm typique : régler à 1.8mm ou 2.0mm."
+
+ui.tooltip.parameters.drill_peck:
+  en: "Depth increment per peck. The drill plunges this distance, retracts to clear chips, then plunges again. Smaller values = safer for thin drills, but slower. Typical: 0.3mm to 0.8mm."
+  fr: "Incrément de profondeur par débourrage. Le foret plonge de cette distance, remonte pour évacuer les copeaux, puis replonge. Des valeurs plus faibles = plus sûr pour les petits forets, mais plus lent. Typique : 0.3mm à 0.8mm."
+
+ui.tooltip.parameters.isolation.depth:
+  en: "Depth of the isolation cut into the copper layer. Deeper = wider cut (V-bit). Typical range: 0.05mm to 0.2mm for PCB copper."
+  fr: "Profondeur de la coupe d'isolation dans la couche de cuivre. Plus profond = coupe plus large (V-bit). Plage typique : 0.05mm à 0.2mm pour le cuivre de PCB."
+
+ui.tooltip.parameters.isolation.overlap:
+  en: "Overlap between consecutive isolation passes, as a percentage of the cutting width. 0% = passes are adjacent, 50% = each pass overlaps the previous by half."
+  fr: "Recouvrement entre les passes d'isolation consécutives, en pourcentage de la largeur de coupe. 0% = passes adjacentes, 50% = chaque passe recouvre la précédente de moitié."
+
+ui.tooltip.parameters.isolation.passes:
+  en: "Number of isolation passes around each trace. More passes = wider clearance between traces. Minimum 1."
+  fr: "Nombre de passes d'isolation autour de chaque piste. Plus de passes = dégagement plus large entre les pistes. Minimum 1."
+
+ui.tooltip.parameters.outline.depth:
+  en: "Total PCB thickness. The end mill will cut all the way through this depth to separate the board from the substrate. Typical FR4: 1.6mm."
+  fr: "Épaisseur totale du PCB. La fraise découpera sur toute cette profondeur pour séparer le circuit du substrat. FR4 typique : 1.6mm."
+
+ui.tooltip.parameters.outline.tab_count:
+  en: "Number of tabs (bridges) to keep the board attached to the substrate during outline cutting. 0 = no tabs. Typical: 4 to 8 tabs depending on board size."
+  fr: "Nombre de tabs (ponts) pour maintenir le circuit attaché au substrat pendant la découpe de contour. 0 = pas de tabs. Typique : 4 à 8 tabs selon la taille du circuit."
+
+ui.tooltip.parameters.outline.tab_length:
+  en: "Length of each tab along the cut path in mm. Longer tabs are stronger but harder to break off cleanly. Typical: 2mm to 5mm."
+  fr: "Longueur de chaque tab le long du chemin de coupe en mm. Des tabs plus longs sont plus solides mais plus difficiles à casser proprement. Typique : 2mm à 5mm."
+
+ui.tooltip.parameters.outline.tab_thickness:
+  en: "Remaining material thickness at each tab in mm. Must be less than the total outline depth. Typical: 0.4mm to 0.8mm for FR4."
+  fr: "Épaisseur de matière restante à chaque tab en mm. Doit être inférieure à la profondeur totale de contour. Typique : 0.4mm à 0.8mm pour du FR4."
+
+
+  

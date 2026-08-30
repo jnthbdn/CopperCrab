@@ -1,0 +1,181 @@
+_version: 2
+
+
+
+ui.label.click_to_enlarge:
+  en: "Click to enlarge"
+  fr: "Cliquer pour agrandir"
+
+ui.label.export_drill:
+  en: "Drill file"
+  fr: "Fichier de perçage"
+
+ui.label.export_isolation_toolpath:
+  en: "Isolation toolpath"
+  fr: "Chemin d'isolation"
+
+ui.label.export_outline_toolpath:
+  en: "Outline toolpath"
+  fr: "Chemin de contour"
+
+ui.label.exports:
+  en: "Exports"
+  fr: "Exports"
+
+ui.label.layer.copper_toolpath:
+  en: "Isolation toolpaths"
+  fr: "Chemins d'isolation"
+
+ui.label.layer.copper:
+  en: "Copper"
+  fr: "Cuivre"
+
+ui.label.layer.drill:
+  en: "Drill holes"
+  fr: "Trous de perçage"
+
+ui.label.layer.outline_toolpath:
+  en: "Outline toolpaths"
+  fr: "Chemins de contour"
+
+ui.label.layer.title:
+  en: "Layers"
+  fr: "Calques"
+
+ui.label.library.angle:
+  en: "Angle"
+  fr: "Angle"
+
+ui.label.library.default_drill_name:
+  en: "New drill"
+  fr: "Nouveau foret"
+
+ui.label.library.default_end_mill_name:
+  en: "New end-mill"
+  fr: "Nouvelle fraise"
+
+ui.label.library.default_vbit_name:
+  en: "New V-Bit"
+  fr: "Nouveau V-Bit"
+
+ui.label.library.diameter:
+  en: "Diameter"
+  fr: "Diamètre"
+
+ui.label.library.drill:
+  en: "Drill"
+  fr: "Foret"
+
+ui.label.library.end_mill:
+  en: "End-mill"
+  fr: "Fraise"
+
+ui.label.library.feed_rate:
+  en: "Feed rate"
+  fr: "Vitesse d'avance"
+
+ui.label.library.max_depth:
+  en: "Max depth"
+  fr: "Prof. max."
+
+ui.label.library.name:
+  en: "Name"
+  fr: "Nom"
+
+ui.label.library.plunge_rate:
+  en: "Plunge rate"
+  fr: "Vitesse de plongée"
+
+ui.label.library.short_diameter:
+  en: "dia."
+  fr: "dia."
+
+ui.label.library.spindle_speed:
+  en: "Spindle speed"
+  fr: "Vitesse broche"
+
+ui.label.library.tip:
+  en: "Tip"
+  fr: "Pointe"
+
+ui.label.library.tip_diameter:
+  en: "Tip diameter"
+  fr: "Diamètre de pointe"
+
+ui.label.library.vbit:
+  en: "V-Bit"
+  fr: "V-Bit"
+
+ui.label.logs:
+  en: "Logs"
+  fr: "Logs"
+
+ui.label.parameters.common.final_z:
+  en: "Final Z"
+  fr: "Z final"
+
+ui.label.parameters.common.safe_z:
+  en: "Safe Z"
+  fr: "Z sécurité"
+
+ui.label.parameters.common.title:
+  en: "Common parameters"
+  fr: "Paramètres communs"
+
+ui.label.parameters.drill.drill_depth:
+  en: "Drill depth"
+  fr: "Profondeur de perçage"
+
+ui.label.parameters.drill.drill_peck:
+  en: "Drill peck step"
+  fr: "Pas de débourrage"
+
+ui.label.parameters.drill.title:
+  en: "Drill parameters"
+  fr: "Paramètres de perçage"
+
+ui.label.parameters.isolation.depth:
+  en: "Isolation depth"
+  fr: "Profondeur d'isolation"
+
+ui.label.parameters.isolation.depth_result:
+  en: "Cutting width"
+  fr: "Largeur de coupe"
+
+ui.label.parameters.isolation.overlap:
+  en: "Overlap"
+  fr: "Recouvrement"
+
+ui.label.parameters.isolation.passes:
+  en: "Passes"
+  fr: "Passes"
+
+ui.label.parameters.isolation.title:
+  en: "Isolation parameters"
+  fr: "Paramètres d'isolation"
+
+ui.label.parameters.outline.depth:
+  en: "Depth"
+  fr: "Profondeur"
+
+ui.label.parameters.outline.title:
+  en: "Outline parameters"
+  fr: "Paramètres de contour"
+
+ui.label.parameters.outline.tab_count:
+  en: "Tab count"
+  fr: "Nombre de tabs"
+
+ui.label.parameters.outline.tab_length:
+  en: "Tab length"
+  fr: "Longueur des tabs"
+  
+ui.label.parameters.outline.tab_thickness:
+  en: "Tab thickness"
+  fr: "Épaisseur des tabs"
+
+ui.label.select_output_folder:
+  en: "Select output folder"
+  fr: "Choisir le dossier de sortie"
+
+
