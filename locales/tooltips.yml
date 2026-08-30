@@ -40,6 +40,10 @@ ui.tooltip.parameters.common.safe_z:
   en: "Distance above the PCB where the tool moves at rapid speed between cuts. Must be high enough to clear any clamps or board edges."
   fr: "Hauteur au-dessus du PCB où l'outil se déplace en rapide entre les coupes. Doit être suffisamment haute pour dégager les brides et les bords du circuit."
 
+ui.tooltip.parameters.common.move_origin:
+  en: "Shifts the design so its origin aligns with (0,0) before G-code generation. Corrects the offset — often significant — found in Gerber files exported from CAD/EDA software, keeping the toolpath within the machine's working area."
+  fr: "Déplace le dessin pour que son origine coïncide avec (0,0) avant la génération du G-code. Corrige le décalage — souvent important — présent dans les fichiers Gerber exportés depuis les logiciels de CAO/EDA, afin que le tracé reste dans la zone de travail de la machine."
+
 ui.tooltip.parameters.drill_depth:
   en: "Total drilling depth in mm. Should be slightly greater than the PCB thickness to ensure the drill breaks through completely. Typical FR4 1.6mm board: set to 1.8mm to 2.0mm."
   fr: "Profondeur de perçage totale en mm. Doit être légèrement supérieure à l'épaisseur du PCB pour s'assurer que le foret perce complètement. PCB FR4 1.6mm typique : régler à 1.8mm ou 2.0mm."

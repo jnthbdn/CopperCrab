@@ -13,6 +13,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     core::{
         DrillLayer,
+        geometry::Point2d,
         toolpath::{ToolpathGenerator, generate_drill_gcode, generate_isolation_gcode},
         tools::{CncTool, library::ToolLibrary},
     },
@@ -75,6 +76,7 @@ struct ContextTools {
 pub(crate) struct ContextParameters {
     z_safe: f64,
     z_finish: f64,
+    move_origin: bool,
     isolation_depth: f64,
     isolation_passes: u32,
     isolation_overlap: f64,
@@ -140,6 +142,7 @@ impl Default for ContextParameters {
         Self {
             z_safe: 3.0,
             z_finish: 5.0,
+            move_origin: false,
             isolation_depth: 0.1,
             isolation_passes: 2,
             isolation_overlap: 50.0,
@@ -446,6 +449,11 @@ impl CopperCrabApp {
                 {
                     self.status_bar.set_need_regenerate(true);
                 }
+                ui.end_row();
+
+                ui.label(t!("ui.label.parameters.common.move_origin"));
+                toggle(ui, &mut self.parameters.move_origin)
+                    .on_hover_text(t!("ui.tooltip.parameters.common.move_origin"));
                 ui.end_row();
             });
     }
@@ -898,11 +906,56 @@ impl CopperCrabApp {
             log::warn!("{}", t!("ui.warn.no_output_folder"));
             return;
         }
+        let mut offset: Option<Point2d> = None;
+
+        if self.parameters.export_outline
+            && self.layers.outline.is_some()
+            && self.tools.outline_tool != SelectedTool::None
+        {
+            if self.parameters.move_origin {
+                let min = self.layers.outline.as_ref().unwrap()[0].bounds().min;
+                offset = Some(Point2d::new(-min.x(), -min.y()));
+            }
+
+            let gcode;
+            if let SelectedTool::EndMill(id) = self.tools.outline_tool {
+                gcode = generate_isolation_gcode(
+                    self.layers.outline.as_ref().unwrap(),
+                    &self.tools.tool_library.end_mills[id],
+                    self.parameters.outline_depth,
+                    self.parameters.z_safe,
+                    self.parameters.z_safe,
+                    offset.as_ref().unwrap_or(&Point2d::new(0.0, 0.0)),
+                );
+            } else {
+                log::error!("{}", t!("ui.error.bad_outline_tool"));
+                return;
+            }
+
+            let gcode_file = self
+                .files
+                .output_folder
+                .as_ref()
+                .unwrap()
+                .join("outline.nc");
+            match std::fs::write(&gcode_file, gcode) {
+                Ok(_) => log::info!(
+                    "{}",
+                    t!("ui.info.outline_write", path = gcode_file.to_string_lossy())
+                ),
+                Err(e) => log::error!("{}", t!("ui.error.fail_write_outline", e = e.to_string())),
+            }
+        }
 
         if self.parameters.export_isolation
             && self.layers.isolation.is_some()
             && self.tools.isolation_tool != SelectedTool::None
         {
+            if self.parameters.move_origin && offset.is_none() {
+                let min = self.layers.isolation.as_ref().unwrap()[0].bounds().min;
+                offset = Some(Point2d::new(-min.x(), -min.y()));
+            }
+
             let gcode;
             if let SelectedTool::VBit(id) = self.tools.isolation_tool {
                 gcode = generate_isolation_gcode(
@@ -911,6 +964,7 @@ impl CopperCrabApp {
                     self.parameters.isolation_depth,
                     self.parameters.z_safe,
                     self.parameters.z_finish,
+                    offset.as_ref().unwrap_or(&Point2d::new(0.0, 0.0)),
                 );
             } else if let SelectedTool::EndMill(id) = self.tools.isolation_tool {
                 gcode = generate_isolation_gcode(
@@ -919,6 +973,7 @@ impl CopperCrabApp {
                     self.parameters.isolation_depth,
                     self.parameters.z_safe,
                     self.parameters.z_safe,
+                    offset.as_ref().unwrap_or(&Point2d::new(0.0, 0.0)),
                 );
             } else {
                 log::error!("{}", t!("ui.error.bad_isolation_tool"));
@@ -944,39 +999,6 @@ impl CopperCrabApp {
             }
         }
 
-        if self.parameters.export_outline
-            && self.layers.outline.is_some()
-            && self.tools.outline_tool != SelectedTool::None
-        {
-            let gcode;
-            if let SelectedTool::EndMill(id) = self.tools.outline_tool {
-                gcode = generate_isolation_gcode(
-                    self.layers.outline.as_ref().unwrap(),
-                    &self.tools.tool_library.end_mills[id],
-                    self.parameters.outline_depth,
-                    self.parameters.z_safe,
-                    self.parameters.z_safe,
-                );
-            } else {
-                log::error!("{}", t!("ui.error.bad_outline_tool"));
-                return;
-            }
-
-            let gcode_file = self
-                .files
-                .output_folder
-                .as_ref()
-                .unwrap()
-                .join("outline.nc");
-            match std::fs::write(&gcode_file, gcode) {
-                Ok(_) => log::info!(
-                    "{}",
-                    t!("ui.info.outline_write", path = gcode_file.to_string_lossy())
-                ),
-                Err(e) => log::error!("{}", t!("ui.error.fail_write_outline", e = e.to_string())),
-            }
-        }
-
         if self.parameters.export_drill
             && self.layers.drill.is_some()
             && self.tools.drill_tool != SelectedTool::None
@@ -990,6 +1012,7 @@ impl CopperCrabApp {
                     self.parameters.z_safe,
                     self.parameters.z_safe,
                     self.parameters.drill_peck_step,
+                    offset.as_ref().unwrap_or(&Point2d::new(0.0, 0.0)),
                 );
             } else {
                 log::error!("{}", t!("ui.error.bad_drill_tool"));

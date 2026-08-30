@@ -6,6 +6,7 @@ use rust_i18n::t;
 
 use crate::core::{
     DrillLayer, PcbLayer, Primitive,
+    geometry::Point2d,
     toolpath::helpers::{arc_to_path, circle_to_path, rectangle_to_path, segment_to_path},
     tools::CncTool,
 };
@@ -111,6 +112,7 @@ pub fn generate_isolation_gcode(
     depth: f64,
     z_safe: f64,
     z_finish: f64,
+    offset: &Point2d,
 ) -> String {
     let mut gcode = String::new();
 
@@ -134,9 +136,11 @@ pub fn generate_isolation_gcode(
             let mut points = path.iter();
 
             if let Some(first) = points.next() {
+                let first: Point2d = Point2d::new(first.x() + offset.x, first.y() + offset.y);
+
                 writeln!(gcode, "; Move to the first point").unwrap();
                 writeln!(gcode, "G0 Z{}", z_safe).unwrap();
-                writeln!(gcode, "G0 X{:.4} Y{:.4}", first.x(), first.y()).unwrap();
+                writeln!(gcode, "G0 X{:.4} Y{:.4}", first.x, first.y).unwrap();
 
                 let mut current_depth = 0.0;
 
@@ -155,18 +159,20 @@ pub fn generate_isolation_gcode(
 
                     // Follow the path
                     for point in points.as_ref() {
+                        let point: Point2d =
+                            Point2d::new(point.x() + offset.x, point.y() + offset.y);
                         writeln!(
                             gcode,
                             "G1 X{:.4} Y{:.4} F{}",
-                            point.x(),
-                            point.y(),
+                            point.x,
+                            point.y,
                             tool.feed_rate()
                         )
                         .unwrap();
                     }
 
                     // Closing path
-                    writeln!(gcode, "G1 X{:.4} Y{:.4}", first.x(), first.y()).unwrap();
+                    writeln!(gcode, "G1 X{:.4} Y{:.4}", first.x, first.y).unwrap();
                 }
 
                 // Go safe Z
@@ -178,7 +184,6 @@ pub fn generate_isolation_gcode(
     // Footer
     writeln!(gcode, "\n; End of program").unwrap();
     writeln!(gcode, "G0 Z{} ; Go to finish Z", z_finish).unwrap();
-    writeln!(gcode, "G0 X0 Y0 ; Go to Zero").unwrap();
     writeln!(gcode, "M5 ; Spindle off").unwrap();
     writeln!(gcode, "M30 ; end").unwrap();
 
@@ -201,6 +206,7 @@ pub fn generate_drill_gcode(
     z_safe: f64,
     z_finish: f64,
     peck_step: f64,
+    offset: &Point2d,
 ) -> String {
     let mut gcode = String::new();
 
@@ -219,7 +225,13 @@ pub fn generate_drill_gcode(
 
     for hole in &drill_layer.holes {
         // Move to hole position
-        writeln!(gcode, "G0 X{:.4} Y{:.4}", hole.x, hole.y).unwrap();
+        writeln!(
+            gcode,
+            "G0 X{:.4} Y{:.4}",
+            hole.x + offset.x,
+            hole.y + offset.y
+        )
+        .unwrap();
 
         // Run drill operation with peck step
         let mut current_depth = 0.0;
@@ -239,7 +251,6 @@ pub fn generate_drill_gcode(
     writeln!(gcode, "\n; End of program").unwrap();
     writeln!(gcode, "G80 ; End drill cycle").unwrap();
     writeln!(gcode, "G0 Z{} ; Go to finish Z", z_finish).unwrap();
-    writeln!(gcode, "G0 X0 Y0 ; Go to Zero").unwrap();
     writeln!(gcode, "M5 ; Spindle off").unwrap();
     writeln!(gcode, "M30 ; end").unwrap();
 

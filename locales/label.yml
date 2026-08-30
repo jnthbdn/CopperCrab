@@ -118,6 +118,10 @@ ui.label.parameters.common.safe_z:
   en: "Safe Z"
   fr: "Z sécurité"
 
+ui.label.parameters.common.move_origin:
+  en: "Move to (0,0)"
+  fr: "Mise à (0,0)"
+
 ui.label.parameters.common.title:
   en: "Common parameters"
   fr: "Paramètres communs"
