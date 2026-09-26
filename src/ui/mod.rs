@@ -77,6 +77,8 @@ pub(crate) struct ContextParameters {
     z_safe: f64,
     z_finish: f64,
     move_origin: bool,
+    mirror_x: bool,
+    mirror_y: bool,
     isolation_depth: f64,
     isolation_passes: u32,
     isolation_overlap: f64,
@@ -143,6 +145,8 @@ impl Default for ContextParameters {
             z_safe: 3.0,
             z_finish: 5.0,
             move_origin: false,
+            mirror_x: false,
+            mirror_y: false,
             isolation_depth: 0.1,
             isolation_passes: 2,
             isolation_overlap: 50.0,
@@ -454,6 +458,16 @@ impl CopperCrabApp {
                 ui.label(t!("ui.label.parameters.common.move_origin"));
                 toggle(ui, &mut self.parameters.move_origin)
                     .on_hover_text(t!("ui.tooltip.parameters.common.move_origin"));
+                ui.end_row();
+
+                ui.label(t!("ui.label.parameters.common.mirror_x"));
+                toggle(ui, &mut self.parameters.mirror_x)
+                    .on_hover_text(t!("ui.tooltip.parameters.common.mirror_x"));
+                ui.end_row();
+
+                ui.label(t!("ui.label.parameters.common.mirror_y"));
+                toggle(ui, &mut self.parameters.mirror_y)
+                    .on_hover_text(t!("ui.tooltip.parameters.common.mirror_y"));
                 ui.end_row();
             });
     }
@@ -907,6 +921,7 @@ impl CopperCrabApp {
             return;
         }
         let mut offset: Option<Point2d> = None;
+        let mut symmetry: (Option<f64>, Option<f64>) = (None, None);
 
         if self.parameters.export_outline
             && self.layers.outline.is_some()
@@ -915,6 +930,26 @@ impl CopperCrabApp {
             if self.parameters.move_origin {
                 let min = self.layers.outline.as_ref().unwrap()[0].bounds().min;
                 offset = Some(Point2d::new(-min.x(), -min.y()));
+            }
+
+            if self.parameters.mirror_x {
+                symmetry.0 = Some(
+                    self.layers.outline.as_ref().unwrap()[0]
+                        .bounds()
+                        .center()
+                        .x()
+                        + offset.as_ref().unwrap_or(&Point2d::new(0.0, 0.0)).x,
+                )
+            }
+
+            if self.parameters.mirror_y {
+                symmetry.1 = Some(
+                    self.layers.outline.as_ref().unwrap()[0]
+                        .bounds()
+                        .center()
+                        .y()
+                        + offset.as_ref().unwrap_or(&Point2d::new(0.0, 0.0)).y,
+                )
             }
 
             let gcode;
@@ -926,6 +961,7 @@ impl CopperCrabApp {
                     self.parameters.z_safe,
                     self.parameters.z_safe,
                     offset.as_ref().unwrap_or(&Point2d::new(0.0, 0.0)),
+                    symmetry,
                 );
             } else {
                 log::error!("{}", t!("ui.error.bad_outline_tool"));
@@ -956,6 +992,26 @@ impl CopperCrabApp {
                 offset = Some(Point2d::new(-min.x(), -min.y()));
             }
 
+            if self.parameters.mirror_x && symmetry.0.is_none() {
+                symmetry.0 = Some(
+                    self.layers.outline.as_ref().unwrap()[0]
+                        .bounds()
+                        .center()
+                        .x()
+                        + offset.as_ref().unwrap_or(&Point2d::new(0.0, 0.0)).x,
+                )
+            }
+
+            if self.parameters.mirror_y && symmetry.1.is_none() {
+                symmetry.1 = Some(
+                    self.layers.outline.as_ref().unwrap()[0]
+                        .bounds()
+                        .center()
+                        .y()
+                        + offset.as_ref().unwrap_or(&Point2d::new(0.0, 0.0)).y,
+                )
+            }
+
             let gcode;
             if let SelectedTool::VBit(id) = self.tools.isolation_tool {
                 gcode = generate_isolation_gcode(
@@ -965,6 +1021,7 @@ impl CopperCrabApp {
                     self.parameters.z_safe,
                     self.parameters.z_finish,
                     offset.as_ref().unwrap_or(&Point2d::new(0.0, 0.0)),
+                    symmetry,
                 );
             } else if let SelectedTool::EndMill(id) = self.tools.isolation_tool {
                 gcode = generate_isolation_gcode(
@@ -974,6 +1031,7 @@ impl CopperCrabApp {
                     self.parameters.z_safe,
                     self.parameters.z_safe,
                     offset.as_ref().unwrap_or(&Point2d::new(0.0, 0.0)),
+                    symmetry,
                 );
             } else {
                 log::error!("{}", t!("ui.error.bad_isolation_tool"));
@@ -1013,6 +1071,7 @@ impl CopperCrabApp {
                     self.parameters.z_safe,
                     self.parameters.drill_peck_step,
                     offset.as_ref().unwrap_or(&Point2d::new(0.0, 0.0)),
+                    symmetry,
                 );
             } else {
                 log::error!("{}", t!("ui.error.bad_drill_tool"));

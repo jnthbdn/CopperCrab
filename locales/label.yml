@@ -122,6 +122,14 @@ ui.label.parameters.common.move_origin:
   en: "Move to (0,0)"
   fr: "Mise à (0,0)"
 
+ui.label.parameters.common.mirror_x:
+  en: "Mirror X-axis"
+  fr: "Mirroir axe X"
+
+ui.label.parameters.common.mirror_y:
+  en: "Mirror Y-axis"
+  fr: "Mirroir axe Y"
+
 ui.label.parameters.common.title:
   en: "Common parameters"
   fr: "Paramètres communs"

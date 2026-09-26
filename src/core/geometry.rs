@@ -12,6 +12,14 @@ impl Point2d {
     pub fn to_tuple(&self) -> (f64, f64) {
         (self.x, self.y)
     }
+
+    pub fn x_symmetry(&mut self, x_ref: f64) {
+        self.x += (x_ref - self.x) * 2.0;
+    }
+
+    pub fn y_symmetry(&mut self, y_ref: f64) {
+        self.y += (y_ref - self.y) * 2.0;
+    }
 }
 
 #[derive(Debug, Clone, Default)]
