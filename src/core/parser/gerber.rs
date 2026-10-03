@@ -514,15 +514,15 @@ fn aperture_to_primitive(
                             }
                         }
 
-                        gerber_parser::gerber_types::MacroContent::Polygon(polygon_primitive) => {
+                        gerber_parser::gerber_types::MacroContent::Polygon(_polygon_primitive) => {
                             log::warn!("TODO ! Support polygon")
                         }
 
-                        gerber_parser::gerber_types::MacroContent::Moire(moire_primitive) => {
+                        gerber_parser::gerber_types::MacroContent::Moire(_moire_primitive) => {
                             log::warn!("TODO ! Support Moire")
                         }
 
-                        gerber_parser::gerber_types::MacroContent::Thermal(thermal_primitive) => {
+                        gerber_parser::gerber_types::MacroContent::Thermal(_thermal_primitive) => {
                             log::warn!("TODO ! Support Thermal")
                         }
 
