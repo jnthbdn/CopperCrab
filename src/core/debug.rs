@@ -41,9 +41,9 @@ pub fn export_svg(layer: &PcbLayer, path: &Path) -> std::io::Result<()> {
             match primitive {
                 Primitive::Segment(s) => {
                     writeln!(svg,
-                        r##"<line x1="{}" y1="{}" x2="{}" y2="{}" stroke="#B87333" stroke-width="{}" stroke-linecap="round"/>"##,
-                        s.start.x, s.start.y, s.end.x, s.end.y, s.width
-                    ).unwrap();
+                                    r##"<line x1="{}" y1="{}" x2="{}" y2="{}" stroke="#B87333" stroke-width="{}" stroke-linecap="round"/>"##,
+                                    s.start.x, s.start.y, s.end.x, s.end.y, s.width
+                                ).unwrap();
                 }
                 Primitive::Circle(c) => {
                     writeln!(
@@ -69,14 +69,16 @@ pub fn export_svg(layer: &PcbLayer, path: &Path) -> std::io::Result<()> {
                 Primitive::Arc(a) => {
                     // SVG arc path
                     writeln!(svg,
-                        r##"<path d="M {} {} A {} {} 0 0 {} {} {}" fill="none" stroke="#B87333" stroke-width="{}"/>"##,
-                        a.start.x, a.start.y,
-                        a.width / 2.0, a.width / 2.0,
-                        if a.clockwise { 1 } else { 0 },
-                        a.end.x, a.end.y,
-                        a.width
-                    ).unwrap();
+                                    r##"<path d="M {} {} A {} {} 0 0 {} {} {}" fill="none" stroke="#B87333" stroke-width="{}"/>"##,
+                                    a.start.x, a.start.y,
+                                    a.width / 2.0, a.width / 2.0,
+                                    if a.clockwise { 1 } else { 0 },
+                                    a.end.x, a.end.y,
+                                    a.width
+                                ).unwrap();
                 }
+                Primitive::Complex(v) => todo!(),
+                Primitive::Polygon(point2ds) => todo!(),
             }
         }
     }
@@ -121,6 +123,8 @@ fn bounding_box(layer: &PcbLayer) -> (f64, f64, f64, f64) {
                     max_x = max_x.max(a.start.x).max(a.end.x);
                     max_y = max_y.max(a.start.y).max(a.end.y);
                 }
+                Primitive::Complex(v) => todo!(),
+                Primitive::Polygon(point2ds) => todo!(),
             }
         }
     }
