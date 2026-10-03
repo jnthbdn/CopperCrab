@@ -42,6 +42,8 @@ fn generate_layer(gerber_doc: &GerberDoc, layer: &mut PcbLayer) -> Result<(), Pa
     let mut aperture: i32 = 0;
     let mut primitives: Vec<Primitive> = Vec::new();
     let mut interpolation = InterpolationMode::Linear;
+    let mut is_region_mode = false;
+    let mut region_points: Vec<Point2d> = Vec::new();
 
     for command in gerber_doc.commands() {
         match command {
@@ -55,13 +57,21 @@ fn generate_layer(gerber_doc: &GerberDoc, layer: &mut PcbLayer) -> Result<(), Pa
 
                             match interpolation {
                                 InterpolationMode::Linear => {
-                                    primitives.push(Primitive::Segment(Segment {
-                                        start: position.clone(),
-                                        end: target_pos.clone(),
-                                        width: width_from_aperture(
-                                            gerber_doc.apertures.get(&aperture),
-                                        ),
-                                    }));
+                                    if is_region_mode {
+                                        if region_points.is_empty() {
+                                            region_points.push(position.clone());
+                                        }
+
+                                        region_points.push(target_pos.clone());
+                                    } else {
+                                        primitives.push(Primitive::Segment(Segment {
+                                            start: position.clone(),
+                                            end: target_pos.clone(),
+                                            width: width_from_aperture(
+                                                gerber_doc.apertures.get(&aperture),
+                                            ),
+                                        }));
+                                    }
                                 }
 
                                 InterpolationMode::ClockwiseCircular
@@ -70,16 +80,22 @@ fn generate_layer(gerber_doc: &GerberDoc, layer: &mut PcbLayer) -> Result<(), Pa
                                         if coord.x.is_none() || coord.y.is_none() {
                                             // return Err(ParseError::Gerber("Offset position is mandatory with (Counter) Clockwise interpolation mode".to_string()));
                                         } else {
-                                            primitives.push(Primitive::Arc(Arc {
-                                                start: position.clone(),
-                                                end: target_pos.clone(),
-                                                center: offset,
-                                                clockwise: interpolation
-                                                    == InterpolationMode::ClockwiseCircular,
-                                                width: width_from_aperture(
-                                                    gerber_doc.apertures.get(&aperture),
-                                                ),
-                                            }));
+                                            if is_region_mode {
+                                                log::warn!(
+                                                    "(Counter)Clockwise circular not supported in region mode"
+                                                );
+                                            } else {
+                                                primitives.push(Primitive::Arc(Arc {
+                                                    start: position.clone(),
+                                                    end: target_pos.clone(),
+                                                    center: offset,
+                                                    clockwise: interpolation
+                                                        == InterpolationMode::ClockwiseCircular,
+                                                    width: width_from_aperture(
+                                                        gerber_doc.apertures.get(&aperture),
+                                                    ),
+                                                }));
+                                            }
                                         }
                                     } else {
                                         return Err(ParseError::Gerber(
@@ -95,18 +111,33 @@ fn generate_layer(gerber_doc: &GerberDoc, layer: &mut PcbLayer) -> Result<(), Pa
                         Operation::Move(coordinates) => {
                             position = coordinate_to_position(&coordinates, &position);
 
-                            if false == primitives.is_empty() {
-                                layer.traces.push(PcbTrace { primitives });
-                                primitives = Vec::new();
+                            if is_region_mode {
+                                if region_points.len() > 0 {
+                                    layer.traces.push(PcbTrace {
+                                        primitives: vec![Primitive::Polygon(region_points)],
+                                    });
+                                }
+
+                                region_points = Vec::new();
+                            } else {
+                                if false == primitives.is_empty() {
+                                    layer.traces.push(PcbTrace { primitives });
+                                    primitives = Vec::new();
+                                }
                             }
                         }
 
                         Operation::Flash(coordinates) => {
-                            let flash_pos = coordinate_to_position(coordinates, &position);
-                            if let Some(aperture) = gerber_doc.apertures.get(&aperture) {
-                                if let Some(p) = aperture_to_primitive(aperture, &flash_pos) {
-                                    primitives.push(p);
+                            if false == is_region_mode {
+                                let flash_pos = coordinate_to_position(coordinates, &position);
+                                if let Some(aperture) = gerber_doc.apertures.get(&aperture) {
+                                    if let Some(p) =
+                                        aperture_to_primitive(aperture, &flash_pos, &layer)
+                                    {
+                                        primitives.push(p);
+                                    }
                                 }
+                                position = flash_pos;
                             }
                         }
                     },
@@ -119,11 +150,15 @@ fn generate_layer(gerber_doc: &GerberDoc, layer: &mut PcbLayer) -> Result<(), Pa
                         interpolation = *interpolation_mode;
                     }
 
-                    GCode::RegionMode(_) => {
-                        log::warn!(
-                            "\t{}",
-                            t!("gerber.warn.G_unsupported", function = "Region Mode")
-                        )
+                    GCode::RegionMode(enbale) => {
+                        is_region_mode = *enbale;
+
+                        if false == *enbale && region_points.len() > 0 {
+                            layer.traces.push(PcbTrace {
+                                primitives: vec![Primitive::Polygon(region_points)],
+                            });
+                            region_points = Vec::new();
+                        }
                     }
 
                     GCode::QuadrantMode(_quadrant_mode) => {
@@ -512,21 +547,9 @@ fn width_from_aperture(aperture: Option<&Aperture>) -> f64 {
 
             Aperture::Rectangle(rectangular) => rectangular.x.max(rectangular.y),
 
-            Aperture::Obround(_rectangular) => {
-                log::warn!(
-                    "{}",
-                    t!("gerber.warn.aperture_unsupported", function = "Obround")
-                );
-                0.0
-            }
+            Aperture::Obround(rectangular) => rectangular.x.max(rectangular.y),
 
-            Aperture::Polygon(_polygon) => {
-                log::warn!(
-                    "{}",
-                    t!("gerber.warn.aperture_unsupported", function = "Polygon")
-                );
-                0.0
-            }
+            Aperture::Polygon(polygon) => polygon.diameter,
 
             Aperture::Macro(_, _macro_decimals) => {
                 log::warn!(

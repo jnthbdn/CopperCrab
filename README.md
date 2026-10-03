@@ -40,6 +40,7 @@ CopperCrab is a desktop application that takes Gerber and Excellon files as inpu
 - [ ] **Multiple drill** - Allow to "map" different drill bit for each hole size.
 - [ ] **Outline tabs** - Add tabs when milling the outline (number and thickness)
 - [ ] **Macro aperture** -- Handle Polygon, Moire and Thermal macros
+- [ ] **Region Mode** -- Handle arcs in region mode
 
 ---
 
