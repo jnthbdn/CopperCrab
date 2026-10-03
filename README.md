@@ -39,6 +39,7 @@ CopperCrab is a desktop application that takes Gerber and Excellon files as inpu
 - [x] **Move to (0, 0)** - Move the traces to place the bottom-left PCB vertex to (0, 0).
 - [ ] **Multiple drill** - Allow to "map" different drill bit for each hole size.
 - [ ] **Outline tabs** - Add tabs when milling the outline (number and thickness)
+- [ ] **Macro aperture** -- Handle Polygon, Moire and Thermal macros
 
 ---
 

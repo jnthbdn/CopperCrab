@@ -2,7 +2,10 @@ use std::f64::consts::PI;
 
 use clipper2::{EndType, JoinType, Path, Paths};
 
-use crate::core::geometry::{Arc, Circle, Point2d, Rectangle, Segment};
+use crate::core::{
+    Primitive,
+    geometry::{Arc, Circle, Point2d, Rectangle, Segment},
+};
 
 pub fn segment_to_path(segment: &Segment) -> Paths {
     let path: Path = vec![segment.start.to_tuple(), segment.end.to_tuple()].into();
@@ -101,4 +104,26 @@ pub fn rectangle_to_path(rectangle: &Rectangle) -> Paths {
         ),
     ]
     .into()
+}
+
+pub fn complex_to_path(primitives: &Vec<Primitive>, segments: usize) -> Paths {
+    let mut paths = Paths::default();
+
+    for primitive in primitives {
+        paths.append(match primitive {
+            Primitive::Segment(segment) => segment_to_path(segment),
+            Primitive::Arc(arc) => arc_to_path(arc, segments),
+            Primitive::Circle(circle) => circle_to_path(circle, segments),
+            Primitive::Rectangle(rectangle) => rectangle_to_path(rectangle),
+            Primitive::Complex(primitives) => complex_to_path(primitives, segments),
+            Primitive::Polygon(point2ds) => polygon_to_paths(point2ds),
+        });
+    }
+
+    clipper2::union(paths, Paths::new(vec![]), clipper2::FillRule::NonZero).unwrap_or_default()
+}
+
+pub fn polygon_to_paths(points: &Vec<Point2d>) -> Paths {
+    let val: Vec<(f64, f64)> = points.iter().map(|x| x.to_tuple()).collect();
+    val.into()
 }

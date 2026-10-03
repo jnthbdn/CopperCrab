@@ -1,12 +1,13 @@
 use std::{fs::File, io::BufReader, path::Path};
 
+use evalexpr::{Context, ContextWithMutableVariables, HashMapContext, eval_float_with_context};
 use rust_i18n::t;
 
 use gerber_parser::{
     GerberDoc,
     gerber_types::{
         Aperture, Command, CoordinateOffset, Coordinates, DCode, ExtendedCode, FunctionCode, GCode,
-        InterpolationMode, MCode, Operation, Unit,
+        InterpolationMode, MCode, MacroDecimal, Operation, Unit,
     },
 };
 
@@ -182,14 +183,10 @@ fn parse_extended_command(cmd: &ExtendedCode, layer: &mut PcbLayer) {
             // Nothing to do...
         }
 
-        ExtendedCode::ApertureMacro(_) => {
-            log::warn!(
-                "\t{}",
-                t!(
-                    "gerber.warn.extended_unsupported",
-                    function = "ApertureMacro"
-                )
-            )
+        ExtendedCode::ApertureMacro(aperture) => {
+            layer
+                .aperture_macro
+                .insert(aperture.name.clone(), aperture.content.clone());
         }
 
         ExtendedCode::LoadPolarity(_) => {
@@ -378,7 +375,11 @@ fn coordinate_offset_to_position(
     result
 }
 
-fn aperture_to_primitive(aperture: &Aperture, position: &Point2d) -> Option<Primitive> {
+fn aperture_to_primitive(
+    aperture: &Aperture,
+    position: &Point2d,
+    layer: &PcbLayer,
+) -> Option<Primitive> {
     match aperture {
         Aperture::Circle(circle) => Some(Primitive::Circle(Circle {
             center: position.clone(),
@@ -389,6 +390,7 @@ fn aperture_to_primitive(aperture: &Aperture, position: &Point2d) -> Option<Prim
             center: position.clone(),
             width: rectangular.x,
             height: rectangular.y,
+            rotation: 0.0,
         })),
 
         Aperture::Obround(_rectangular) => {
@@ -407,12 +409,97 @@ fn aperture_to_primitive(aperture: &Aperture, position: &Point2d) -> Option<Prim
             None
         }
 
-        Aperture::Macro(_, _macro_decimals) => {
-            log::warn!(
-                "{}",
-                t!("gerber.warn.aperture_unsupported", function = "Macro")
-            );
-            None
+        Aperture::Macro(name, data) => {
+            if let Some(aperture) = layer.aperture_macro.get(name) {
+                let mut complex: Vec<Primitive> = Vec::new();
+                let context = macro_data_to_context(data);
+
+                for element in aperture {
+                    match element {
+                        gerber_parser::gerber_types::MacroContent::Circle(circle_primitive) => {
+                            complex.push(Primitive::Circle(Circle {
+                                center: macro_decimal_pair_to_point(
+                                    &circle_primitive.center,
+                                    &context,
+                                )
+                                .add(position),
+                                diameter: resolve_macro_decimal(
+                                    &circle_primitive.diameter,
+                                    &context,
+                                ),
+                            }));
+                        }
+
+                        gerber_parser::gerber_types::MacroContent::VectorLine(vector_line) => {
+                            let start = macro_decimal_pair_to_point(&vector_line.start, &context);
+                            let end = macro_decimal_pair_to_point(&vector_line.end, &context);
+                            let (dx, dy) = (end.x - start.x, end.y - start.y);
+                            let len = dx.hypot(dy);
+
+                            if resolve_macro_decimal(&vector_line.angle, &context) != 0.0 {
+                                log::warn!("Angle is not supported for VectorLine");
+                            }
+
+                            if len > 0.0 {
+                                let h = resolve_macro_decimal(&vector_line.width, &context) / 2.0;
+                                let (nx, ny) = (-dy / len * h, dx / len * h);
+
+                                complex.push(Primitive::Polygon(vec![
+                                    Point2d::new(start.x + nx, start.y + ny).add(position),
+                                    Point2d::new(start.x - nx, start.y - ny).add(position),
+                                    Point2d::new(end.x - nx, end.y - ny).add(position),
+                                    Point2d::new(end.x + nx, end.y + ny).add(position),
+                                ]));
+                            }
+                        }
+
+                        gerber_parser::gerber_types::MacroContent::CenterLine(center_line) => {
+                            let center = macro_decimal_pair_to_point(&center_line.center, &context);
+                            let size =
+                                macro_decimal_pair_to_point(&center_line.dimensions, &context);
+
+                            complex.push(Primitive::Rectangle(Rectangle {
+                                center: center.add(position),
+                                width: size.x,
+                                height: size.y,
+                            }));
+                        }
+
+                        gerber_parser::gerber_types::MacroContent::Outline(outline_primitive) => {
+                            let mut points = Vec::new();
+                            for p in &outline_primitive.points {
+                                points.push(macro_decimal_pair_to_point(p, &context).add(position));
+                            }
+
+                            complex.push(Primitive::Polygon(points));
+
+                            if resolve_macro_decimal(&outline_primitive.angle, &context) != 0.0 {
+                                log::warn!("Angle is not supported for Outline");
+                            }
+                        }
+
+                        gerber_parser::gerber_types::MacroContent::Polygon(polygon_primitive) => {
+                            log::warn!("TODO ! Support polygon")
+                        }
+
+                        gerber_parser::gerber_types::MacroContent::Moire(moire_primitive) => {
+                            log::warn!("TODO ! Support Moire")
+                        }
+
+                        gerber_parser::gerber_types::MacroContent::Thermal(thermal_primitive) => {
+                            log::warn!("TODO ! Support Thermal")
+                        }
+
+                        gerber_parser::gerber_types::MacroContent::VariableDefinition(_)
+                        | gerber_parser::gerber_types::MacroContent::Comment(_) => {}
+                    }
+                }
+
+                Some(Primitive::Complex(complex))
+            } else {
+                log::error!("{}", t!("gerber.error.no_macro_aperture_name", name = name));
+                None
+            }
         }
     }
 }
@@ -450,5 +537,70 @@ fn width_from_aperture(aperture: Option<&Aperture>) -> f64 {
         }
     } else {
         0.0
+    }
+}
+
+fn macro_data_to_context(data: &Option<Vec<MacroDecimal>>) -> HashMapContext {
+    let mut result = HashMapContext::new();
+
+    if let Some(data) = data {
+        for (idx, elem) in data.iter().enumerate() {
+            match elem {
+                MacroDecimal::Value(v) => {
+                    let _ = result.set_value(format!("${}", idx + 1), evalexpr::Value::Float(*v));
+                }
+                MacroDecimal::Variable(_) | MacroDecimal::Expression(_) => {
+                    log::error!("{}", t!("gerber.warn.macro_aperture_parameter_not_number"));
+                }
+            };
+        }
+    }
+
+    result
+}
+
+fn macro_decimal_pair_to_point(
+    pair: &(MacroDecimal, MacroDecimal),
+    macro_data: &HashMapContext,
+) -> Point2d {
+    Point2d {
+        x: resolve_macro_decimal(&pair.0, macro_data),
+        y: resolve_macro_decimal(&pair.1, macro_data),
+    }
+}
+
+fn resolve_macro_decimal(value: &MacroDecimal, macro_data: &HashMapContext) -> f64 {
+    match value {
+        MacroDecimal::Value(v) => *v,
+        MacroDecimal::Variable(var) => {
+            if let Some(value) = macro_data.get_value(&format!("${}", var)) {
+                if let Ok(value) = value.as_number() {
+                    value
+                } else {
+                    log::error!(
+                        "{}",
+                        t!("gerber.error.macro_variable_not_number", var = var)
+                    );
+                    f64::NAN
+                }
+            } else {
+                log::error!("{}", t!("gerber.error.macro_variable_not_found", var = var));
+                f64::NAN
+            }
+        }
+        MacroDecimal::Expression(expr) => match eval_float_with_context(&expr, macro_data) {
+            Ok(val) => val,
+            Err(e) => {
+                log::error!(
+                    "{}",
+                    t!(
+                        "gerber.error.macro_expression_error",
+                        expr = expr,
+                        err = e.to_string()
+                    )
+                );
+                f64::NAN
+            }
+        },
     }
 }

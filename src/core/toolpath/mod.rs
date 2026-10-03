@@ -7,7 +7,10 @@ use rust_i18n::t;
 use crate::core::{
     DrillLayer, PcbLayer, Primitive,
     geometry::Point2d,
-    toolpath::helpers::{arc_to_path, circle_to_path, rectangle_to_path, segment_to_path},
+    toolpath::helpers::{
+        arc_to_path, circle_to_path, complex_to_path, polygon_to_paths, rectangle_to_path,
+        segment_to_path,
+    },
     tools::CncTool,
 };
 
@@ -208,10 +211,12 @@ pub fn generate_isolation_gcode(
 
 fn primitive_to_paths(primitive: &Primitive) -> Paths {
     match primitive {
-        crate::core::Primitive::Segment(segment) => segment_to_path(segment),
-        crate::core::Primitive::Arc(arc) => arc_to_path(arc, 100),
-        crate::core::Primitive::Circle(circle) => circle_to_path(circle, 100),
-        crate::core::Primitive::Rectangle(rectangle) => rectangle_to_path(rectangle),
+        Primitive::Segment(segment) => segment_to_path(segment),
+        Primitive::Arc(arc) => arc_to_path(arc, 100),
+        Primitive::Circle(circle) => circle_to_path(circle, 100),
+        Primitive::Rectangle(rectangle) => rectangle_to_path(rectangle),
+        Primitive::Complex(primitives) => complex_to_path(primitives, 100),
+        Primitive::Polygon(point2ds) => polygon_to_paths(point2ds),
     }
 }
 

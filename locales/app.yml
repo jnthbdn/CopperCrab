@@ -20,6 +20,26 @@ gerber.error.offset_circule_mode:
   en: "Offset position is mandatory with (Counter) Clockwise interpolation mode"
   fr: "La position d'offset est obligatoire en mode d'interpolation (anti-)horaire"
 
+gerber.error.no_macro_aperture_name:
+  en: "There is no macro aperture definition named '%{name}'"
+  fr: "Il n'existe aucune définition de macro d'aperture nommée '%{name}'"
+
+gerber.error.macro_variable_not_found:
+  en: "Variable '%{var}' not found"
+  fr: "La variable '%{var}' est introuvable"
+
+gerber.error.macro_variable_not_number:
+  en: "Variable '%{var}' is not a number"
+  fr: "La variable '%{var}' n'est pas un nombre"
+
+gerber.error.macro_expression_error:
+  en: "Failed to evaluate expression '%{expr}'. Error: %{err}"
+  fr: "Échec de l'évaluation de l'expression '%{expr}'. Erreur : %{err}"
+
+gerber.warn.macro_aperture_parameter_not_number:
+  en: "Macro aperture parameters can only be numbers"
+  fr: "Les paramètres de macro d'aperture ne peuvent être que des nombres"
+
 gerber.info.generate_layer:
   en: "Generating layer"
   fr: "Génération du calque"
