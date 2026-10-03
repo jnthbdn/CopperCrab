@@ -7,6 +7,12 @@ use crate::core::{
     geometry::{Arc, Circle, Point2d, Rectangle, Segment},
 };
 
+fn rotate_around(x: f64, y: f64, cx: f64, cy: f64, angle_deg: f64) -> (f64, f64) {
+    let (s, c) = angle_deg.to_radians().sin_cos();
+    let (dx, dy) = (x - cx, y - cy);
+    (cx + dx * c - dy * s, cy + dx * s + dy * c)
+}
+
 pub fn segment_to_path(segment: &Segment) -> Paths {
     let path: Path = vec![segment.start.to_tuple(), segment.end.to_tuple()].into();
 
@@ -103,6 +109,17 @@ pub fn rectangle_to_path(rectangle: &Rectangle) -> Paths {
             rectangle.center.y - rectangle.height / 2.0,
         ),
     ]
+    .iter()
+    .map(|p| {
+        rotate_around(
+            p.0,
+            p.1,
+            rectangle.center.x,
+            rectangle.center.y,
+            rectangle.rotation,
+        )
+    })
+    .collect::<Vec<(f64, f64)>>()
     .into()
 }
 

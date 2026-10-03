@@ -462,6 +462,7 @@ fn aperture_to_primitive(
                                 center: center.add(position),
                                 width: size.x,
                                 height: size.y,
+                                rotation: resolve_macro_decimal(&center_line.angle, &context),
                             }));
                         }
 

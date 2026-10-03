@@ -56,5 +56,5 @@ pub struct Rectangle {
     pub center: Point2d,
     pub width: f64,
     pub height: f64,
-    // pub rotation: f64,
+    pub rotation: f64,
 }
