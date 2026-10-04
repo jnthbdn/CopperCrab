@@ -3,11 +3,12 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+use elegance::Button;
 use rust_i18n::t;
 
 use crate::{
     logger::LogEntry,
-    ui::{buttons::button, colors::*, labels::title_label},
+    ui::{colors::*, labels::title_label},
 };
 
 pub fn panel_logs(ui: &mut egui::Ui, log_buffer: &Arc<Mutex<VecDeque<LogEntry>>>) {
@@ -20,7 +21,7 @@ pub fn panel_logs(ui: &mut egui::Ui, log_buffer: &Arc<Mutex<VecDeque<LogEntry>>>
                 // title_label(ui, "Logs", false);
                 title_label(ui, &t!("ui.label.logs").to_string(), false);
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if button(ui, &t!("ui.button.clear_logs").to_string(), false).clicked() {
+                    if ui.add(Button::new(t!("ui.button.clear_logs"))).clicked() {
                         if let Ok(mut logs) = log_buffer.lock() {
                             logs.clear();
                         }

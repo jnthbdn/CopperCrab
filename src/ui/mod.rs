@@ -8,6 +8,7 @@ use rust_i18n::t;
 
 use clipper2::Paths;
 use egui::{RichText, Vec2};
+use elegance::{Accent, Button, Select, Switch, Theme};
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -20,7 +21,7 @@ use crate::{
     logger::LogEntry,
     ui::{
         app_config::AppConfig,
-        buttons::{button, button_primary, pick_drill_file, pick_gerber_file, toggle},
+        buttons::{pick_drill_file, pick_gerber_file},
         canvas::{draw_axes, draw_paths, draw_paths_stroke},
         colors::*,
         labels::title_label,
@@ -44,7 +45,7 @@ mod tool_library;
 const TOOLS_FILENAME: &str = "tools.toml";
 const AVAILABLE_LOCALE: [(&str, &str); 2] = [("en", "English"), ("fr", "Français")];
 
-#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Default, PartialEq, Serialize, Deserialize, Clone)]
 enum SelectedTool {
     VBit(usize),
     EndMill(usize),
@@ -272,30 +273,23 @@ impl CopperCrabApp {
         ui.separator();
 
         // Isolation — VBit or EndMill
-        ui.label(t!("ui.select_tool.isolation"));
-        if egui::ComboBox::from_id_salt("isolation_tool")
-            .selected_text(self.isolation_tool_name())
-            .width(ui.available_width())
-            .show_ui(ui, |ui| {
-                ui.label(RichText::new(t!("ui.label.library.vbit")).color(TEXT_SECONDARY));
-                for (i, vbit) in self.tools.tool_library.vbits.iter().enumerate() {
-                    ui.selectable_value(
-                        &mut self.tools.isolation_tool,
-                        SelectedTool::VBit(i),
-                        vbit.to_string(),
-                    );
-                }
+        let mut isolation_tools = Vec::new();
 
-                ui.label(RichText::new(t!("ui.label.library.end_mill")).color(TEXT_SECONDARY));
-                for (i, end_mill) in self.tools.tool_library.end_mills.iter().enumerate() {
-                    ui.selectable_value(
-                        &mut self.tools.isolation_tool,
-                        SelectedTool::EndMill(i),
-                        end_mill.to_string(),
-                    );
-                }
-            })
-            .response
+        for (i, vbit) in self.tools.tool_library.vbits.iter().enumerate() {
+            isolation_tools.push((SelectedTool::VBit(i), vbit.to_string()));
+        }
+
+        for (i, end_mill) in self.tools.tool_library.end_mills.iter().enumerate() {
+            isolation_tools.push((SelectedTool::EndMill(i), end_mill.to_string()));
+        }
+
+        if ui
+            .add(
+                Select::new("isolation_tools", &mut self.tools.isolation_tool)
+                    .options(isolation_tools)
+                    .width(ui.available_width())
+                    .label(t!("ui.select_tool.isolation")),
+            )
             .changed()
         {
             self.status_bar.set_need_regenerate(true);
@@ -303,20 +297,19 @@ impl CopperCrabApp {
 
         // Outline — EndMill only
         ui.add_space(4.0);
-        ui.label(t!("ui.select_tool.outline"));
-        if egui::ComboBox::from_id_salt("outline_tool")
-            .selected_text(self.outline_tool_name())
-            .width(ui.available_width())
-            .show_ui(ui, |ui| {
-                for (i, end_mill) in self.tools.tool_library.end_mills.iter().enumerate() {
-                    ui.selectable_value(
-                        &mut self.tools.outline_tool,
-                        SelectedTool::EndMill(i),
-                        end_mill.to_string(),
-                    );
-                }
-            })
-            .response
+        let mut endmill_tools = Vec::new();
+
+        for (i, end_mill) in self.tools.tool_library.end_mills.iter().enumerate() {
+            endmill_tools.push((SelectedTool::EndMill(i), end_mill.to_string()));
+        }
+
+        if ui
+            .add(
+                Select::new("outline_tools", &mut self.tools.outline_tool)
+                    .options(endmill_tools)
+                    .width(ui.available_width())
+                    .label(t!("ui.select_tool.outline")),
+            )
             .changed()
         {
             self.status_bar.set_need_regenerate(true);
@@ -324,22 +317,31 @@ impl CopperCrabApp {
 
         // Drill — DrillBit only
         ui.add_space(4.0);
-        ui.label(t!("ui.select_tool.drill"));
-        egui::ComboBox::from_id_salt("drill_tool")
-            .selected_text(self.drill_tool_name())
-            .width(ui.available_width())
-            .show_ui(ui, |ui| {
-                for (i, drill_bit) in self.tools.tool_library.drill_bits.iter().enumerate() {
-                    ui.selectable_value(
-                        &mut self.tools.drill_tool,
-                        SelectedTool::Drill(i),
-                        drill_bit.to_string(),
-                    );
-                }
-            });
+
+        let mut drill_tools = Vec::new();
+
+        for (i, drill) in self.tools.tool_library.drill_bits.iter().enumerate() {
+            drill_tools.push((SelectedTool::Drill(i), drill.to_string()));
+        }
+
+        if ui
+            .add(
+                Select::new("drill_tools", &mut self.tools.drill_tool)
+                    .options(drill_tools)
+                    .width(ui.available_width())
+                    .label(t!("ui.select_tool.drill")),
+            )
+            .changed()
+        {
+            self.status_bar.set_need_regenerate(true);
+        }
 
         ui.add_space(16.0);
-        if button_primary(ui, &t!("ui.button.tool_library"), true).clicked() {
+
+        if ui
+            .add(Button::new(t!("ui.button.tool_library")).full_width())
+            .clicked()
+        {
             self.tools.tool_library_open = true;
         }
     }
@@ -381,7 +383,7 @@ impl CopperCrabApp {
             ui.colored_label(color, "■");
             ui.label(label);
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                toggle(ui, visible);
+                ui.add(Switch::new(visible, "").accent(Accent::Blue))
             });
         });
     }
@@ -401,7 +403,12 @@ impl CopperCrabApp {
                     || (self.files.gerber_outline_path.is_some()
                         && self.tools.outline_tool != SelectedTool::None),
                 |ui| {
-                    if button_primary(ui, &t!("ui.button.generate_toolpath").to_string(), true)
+                    if ui
+                        .add(
+                            Button::new(t!("ui.button.generate_toolpath"))
+                                .accent(Accent::Blue)
+                                .full_width(),
+                        )
                         .clicked()
                     {
                         self.run_toolpath_generation();
@@ -456,17 +463,18 @@ impl CopperCrabApp {
                 ui.end_row();
 
                 ui.label(t!("ui.label.parameters.common.move_origin"));
-                toggle(ui, &mut self.parameters.move_origin)
+                ui.add(Switch::new(&mut self.parameters.move_origin, ""))
                     .on_hover_text(t!("ui.tooltip.parameters.common.move_origin"));
+
                 ui.end_row();
 
                 ui.label(t!("ui.label.parameters.common.mirror_x"));
-                toggle(ui, &mut self.parameters.mirror_x)
+                ui.add(Switch::new(&mut self.parameters.mirror_x, ""))
                     .on_hover_text(t!("ui.tooltip.parameters.common.mirror_x"));
                 ui.end_row();
 
                 ui.label(t!("ui.label.parameters.common.mirror_y"));
-                toggle(ui, &mut self.parameters.mirror_y)
+                ui.add(Switch::new(&mut self.parameters.mirror_y, ""))
                     .on_hover_text(t!("ui.tooltip.parameters.common.mirror_y"));
                 ui.end_row();
             });
@@ -668,7 +676,14 @@ impl CopperCrabApp {
         ui.add_enabled_ui(
             !self.status_bar.is_need_regenerate() && self.files.output_folder.is_some(),
             |ui| {
-                if button_primary(ui, &t!("ui.button.export_files").to_string(), true).clicked() {
+                if ui
+                    .add(
+                        Button::new(t!("ui.button.export_files"))
+                            .accent(Accent::Blue)
+                            .full_width(),
+                    )
+                    .clicked()
+                {
                     self.export_to_gcode();
                 }
             },
@@ -685,7 +700,7 @@ impl CopperCrabApp {
 
             ui.label(label);
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                toggle(ui, active);
+                ui.add(Switch::new(active, "").accent(Accent::Green))
             });
         });
     }
@@ -769,16 +784,16 @@ impl CopperCrabApp {
         }
 
         egui::Area::new(egui::Id::new("canvas_controls"))
-            .fixed_pos(egui::pos2(rect.max.x - 110.0, rect.max.y - 40.0))
+            .fixed_pos(egui::pos2(rect.max.x - 150.0, rect.max.y - 40.0))
             .show(ui.ctx(), |ui| {
                 ui.horizontal(|ui| {
-                    if button(ui, "−", false).clicked() {
+                    if ui.add(Button::new("−")).clicked() {
                         self.zoom_on_position(0.95, Vec2::ZERO);
                     }
-                    if button(ui, "+", false).clicked() {
+                    if ui.add(Button::new("+")).clicked() {
                         self.zoom_on_position(1.05, Vec2::ZERO);
                     }
-                    if button(ui, "⊡", false).clicked() {
+                    if ui.add(Button::new("⊡")).clicked() {
                         // Reset zoom et offset
                         self.center_view_to_board();
                     }
@@ -792,60 +807,6 @@ impl CopperCrabApp {
 
         self.canvas.offset =
             position + (self.canvas.offset - position) * (self.canvas.zoom / old_zoom);
-    }
-
-    fn isolation_tool_name(&self) -> String {
-        match self.tools.isolation_tool {
-            SelectedTool::VBit(_) | SelectedTool::EndMill(_) => {
-                self.tool_name(&self.tools.isolation_tool)
-            }
-            SelectedTool::Drill(_) | SelectedTool::None => self.tool_name(&SelectedTool::None),
-        }
-    }
-
-    fn outline_tool_name(&self) -> String {
-        match self.tools.outline_tool {
-            SelectedTool::EndMill(_) => self.tool_name(&self.tools.outline_tool),
-            SelectedTool::VBit(_) | SelectedTool::Drill(_) | SelectedTool::None => {
-                self.tool_name(&SelectedTool::None)
-            }
-        }
-    }
-
-    fn drill_tool_name(&self) -> String {
-        match self.tools.drill_tool {
-            SelectedTool::Drill(_) => self.tool_name(&self.tools.drill_tool),
-            SelectedTool::VBit(_) | SelectedTool::EndMill(_) | SelectedTool::None => {
-                self.tool_name(&SelectedTool::None)
-            }
-        }
-    }
-
-    fn tool_name(&self, tool: &SelectedTool) -> String {
-        match tool {
-            SelectedTool::VBit(id) => self
-                .tools
-                .tool_library
-                .vbits
-                .get(*id)
-                .map_or(t!("ui.tool.pick").into(), |v| v.to_string()),
-
-            SelectedTool::EndMill(id) => self
-                .tools
-                .tool_library
-                .end_mills
-                .get(*id)
-                .map_or(t!("ui.tool.pick").into(), |v| v.to_string()),
-
-            SelectedTool::Drill(id) => self
-                .tools
-                .tool_library
-                .drill_bits
-                .get(*id)
-                .map_or(t!("ui.tool.pick").into(), |v| v.to_string()),
-
-            SelectedTool::None => t!("ui.tool.pick").into(),
-        }
     }
 
     fn run_toolpath_generation(&mut self) {
@@ -1146,6 +1107,8 @@ impl CopperCrabApp {
 
 impl eframe::App for CopperCrabApp {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
+        Theme::slate().install(ui.ctx());
+
         let screen_rect = ui.ctx().viewport_rect();
         self.app_config.window_width = screen_rect.width();
         self.app_config.window_height = screen_rect.height();

@@ -8,6 +8,7 @@ clipper2 = "0.5.4"
 directories = "6.0.0"
 eframe = "0.36.2"
 egui = { version = "0.36.2", features = ["serde"] }
+egui-elegance = "0.16.1"
 egui_extras = { version = "0.36.2", features = ["image", "all_loaders"] }
 env_logger = "0.11.10"
 evalexpr = "13.1.0"

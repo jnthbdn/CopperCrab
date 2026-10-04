@@ -1,11 +1,9 @@
 use egui::{Layout, RichText, Sense};
 
+use elegance::{Accent, Button};
 use rust_i18n::t;
 
-use crate::{
-    core::tools::{drill::DrillBit, endmill::EndMill, library::ToolLibrary, vbit::VBit},
-    ui::buttons::{button, button_danger, button_primary},
-};
+use crate::core::tools::{drill::DrillBit, endmill::EndMill, library::ToolLibrary, vbit::VBit};
 
 #[derive(Debug)]
 struct ToolEditor {
@@ -150,7 +148,14 @@ impl ToolLibraryUi {
                             columns[0].label(t!("ui.label.library.vbit"));
                             columns[0].separator();
 
-                            if button_primary(&mut columns[0], &t!("ui.button.library.add_vbit").to_string(), /*"+ Add V-Bit",*/ true).clicked() {
+                            if columns[0]
+                                .add(
+                                    Button::new(t!("ui.button.library.add_vbit"))
+                                        .accent(Accent::Blue)
+                                        .full_width(),
+                                )
+                                .clicked()
+                            {
                                 self.tool_editor = Some(ToolEditor::new_vbit());
                             }
                             let mut to_delete = None;
@@ -158,14 +163,21 @@ impl ToolLibraryUi {
                                 columns[0].horizontal(|ui| {
                                     ui.label(egui::RichText::new(&vbit.name).strong());
                                     ui.label(format!("{}°", vbit.angle_deg));
-                                    ui.label(format!("{}: {}mm",t!("ui.label.library.tip"), vbit.tip_diameter));
+                                    ui.label(format!(
+                                        "{}: {}mm",
+                                        t!("ui.label.library.tip"),
+                                        vbit.tip_diameter
+                                    ));
                                     ui.with_layout(
                                         egui::Layout::right_to_left(egui::Align::Center),
                                         |ui| {
-                                            if button_danger(ui, "🗑", false).clicked() {
+                                            if ui
+                                                .add(Button::new("🗑").accent(Accent::Red))
+                                                .clicked()
+                                            {
                                                 to_delete = Some(i);
                                             }
-                                            if button(ui, "✏", false).clicked() {
+                                            if ui.add(Button::new("✏")).clicked() {
                                                 self.tool_editor =
                                                     Some(ToolEditor::from_vbit(i, vbit));
                                             }
@@ -181,21 +193,35 @@ impl ToolLibraryUi {
                             columns[1].label(t!("ui.label.library.end_mill"));
                             columns[1].separator();
 
-                            if button_primary(&mut columns[1], &t!("ui.button.library.add_end_mill").to_string(), /*"+ Add End Mill"*/ true).clicked() {
+                            if columns[1]
+                                .add(
+                                    Button::new(t!("ui.button.library.add_end_mill"))
+                                        .accent(Accent::Blue)
+                                        .full_width(),
+                                )
+                                .clicked()
+                            {
                                 self.tool_editor = Some(ToolEditor::new_end_mill());
                             }
                             let mut to_delete = None;
                             for (i, end_mill) in tool_library.end_mills.iter().enumerate() {
                                 columns[1].horizontal(|ui| {
                                     ui.label(egui::RichText::new(&end_mill.name).strong());
-                                    ui.label(format!("{}: {}mm", t!("ui.label.library.short_diameter"), end_mill.diameter));
+                                    ui.label(format!(
+                                        "{}: {}mm",
+                                        t!("ui.label.library.short_diameter"),
+                                        end_mill.diameter
+                                    ));
                                     ui.with_layout(
                                         egui::Layout::right_to_left(egui::Align::Center),
                                         |ui| {
-                                            if button_danger(ui, "🗑", false).clicked() {
+                                            if ui
+                                                .add(Button::new("🗑").accent(Accent::Red))
+                                                .clicked()
+                                            {
                                                 to_delete = Some(i);
                                             }
-                                            if button(ui, "✏", false).clicked() {
+                                            if ui.add(Button::new("✏")).clicked() {
                                                 self.tool_editor =
                                                     Some(ToolEditor::from_end_mill(i, end_mill));
                                             }
@@ -211,12 +237,13 @@ impl ToolLibraryUi {
                             columns[2].label(t!("ui.label.library.drill"));
                             columns[2].separator();
 
-                            if button_primary(
-                                &mut columns[2],
-                                &t!("ui.button.library.add_drill").to_string(), /*"+ Add Drill Bit"*/
-                                true,
-                            )
-                            .clicked()
+                            if columns[2]
+                                .add(
+                                    Button::new(t!("ui.button.library.add_drill"))
+                                        .accent(Accent::Blue)
+                                        .full_width(),
+                                )
+                                .clicked()
                             {
                                 self.tool_editor = Some(ToolEditor::new_drill_bit());
                             }
@@ -232,10 +259,13 @@ impl ToolLibraryUi {
                                     ui.with_layout(
                                         egui::Layout::right_to_left(egui::Align::Center),
                                         |ui| {
-                                            if button_danger(ui, "🗑", false).clicked() {
+                                            if ui
+                                                .add(Button::new("🗑").accent(Accent::Red))
+                                                .clicked()
+                                            {
                                                 to_delete = Some(i);
                                             }
-                                            if button(ui, "✏", false).clicked() {
+                                            if ui.add(Button::new("✏")).clicked() {
                                                 self.tool_editor =
                                                     Some(ToolEditor::from_drill_bit(i, drill_bit));
                                             }
@@ -249,7 +279,10 @@ impl ToolLibraryUi {
                         });
                     });
                     ui.with_layout(Layout::right_to_left(egui::Align::Min), |ui| {
-                        if button_primary(ui, &t!("ui.button.close").to_string(), false).clicked() {
+                        if ui
+                            .add(Button::new(t!("ui.button.close")).accent(Accent::Blue))
+                            .clicked()
+                        {
                             *open = false;
                         }
                     });
@@ -385,7 +418,10 @@ impl ToolLibraryUi {
 
                     ui.separator();
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), |ui| {
-                        if button_primary(ui, &t!("ui.button.save").to_string(), false).clicked() {
+                        if ui
+                            .add(Button::new(t!("ui.button.save")).accent(Accent::Blue))
+                            .clicked()
+                        {
                             if let Some(editor) = &self.tool_editor {
                                 match editor.tool_type {
                                     ToolType::VBit => {
@@ -441,7 +477,7 @@ impl ToolLibraryUi {
                                 };
                             }
                         }
-                        if button(ui, &t!("ui.button.cancel").to_string(), false).clicked() {
+                        if ui.add(Button::new(t!("ui.button.cancel"))).clicked() {
                             self.tool_editor = None;
                         }
                     });
