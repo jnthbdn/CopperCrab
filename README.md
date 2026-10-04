@@ -15,13 +15,18 @@ CopperCrab is a desktop application that takes Gerber and Excellon files as inpu
 
 ## Features
 
-- Import Gerber files (copper top, board outline)
-- Real-time 2D PCB preview with zoom and pan
+- Import Gerber files (copper top, board outline) and Excellon drill files
+- Real-time 2D PCB preview with zoom and pan, plus per-layer visibility toggles
 - Persistent tool library (V-Bits, End Mills, Drill Bits) stored as TOML
 - Isolation routing toolpath generation with configurable passes and overlap
 - Outline toolpath generation
-- G-code export (GRBL dialect)
+- Drill G-code generation with peck drilling
 - Multi-pass Z depth support based on tool `max_depth`
+- Aperture macro support (arithmetic expressions and variables, partial primitive coverage)
+- Automatic board origin: move the PCB's bottom-left corner to (0, 0)
+- G-code export (GRBL dialect), with separate files for isolation, outline and drill
+- Multi-language UI (English, French) with system language detection
+- Persistent app settings (window size, last used folder)
 - Integrated log panel
 
 ---
@@ -29,10 +34,11 @@ CopperCrab is a desktop application that takes Gerber and Excellon files as inpu
 ## Roadmap / TODO
 
 - [ ] **Inch support** — Gerber files in imperial units are parsed but not yet fully handled
-- [x] **Excellon / drill file support** — drill file parsing and G83 peck drilling G-code generation
+- [x] **Excellon / drill file support** — drill file parsing and peck drilling G-code generation
 - [x] **i18n / translation files** — UI strings are hardcoded in English, `rust-i18n` integration planned
 - [ ] **LinuxCNC and Mach3 G-code dialects** — currently only GRBL is supported
 - [x] **App config persistence** — window size and last used folder  not yet saved between sessions
+- [ ] **Export/Import tools library**
 - [ ] **Unit tests** — parser and toolpath generator need proper test coverage
 - [x] **CI/CD pipeline** — no automated build or test workflow yet
 - [ ] **Nice icons** - display nice icon on linux (Is windows/mac ok ?)
@@ -53,11 +59,14 @@ CopperCrab is a desktop application that takes Gerber and Excellon files as inpu
 | [`clipper2`](https://crates.io/crates/clipper2)                                             | Polygon boolean operations and offsetting (toolpath generation) |
 | [`lyon`](https://crates.io/crates/lyon)                                                     | Polygon tessellation for concave shape rendering                |
 | [`gerber_parser`](https://crates.io/crates/gerber_parser)                                   | Gerber RS-274X file parsing                                     |
+| [`evalexpr`](https://crates.io/crates/evalexpr)                                             | Arithmetic expression evaluation (aperture macros)              |
 | [`rfd`](https://crates.io/crates/rfd)                                                       | Native file dialog (open/save)                                  |
 | [`serde`](https://crates.io/crates/serde) + [`toml`](https://crates.io/crates/toml)         | Tool library and config serialization                           |
 | [`log`](https://crates.io/crates/log) + [`env_logger`](https://crates.io/crates/env_logger) | Logging facade and console output                               |
 | [`image`](https://crates.io/crates/image)                                                   | PNG image loading                                               |
 | [`directories`](https://crates.io/crates/directories)                                       | Platform-appropriate config/data directories                    |
+| [`rust-i18n`](https://crates.io/crates/rust-i18n)                                           | UI translations (YAML locale files)                             |
+| [`sys-locale`](https://crates.io/crates/sys-locale)                                         | System language detection                                       |
 
 ---
 
