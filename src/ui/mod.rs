@@ -1156,18 +1156,18 @@ impl eframe::App for CopperCrabApp {
         egui::Panel::left("left_panel")
             .resizable(false)
             .min_size(250.0)
-            .show_inside(ui, |ui| {
+            .show(ui, |ui| {
                 self.ui_left(ui);
             });
 
         egui::Panel::right("right_panel")
             .resizable(false)
             .min_size(200.0)
-            .show_inside(ui, |ui| {
+            .show(ui, |ui| {
                 self.ui_right(ui);
             });
 
-        egui::CentralPanel::default().show_inside(ui, |ui| {
+        egui::CentralPanel::default().show(ui, |ui| {
             self.ui_canvas(ui);
         });
 

@@ -15,7 +15,7 @@ pub fn panel_logs(ui: &mut egui::Ui, log_buffer: &Arc<Mutex<VecDeque<LogEntry>>>
         .resizable(true)
         .min_size(80.0)
         .default_size(120.0)
-        .show_inside(ui, |ui| {
+        .show(ui, |ui| {
             ui.horizontal(|ui| {
                 // title_label(ui, "Logs", false);
                 title_label(ui, &t!("ui.label.logs").to_string(), false);

@@ -37,7 +37,7 @@ impl StatusBar {
     }
 
     pub fn show(&self, ui: &mut egui::Ui, app_locale: &mut String) {
-        egui::Panel::bottom(Id::new("info_bar")).show_inside(ui, |ui| {
+        egui::Panel::bottom(Id::new("info_bar")).show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.label(format!(
                     "{}: {:.3} mm, {:.3} mm",
