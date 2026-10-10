@@ -3,7 +3,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use elegance::Button;
+use elegance::{Button, Theme};
 use rust_i18n::t;
 
 use crate::{
@@ -34,13 +34,16 @@ pub fn panel_logs(ui: &mut egui::Ui, log_buffer: &Arc<Mutex<VecDeque<LogEntry>>>
                 .show(ui, |ui| {
                     ui.set_min_height(ui.available_height());
                     ui.set_min_width(ui.available_width());
+
+                    let palette = Theme::current(ui.ctx()).palette;
+
                     if let Ok(logs) = log_buffer.lock() {
                         for (i, entry) in logs.iter().enumerate() {
                             let color = match entry.level {
-                                log::Level::Error => ERROR,
-                                log::Level::Warn => WARNING,
-                                log::Level::Info => TEXT_PRIMARY,
-                                _ => TEXT_SECONDARY,
+                                log::Level::Error => palette.danger,
+                                log::Level::Warn => palette.warning,
+                                log::Level::Info => palette.text_muted,
+                                _ => palette.text_faint,
                             };
 
                             ui.push_id(i, |ui| {
