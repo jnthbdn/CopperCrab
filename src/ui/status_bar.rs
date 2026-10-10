@@ -2,7 +2,7 @@ use rust_i18n::t;
 
 use egui::{Id, Layout};
 
-use crate::ui::{AVAILABLE_LOCALE, colors::*};
+use crate::ui::{AVAILABLE_LOCALE, app_config::AppTheme, colors::*};
 
 #[derive(Debug)]
 pub struct StatusBar {
@@ -36,7 +36,7 @@ impl StatusBar {
         self.need_regen
     }
 
-    pub fn show(&self, ui: &mut egui::Ui, app_locale: &mut String) {
+    pub fn show(&self, ui: &mut egui::Ui, app_locale: &mut String, app_theme: &mut AppTheme) {
         egui::Panel::bottom(Id::new("info_bar")).show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.label(format!(
@@ -55,8 +55,10 @@ impl StatusBar {
 
                 ui.with_layout(Layout::right_to_left(egui::Align::Min), |ui| {
                     let before = app_locale.clone();
+
                     egui::ComboBox::from_id_salt("locale_settings")
                         .selected_text(get_locale_name(&app_locale))
+                        .wrap()
                         .show_ui(ui, |ui| {
                             for (locale, name) in AVAILABLE_LOCALE {
                                 ui.selectable_value(app_locale, locale.to_string(), name);
@@ -66,6 +68,16 @@ impl StatusBar {
                     if *app_locale != before {
                         rust_i18n::set_locale(&app_locale);
                     }
+
+                    ui.add_sized(
+                        [160.0, ui.spacing().interact_size.y],
+                        elegance::Select::new("unit", app_theme).options([
+                            (AppTheme::Slate, "Slate (dark)"),
+                            (AppTheme::Charcoal, "Charcoal (dark)"),
+                            (AppTheme::Frost, "Frost (light)"),
+                            (AppTheme::Paper, "Paper (light)"),
+                        ]),
+                    );
                 });
             })
         });

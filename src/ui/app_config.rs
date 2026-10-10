@@ -6,6 +6,15 @@ use serde::{Deserialize, Serialize};
 
 use crate::ui::{ContextLayer, ContextParameters};
 
+#[derive(Default, Debug, Serialize, Deserialize, PartialEq, Clone)]
+pub enum AppTheme {
+    #[default]
+    Slate,
+    Charcoal,
+    Frost,
+    Paper,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AppConfig {
     #[serde(skip)]
@@ -19,6 +28,9 @@ pub struct AppConfig {
 
     #[serde(default = "default_locale")]
     pub app_locale: String,
+
+    #[serde(default = "default_theme")]
+    pub app_theme: AppTheme,
 
     pub context_parameter: ContextParameters,
     pub context_layer: ContextLayer,
@@ -63,6 +75,7 @@ impl Default for AppConfig {
             app_locale: sys_locale::get_locale().unwrap_or("en".to_string()),
             context_parameter: Default::default(),
             context_layer: Default::default(),
+            app_theme: Default::default(),
         }
     }
 }
@@ -77,4 +90,8 @@ fn default_height() -> f32 {
 
 fn default_locale() -> String {
     "en".to_string()
+}
+
+fn default_theme() -> AppTheme {
+    AppTheme::default()
 }

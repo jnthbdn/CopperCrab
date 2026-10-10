@@ -1107,13 +1107,22 @@ impl CopperCrabApp {
 
 impl eframe::App for CopperCrabApp {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
-        Theme::slate().install(ui.ctx());
+        match self.app_config.app_theme {
+            app_config::AppTheme::Slate => Theme::slate().install(ui.ctx()),
+            app_config::AppTheme::Charcoal => Theme::charcoal().install(ui.ctx()),
+            app_config::AppTheme::Frost => Theme::frost().install(ui.ctx()),
+            app_config::AppTheme::Paper => Theme::paper().install(ui.ctx()),
+        };
 
         let screen_rect = ui.ctx().viewport_rect();
         self.app_config.window_width = screen_rect.width();
         self.app_config.window_height = screen_rect.height();
 
-        self.status_bar.show(ui, &mut self.app_config.app_locale);
+        self.status_bar.show(
+            ui,
+            &mut self.app_config.app_locale,
+            &mut self.app_config.app_theme,
+        );
         panel_logs(ui, &self.log_buffer);
 
         egui::Panel::left("left_panel")
