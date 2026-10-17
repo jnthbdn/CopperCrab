@@ -784,16 +784,25 @@ impl CopperCrabApp {
         }
 
         egui::Area::new(egui::Id::new("canvas_controls"))
-            .fixed_pos(egui::pos2(rect.max.x - 150.0, rect.max.y - 40.0))
+            .fixed_pos(egui::pos2(rect.max.x - 110.0, rect.max.y - 40.0))
             .show(ui.ctx(), |ui| {
                 ui.horizontal(|ui| {
-                    if ui.add(Button::new("−")).clicked() {
+                    if ui
+                        .add(Button::icon('−', "").accent(Accent::Purple))
+                        .clicked()
+                    {
                         self.zoom_on_position(0.95, Vec2::ZERO);
                     }
-                    if ui.add(Button::new("+")).clicked() {
+                    if ui
+                        .add(Button::icon('+', "").accent(Accent::Purple))
+                        .clicked()
+                    {
                         self.zoom_on_position(1.05, Vec2::ZERO);
                     }
-                    if ui.add(Button::new("⊡")).clicked() {
+                    if ui
+                        .add(Button::icon('⊡', "").accent(Accent::Purple))
+                        .clicked()
+                    {
                         // Reset zoom et offset
                         self.center_view_to_board();
                     }
