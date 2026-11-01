@@ -125,7 +125,7 @@ pub struct ToolLibraryUi {
     img_vbit_big_scale: bool,
 }
 
-const IMG_VBIT: egui::ImageSource<'static> = egui::include_image!("../../img/vbit_diagram.png");
+const IMG_VBIT: egui::ImageSource<'static> = egui::include_image!("../../../img/vbit_diagram.png");
 
 impl ToolLibraryUi {
     pub fn show(&mut self, ctx: &egui::Context, open: &mut bool, tool_library: &mut ToolLibrary) {
