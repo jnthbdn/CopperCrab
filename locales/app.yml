@@ -100,10 +100,6 @@ main.info.create_config_folder:
   en: "Config directory created"
   fr: "Dossier de configuration créé"
 
-ui.tool.pick:
-  en: "Pick a tool"
-  fr: "Choisir un outil"
-
 toolpath.info.build_path:
   en: "Build path from layer"
   fr: "Construction des chemins depuis le calque"
@@ -124,9 +120,6 @@ ui.button.export_files:
   en: "Export files"
   fr: "Exporter les fichiers"
 
-ui.button.generate_toolpath:
-  en: "Generate toolpaths"
-  fr: "Générer les chemins d'outil"
 
 ui.button.library.add_drill:
   en: "+ Add Drill"
@@ -144,9 +137,53 @@ ui.button.save:
   en: "Save"
   fr: "Sauvegarder"
 
+ui.button.copper:
+  en: "Copper"
+  fr: "Cuivre"
+
+ui.button.drill:
+  en: "Drill"
+  fr: "Perçage"
+
+ui.button.outline:
+  en: "Outline"
+  fr: "Contour"
+
 ui.button.tool_library:
   en: "Open Tool library"
   fr: "Ouvrir la bibliothèque d'outils"
+
+ui.button.move_origin:
+  en: "Move to (0,0)"
+  fr: "Mise à (0,0)"
+
+ui.button.mirror_x:
+  en: "Mirror X-axis"
+  fr: "Mirroir axe X"
+
+ui.button.mirror_y:
+  en: "Mirror Y-axis"
+  fr: "Mirroir axe Y"
+
+ui.button.delete_file:
+  en: "Delete file"
+  fr: "Supprimer fichier"
+
+ui.button.delete_operation:
+  en: "Delete operation"
+  fr: "Supprimer opération"
+
+ui.button.add_isolation_operation:
+  en: "Add isolation operation"
+  fr: "Ajouter une isolation"
+
+ui.button.add_outline_operation:
+  en: "Add outline operation"
+  fr: "Ajouter un détourage"
+
+ui.button.add_drill_operation:
+  en: "Add drill operation"
+  fr: "Ajouter un perçage"
 
 ui.error.bad_drill_tool:
   en: "Bad drill tool!"
@@ -176,34 +213,6 @@ ui.excellon.error.fail_load:
   en: "Failed to load excellon file: %{e}"
   fr: "Échec du chargement du fichier Excellon : %{e}"
 
-ui.files.pick_copper:
-  en: "Pick copper file"
-  fr: "Choisir le fichier cuivre"
-
-ui.files.pick_drill:
-  en: "Pick drill file"
-  fr: "Choisir le fichier de perçage"
-
-ui.files.pick_outline:
-  en: "Pick outline file"
-  fr: "Choisir le fichier de contour"
-
-ui.files.title:
-  en: "Files"
-  fr: "Fichiers"
-
-ui.info.drill_write:
-  en: "Drill gcode write to %{path}"
-  fr: "G-code de perçage écrit dans %{path}"
-
-ui.info.isolation_write:
-  en: "Isolation gcode write to %{path}"
-  fr: "G-code d'isolation écrit dans %{path}"
-
-ui.info.outline_write:
-  en: "Outline gcode write to %{path}"
-  fr: "G-code de contour écrit dans %{path}"
-
 ui.select_tool.drill:
   en: "Drill tool"
   fr: "Outil de perçage"
@@ -216,21 +225,9 @@ ui.select_tool.outline:
   en: "Outline tool"
   fr: "Outil de contour"
 
-ui.select_tool.title:
-  en: "Tools"
-  fr: "Outils"
-
 ui.status_bar.mouse:
   en: "Mouse"
   fr: "Souris"
-
-ui.status_bar.toolpath_up_to_date:
-  en: "Toolpath up to date"
-  fr: "Chemins à jour"
-
-ui.status_bar.toolpaths_outdated:
-  en: "Toolpath outdated"
-  fr: "Chemins obsolètes"
 
 ui.toolpath.error.fail_generate:
   en: "Fail to generator toolpath: %{e}"
@@ -243,15 +240,3 @@ ui.toolpath.error.fail_load:
 ui.warn.fail_save_library:
   en: "Unable to save the tool library: %{e}"
   fr: "Impossible de sauvegarder la bibliothèque d'outils : %{e}"
-
-ui.warn.no_isolation_toolpath:
-  en: "No file/tool selected for isolation toolpath. Skip."
-  fr: "Aucun fichier/outil sélectionné pour le chemin d'isolation. Ignoré."
-
-ui.warn.no_outline_toolpath:
-  en: "No file/tool selected for outline toolpath. Skip."
-  fr: "Aucun fichier/outil sélectionné pour le chemin de contour. Ignoré."
-
-ui.warn.no_output_folder:
-  en: "No output folder selected."
-  fr: "Aucun dossier de sortie sélectionné."

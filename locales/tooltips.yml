@@ -40,18 +40,6 @@ ui.tooltip.parameters.common.safe_z:
   en: "Distance above the PCB where the tool moves at rapid speed between cuts. Must be high enough to clear any clamps or board edges."
   fr: "Hauteur au-dessus du PCB où l'outil se déplace en rapide entre les coupes. Doit être suffisamment haute pour dégager les brides et les bords du circuit."
 
-ui.tooltip.parameters.common.move_origin:
-  en: "Shifts the design so its origin aligns with (0,0) before G-code generation. Corrects the offset — often significant — found in Gerber files exported from CAD/EDA software, keeping the toolpath within the machine's working area."
-  fr: "Déplace le dessin pour que son origine coïncide avec (0,0) avant la génération du G-code. Corrige le décalage — souvent important — présent dans les fichiers Gerber exportés depuis les logiciels de CAO/EDA, afin que le tracé reste dans la zone de travail de la machine."
-
-ui.tooltip.parameters.common.mirror_x:
-  en: "Mirror it across itself (central X-axis), reflecting the path with respect to the horizontal (X) axis passing through its center."
-  fr: "Miroir sur lui-même (axe X central) qui reflète le tracé par rapport à l’axe horizontal (X) passant par son centre."
-
-ui.tooltip.parameters.common.mirror_y:
-  en: "Mirror it across itself (central Y-axis), reflecting the path with respect to the vertical (Y) axis passing through its center."
-  fr: "Miroir sur lui-même (axe Y central) qui reflète le tracé par rapport à l’axe vertical (Y) passant par son centre."
-
 ui.tooltip.parameters.drill_depth:
   en: "Total drilling depth in mm. Should be slightly greater than the PCB thickness to ensure the drill breaks through completely. Typical FR4 1.6mm board: set to 1.8mm to 2.0mm."
   fr: "Profondeur de perçage totale en mm. Doit être légèrement supérieure à l'épaisseur du PCB pour s'assurer que le foret perce complètement. PCB FR4 1.6mm typique : régler à 1.8mm ou 2.0mm."
@@ -72,21 +60,10 @@ ui.tooltip.parameters.isolation.passes:
   en: "Number of isolation passes around each trace. More passes = wider clearance between traces. Minimum 1."
   fr: "Nombre de passes d'isolation autour de chaque piste. Plus de passes = dégagement plus large entre les pistes. Minimum 1."
 
+ui.tooltip.parameters.isolation.offset:
+  en: "Offsets the isolation toolpath away from the copper. Useful when chaining several isolations, for example a fine tool for the first pass followed by a larger tool to clear more copper: the second pass won't retrace the path of the first one."
+  fr: "Décale le tracé d'isolation par rapport au cuivre. Utile quand on enchaîne plusieurs isolations, par exemple un outil fin pour une première passe puis un outil plus gros pour retirer plus de cuivre : la seconde passe ne repasse pas sur le tracé de la première."
+
 ui.tooltip.parameters.outline.depth:
   en: "Total PCB thickness. The end mill will cut all the way through this depth to separate the board from the substrate. Typical FR4: 1.6mm."
   fr: "Épaisseur totale du PCB. La fraise découpera sur toute cette profondeur pour séparer le circuit du substrat. FR4 typique : 1.6mm."
-
-ui.tooltip.parameters.outline.tab_count:
-  en: "Number of tabs (bridges) to keep the board attached to the substrate during outline cutting. 0 = no tabs. Typical: 4 to 8 tabs depending on board size."
-  fr: "Nombre de tabs (ponts) pour maintenir le circuit attaché au substrat pendant la découpe de contour. 0 = pas de tabs. Typique : 4 à 8 tabs selon la taille du circuit."
-
-ui.tooltip.parameters.outline.tab_length:
-  en: "Length of each tab along the cut path in mm. Longer tabs are stronger but harder to break off cleanly. Typical: 2mm to 5mm."
-  fr: "Longueur de chaque tab le long du chemin de coupe en mm. Des tabs plus longs sont plus solides mais plus difficiles à casser proprement. Typique : 2mm à 5mm."
-
-ui.tooltip.parameters.outline.tab_thickness:
-  en: "Remaining material thickness at each tab in mm. Must be less than the total outline depth. Typical: 0.4mm to 0.8mm for FR4."
-  fr: "Épaisseur de matière restante à chaque tab en mm. Doit être inférieure à la profondeur totale de contour. Typique : 0.4mm à 0.8mm pour du FR4."
-
-
-  
