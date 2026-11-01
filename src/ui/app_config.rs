@@ -20,10 +20,10 @@ pub struct AppConfig {
     #[serde(skip)]
     file_path: PathBuf,
 
-    #[serde(default = "default_width")]
+    #[serde(default = "default_height")]
     pub window_height: f32,
 
-    #[serde(default = "default_height")]
+    #[serde(default = "default_width")]
     pub window_width: f32,
 
     #[serde(default = "default_locale")]
