@@ -6,10 +6,7 @@ use std::{
 use elegance::{Button, Theme};
 use rust_i18n::t;
 
-use crate::{
-    logger::LogEntry,
-    ui::{colors::*, labels::title_label},
-};
+use crate::{logger::LogEntry, ui::widget::labels::title_label};
 
 pub fn panel_logs(ui: &mut egui::Ui, log_buffer: &Arc<Mutex<VecDeque<LogEntry>>>) {
     egui::Panel::bottom("log_panel")
