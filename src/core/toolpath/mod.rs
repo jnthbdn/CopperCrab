@@ -89,9 +89,9 @@ impl ToolpathGenerator {
         Ok(s)
     }
 
-    pub fn generate_toolpaths<Tool: CncTool>(
+    pub fn generate_toolpaths(
         &self,
-        tool: &Tool,
+        tool: &dyn CncTool,
         depth: f64,
         nb_passes: u32,
         pass_overlap: f64,
