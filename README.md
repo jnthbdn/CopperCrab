@@ -42,7 +42,7 @@ CopperCrab is a desktop application that turns Gerber and Excellon files into G-
 - Real-time 2D preview with zoom (scroll wheel or buttons), pan and "fit to board"
 - Persistent tool library (V-Bits, End Mills, Drill Bits) stored as TOML
 - Four themes (Slate, Charcoal, Frost, Paper) and two languages (English, French), switchable from the status bar
-- Persistent settings: window size, language, theme
+- Persistent settings: window size, language, theme, Safe Z / Final Z
 - Integrated log panel
 
 ---
