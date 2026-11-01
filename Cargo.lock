@@ -922,14 +922,16 @@ dependencies = [
 
 [[package]]
 name = "coppercrab"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "clipper2",
  "directories",
  "eframe",
  "egui",
  "egui-elegance",
+ "egui-phosphor",
  "egui_extras",
+ "egui_ltreeview",
  "env_logger",
  "evalexpr",
  "gerber_parser",
@@ -938,6 +940,7 @@ dependencies = [
  "lyon",
  "rfd",
  "rust-i18n",
+ "sanitize-filename",
  "serde",
  "sys-locale",
  "toml 1.1.6+spec-1.1.0",
@@ -1230,6 +1233,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "egui-phosphor"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3f4299551488dddaa8f757727e1eb4ffdaf277ffe6e30b413403468f5ecf4634"
+dependencies = [
+ "egui",
+]
+
+[[package]]
 name = "egui-wgpu"
 version = "0.36.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1301,6 +1313,15 @@ dependencies = [
  "log",
  "profiling",
  "winit",
+]
+
+[[package]]
+name = "egui_ltreeview"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7aff0f79eec78ea0b2084940afd4d31bec4e78e3bdd221387d41ed38ac700130"
+dependencies = [
+ "egui",
 ]
 
 [[package]]
@@ -4153,6 +4174,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "93fc1dc3aaa9bfed95e02e6eadabb4baf7e3078b0bd1b4d7b6b0b68378900502"
 dependencies = [
  "winapi-util",
+]
+
+[[package]]
+name = "sanitize-filename"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bc984f4f9ceb736a7bb755c3e3bd17dc56370af2600c9780dcc48c66453da34d"
+dependencies = [
+ "regex",
 ]
 
 [[package]]

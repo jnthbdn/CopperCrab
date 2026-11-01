@@ -9,7 +9,9 @@ directories = "6.0.0"
 eframe = "0.36.2"
 egui = { version = "0.36.2", features = ["serde"] }
 egui-elegance = "0.16.1"
+egui-phosphor = "0.14.0"
 egui_extras = { version = "0.36.2", features = ["image", "all_loaders"] }
+egui_ltreeview = "0.9.0"
 env_logger = "0.11.10"
 evalexpr = "13.1.0"
 gerber_parser = "0.4.0"
@@ -18,6 +20,7 @@ log = "0.4.29"
 lyon = "1.0.19"
 rfd = "0.17.2"
 rust-i18n = { version = "4.0.0", features = ["log-miss-tr"] }
+sanitize-filename = "0.6.0"
 serde = { version = "1.0.228", features = ["derive"] }
 sys-locale = "0.3.2"
 toml = "1.1.2"
