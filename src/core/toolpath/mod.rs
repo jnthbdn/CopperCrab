@@ -1,4 +1,4 @@
-use clipper2::{EndType, FillRule, JoinType, Paths};
+use clipper2::{EndType, FillRule, JoinType, Path, Paths, Point};
 
 use std::fmt::{self, Write};
 
@@ -6,6 +6,7 @@ use rust_i18n::t;
 
 use crate::core::{
     DrillLayer, PcbLayer, Primitive,
+    bounding_box::BoundingBox,
     geometry::Point2d,
     toolpath::helpers::{
         arc_to_path, circle_to_path, complex_to_path, polygon_to_paths, rectangle_to_path,
@@ -107,6 +108,73 @@ impl ToolpathGenerator {
                     .inflate(offset, JoinType::Round, EndType::Polygon, 2.0)
             })
             .collect::<Vec<Paths>>()
+    }
+
+    pub fn mirror_x(&mut self, center_x: Option<f64>) {
+        let mut b_box = BoundingBox::new();
+
+        if center_x.is_none() {
+            for path in self.traces.iter() {
+                b_box.update_from_bounds(&path.bounds());
+            }
+        }
+
+        if !b_box.is_infinite() || center_x.is_some() {
+            let center_x = center_x.unwrap_or(b_box.get_center().x);
+            let mut new_traces = Vec::new();
+
+            for path in self.traces.iter() {
+                let mut new_path = Vec::new();
+                for p in path.iter() {
+                    new_path.push(Point::new(p.x() - 2.0 * (p.x() - center_x), p.y()));
+                }
+
+                new_traces.push(Path::new(new_path));
+            }
+
+            self.traces = Paths::new(new_traces);
+        }
+    }
+
+    pub fn mirror_y(&mut self, center_y: Option<f64>) {
+        let mut b_box = BoundingBox::new();
+
+        if center_y.is_none() {
+            for path in self.traces.iter() {
+                b_box.update_from_bounds(&path.bounds());
+            }
+        }
+
+        if !b_box.is_infinite() || center_y.is_some() {
+            let center_y = center_y.unwrap_or(b_box.get_center().y);
+            let mut new_traces = Vec::new();
+
+            for path in self.traces.iter() {
+                let mut new_path = Vec::new();
+                for p in path.iter() {
+                    new_path.push(Point::new(p.x(), p.y() - 2.0 * (p.y() - center_y)));
+                }
+
+                new_traces.push(Path::new(new_path));
+            }
+
+            self.traces = Paths::new(new_traces);
+        }
+    }
+
+    pub fn translate(&mut self, offset: Point2d) {
+        let mut new_traces = Vec::new();
+
+        for path in self.traces.iter() {
+            let mut new_path = Vec::new();
+            for p in path.iter() {
+                new_path.push(Point::new(p.x() + offset.x, p.y() + offset.y));
+            }
+
+            new_traces.push(Path::new(new_path));
+        }
+
+        self.traces = Paths::new(new_traces);
     }
 }
 
