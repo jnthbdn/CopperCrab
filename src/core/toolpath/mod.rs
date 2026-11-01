@@ -95,13 +95,14 @@ impl ToolpathGenerator {
         depth: f64,
         nb_passes: u32,
         pass_overlap: f64,
+        start_offset: f64,
     ) -> Vec<Paths> {
         let width = tool.cutting_width(depth);
         let step = width * (1.0 - pass_overlap.min(1.0).max(0.0));
 
         (0..nb_passes)
             .map(|pass| {
-                let offset = (width / 2.0) + (pass as f64) * step;
+                let offset = start_offset + (width / 2.0) + (pass as f64) * step;
                 self.traces
                     .inflate(offset, JoinType::Round, EndType::Polygon, 2.0)
             })
