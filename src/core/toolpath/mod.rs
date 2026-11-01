@@ -115,8 +115,6 @@ pub fn generate_isolation_gcode(
     depth: f64,
     z_safe: f64,
     z_finish: f64,
-    offset: &Point2d,
-    symmetry: (Option<f64>, Option<f64>),
 ) -> String {
     let mut gcode = String::new();
 
@@ -140,18 +138,9 @@ pub fn generate_isolation_gcode(
             let mut points = path.iter();
 
             if let Some(first) = points.next() {
-                let mut first: Point2d = Point2d::new(first.x() + offset.x, first.y() + offset.y);
-
-                if let Some(x_ref) = symmetry.0 {
-                    first.x_symmetry(x_ref);
-                }
-                if let Some(y_ref) = symmetry.1 {
-                    first.y_symmetry(y_ref);
-                }
-
                 writeln!(gcode, "; Move to the first point").unwrap();
                 writeln!(gcode, "G0 Z{}", z_safe).unwrap();
-                writeln!(gcode, "G0 X{:.4} Y{:.4}", first.x, first.y).unwrap();
+                writeln!(gcode, "G0 X{:.4} Y{:.4}", first.x(), first.y()).unwrap();
 
                 let mut current_depth = 0.0;
 
@@ -170,28 +159,18 @@ pub fn generate_isolation_gcode(
 
                     // Follow the path
                     for point in points.as_ref() {
-                        let mut point: Point2d =
-                            Point2d::new(point.x() + offset.x, point.y() + offset.y);
-
-                        if let Some(x_ref) = symmetry.0 {
-                            point.x_symmetry(x_ref);
-                        }
-                        if let Some(y_ref) = symmetry.1 {
-                            point.y_symmetry(y_ref);
-                        }
-
                         writeln!(
                             gcode,
                             "G1 X{:.4} Y{:.4} F{}",
-                            point.x,
-                            point.y,
+                            point.x(),
+                            point.y(),
                             tool.feed_rate()
                         )
                         .unwrap();
                     }
 
                     // Closing path
-                    writeln!(gcode, "G1 X{:.4} Y{:.4}", first.x, first.y).unwrap();
+                    writeln!(gcode, "G1 X{:.4} Y{:.4}", first.x(), first.y()).unwrap();
                 }
 
                 // Go safe Z
@@ -227,8 +206,6 @@ pub fn generate_drill_gcode(
     z_safe: f64,
     z_finish: f64,
     peck_step: f64,
-    offset: &Point2d,
-    symmetry: (Option<f64>, Option<f64>),
 ) -> String {
     let mut gcode = String::new();
 
@@ -246,17 +223,8 @@ pub fn generate_drill_gcode(
     writeln!(gcode, "M3 S{}; Start spindle", tool.spindle_speed()).unwrap();
 
     for hole in &drill_layer.holes {
-        let mut point = Point2d::new(hole.x + offset.x, hole.y + offset.y);
-
-        if let Some(x_ref) = symmetry.0 {
-            point.x_symmetry(x_ref);
-        }
-        if let Some(y_ref) = symmetry.1 {
-            point.y_symmetry(y_ref);
-        }
-
         // Move to hole position
-        writeln!(gcode, "G0 X{:.4} Y{:.4}", point.x, point.y).unwrap();
+        writeln!(gcode, "G0 X{:.4} Y{:.4}", hole.x, hole.y).unwrap();
 
         // Run drill operation with peck step
         let mut current_depth = 0.0;

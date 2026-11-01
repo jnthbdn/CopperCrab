@@ -13,14 +13,6 @@ impl Point2d {
         (self.x, self.y)
     }
 
-    pub fn x_symmetry(&mut self, x_ref: f64) {
-        self.x += (x_ref - self.x) * 2.0;
-    }
-
-    pub fn y_symmetry(&mut self, y_ref: f64) {
-        self.y += (y_ref - self.y) * 2.0;
-    }
-
     pub fn add(mut self, other: &Point2d) -> Self {
         self.x += other.x;
         self.y += other.y;
