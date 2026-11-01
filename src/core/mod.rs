@@ -4,6 +4,7 @@ use gerber_parser::gerber_types::MacroContent;
 
 use crate::core::geometry::{Arc, Circle, Point2d, Rectangle, Segment};
 
+pub mod bounding_box;
 pub mod debug;
 pub mod geometry;
 pub mod parser;
