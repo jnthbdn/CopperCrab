@@ -4,7 +4,7 @@ use rust_i18n::t;
 
 use serde::{Deserialize, Serialize};
 
-use crate::ui::{ContextLayer, ContextParameters};
+use crate::ui::CommonParameters;
 
 #[derive(Default, Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub enum AppTheme {
@@ -32,8 +32,7 @@ pub struct AppConfig {
     #[serde(default = "default_theme")]
     pub app_theme: AppTheme,
 
-    pub context_parameter: ContextParameters,
-    pub context_layer: ContextLayer,
+    pub common_parameters: CommonParameters,
 }
 
 impl AppConfig {
@@ -73,8 +72,7 @@ impl Default for AppConfig {
             window_height: default_height(),
             window_width: default_width(),
             app_locale: sys_locale::get_locale().unwrap_or("en".to_string()),
-            context_parameter: Default::default(),
-            context_layer: Default::default(),
+            common_parameters: Default::default(),
             app_theme: Default::default(),
         }
     }
