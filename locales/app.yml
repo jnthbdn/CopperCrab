@@ -3,240 +3,299 @@ _version: 2
 app_config.error.fail_save:
   en: "Failed to write app config file: %{e}"
   fr: "Échec de l'écriture du fichier de configuration : %{e}"
+  ru: "Не удалось записать файл конфигурации приложения: %{e}"
 
 app_config.info.saved:
   en: "App config saved to: %{path}"
   fr: "Configuration sauvegardée : %{path}"
+  ru: "Конфигурация приложения сохранена в: %{path}"
 
 excellon.info.load_file:
   en: "Loading Excellon: %{path}"
   fr: "Chargement Excellon : %{path}"
+  ru: "Загрузка Excellon: %{path}"
 
 excellon.info.loaded:
   en: "Excellon loaded: %{holes} holes"
   fr: "Excellon chargé : %{holes} trous"
+  ru: "Excellon загружен: %{holes} отверстий"
 
 gerber.error.offset_circule_mode:
   en: "Offset position is mandatory with (Counter) Clockwise interpolation mode"
   fr: "La position d'offset est obligatoire en mode d'interpolation (anti-)horaire"
+  ru: "Позиция смещения обязательна в режиме (против) часовой интерполяции"
 
 gerber.error.no_macro_aperture_name:
   en: "There is no macro aperture definition named '%{name}'"
   fr: "Il n'existe aucune définition de macro d'aperture nommée '%{name}'"
+  ru: "Нет определения макро-апертуры с именем '%{name}'"
 
 gerber.error.macro_variable_not_found:
   en: "Variable '%{var}' not found"
   fr: "La variable '%{var}' est introuvable"
+  ru: "Переменная '%{var}' не найдена"
 
 gerber.error.macro_variable_not_number:
   en: "Variable '%{var}' is not a number"
   fr: "La variable '%{var}' n'est pas un nombre"
+  ru: "Переменная '%{var}' не является числом"
 
 gerber.error.macro_expression_error:
   en: "Failed to evaluate expression '%{expr}'. Error: %{err}"
   fr: "Échec de l'évaluation de l'expression '%{expr}'. Erreur : %{err}"
+  ru: "Не удалось вычислить выражение '%{expr}'. Ошибка: %{err}"
 
 gerber.warn.macro_aperture_parameter_not_number:
   en: "Macro aperture parameters can only be numbers"
   fr: "Les paramètres de macro d'aperture ne peuvent être que des nombres"
+  ru: "Параметры макро-апертуры могут быть только числами"
 
 gerber.info.generate_layer:
   en: "Generating layer"
   fr: "Génération du calque"
+  ru: "Генерация слоя"
 
 gerber.info.load_file:
   en: "Loading file '%{path}'"
   fr: "Chargement du fichier '%{path}'"
+  ru: "Загрузка файла '%{path}'"
 
 gerber.info.loaded:
   en: "Gerber file loaded"
   fr: "Fichier Gerber chargé"
+  ru: "Файл Gerber загружен"
 
 gerber.warn.G_unsupported:
   en: "Unsupported '%{function}'"
   fr: "'%{function}' non supporté"
+  ru: "Неподдерживаемый '%{function}'"
 
 gerber.warn.aperture_unsupported:
   en: "Unsupported '%{function}' aperture"
   fr: "Ouverture '%{function}' non supportée"
+  ru: "Неподдерживаемая апертура '%{function}'"
 
 gerber.warn.deprecated:
   en: "GCode '%{function}' is deprecated since December 2012."
   fr: "Le GCode '%{function}' est déprécié depuis décembre 2012."
+  ru: "GCode '%{function}' устарел с декабря 2012 года."
 
 gerber.warn.extended_unsupported:
   en: "Unsupported extended command '%{function}'"
   fr: "Commande étendue '%{function}' non supportée"
+  ru: "Неподдерживаемая расширенная команда '%{function}'"
 
 library.debug.loaded:
   en: "Tool library loaded from %{path}"
   fr: "Bibliothèque d'outils chargée depuis %{path}"
+  ru: "Библиотека инструментов загружена из %{path}"
 
 library.debug.save_path:
   en: "Saving library to %{path}"
   fr: "Sauvegarde de la bibliothèque vers %{path}"
+  ru: "Сохранение библиотеки в %{path}"
 
 library.info.saved:
   en: "Tool library saved"
   fr: "Bibliothèque d'outils sauvegardée"
+  ru: "Библиотека инструментов сохранена"
 
 library.warn.no_library:
   en: "Tool library not found or empty."
   fr: "Bibliothèque d'outils introuvable ou vide."
+  ru: "Библиотека инструментов не найдена или пуста."
 
 main.error.create_config_folder:
   en: "Failed to create config directory: %{e}"
   fr: "Échec de la création du dossier de configuration : %{e}"
+  ru: "Не удалось создать каталог конфигурации: %{e}"
 
 main.error.get_config_folder:
   en: "Failed to fetch the config folder !"
   fr: "Impossible de récupérer le dossier de configuration !"
+  ru: "Не удалось получить папку конфигурации!"
 
 main.info.config_dir:
   en: "Config dir: %{path}"
   fr: "Dossier de configuration : %{path}"
+  ru: "Каталог конфигурации: %{path}"
 
 main.info.create_config_folder:
   en: "Config directory created"
   fr: "Dossier de configuration créé"
+  ru: "Каталог конфигурации создан"
 
 toolpath.info.build_path:
   en: "Build path from layer"
   fr: "Construction des chemins depuis le calque"
+  ru: "Построение траекторий по слою"
 
 ui.button.cancel:
   en: "Cancel"
   fr: "Annuler"
+  ru: "Отмена"
 
 ui.button.clear_logs:
   en: "Clear logs"
   fr: "Effacer les logs"
+  ru: "Очистить логи"
 
 ui.button.close:
   en: "Close"
   fr: "Fermer"
+  ru: "Закрыть"
 
 ui.button.export_files:
   en: "Export files"
   fr: "Exporter les fichiers"
-
+  ru: "Экспортировать файлы"
 
 ui.button.library.add_drill:
   en: "+ Add Drill"
   fr: "+ Ajouter un foret"
+  ru: "+ Добавить сверло"
 
 ui.button.library.add_end_mill:
   en: "+ Add End-mill"
   fr: "+ Ajouter une fraise"
+  ru: "+ Добавить концевую фрезу"
 
 ui.button.library.add_vbit:
   en: "+ Add V-Bit"
   fr: "+ Ajouter un V-Bit"
+  ru: "+ Добавить V-образную фрезу"
 
 ui.button.save:
   en: "Save"
   fr: "Sauvegarder"
+  ru: "Сохранить"
 
 ui.button.copper:
   en: "Copper"
   fr: "Cuivre"
+  ru: "Медь"
 
 ui.button.drill:
   en: "Drill"
   fr: "Perçage"
+  ru: "Сверление"
 
 ui.button.outline:
   en: "Outline"
   fr: "Contour"
+  ru: "Контур"
 
 ui.button.tool_library:
   en: "Open Tool library"
   fr: "Ouvrir la bibliothèque d'outils"
+  ru: "Открыть библиотеку инструментов"
 
 ui.button.move_origin:
   en: "Move to (0,0)"
   fr: "Mise à (0,0)"
+  ru: "Переместить в (0,0)"
 
 ui.button.mirror_x:
   en: "Mirror X-axis"
   fr: "Mirroir axe X"
+  ru: "Отразить по оси X"
 
 ui.button.mirror_y:
   en: "Mirror Y-axis"
   fr: "Mirroir axe Y"
+  ru: "Отразить по оси Y"
 
 ui.button.delete_file:
   en: "Delete file"
   fr: "Supprimer fichier"
+  ru: "Удалить файл"
 
 ui.button.delete_operation:
   en: "Delete operation"
   fr: "Supprimer opération"
+  ru: "Удалить операцию"
 
 ui.button.add_isolation_operation:
   en: "Add isolation operation"
   fr: "Ajouter une isolation"
+  ru: "Добавить операцию изоляции"
 
 ui.button.add_outline_operation:
   en: "Add outline operation"
   fr: "Ajouter un détourage"
+  ru: "Добавить операцию контура"
 
 ui.button.add_drill_operation:
   en: "Add drill operation"
   fr: "Ajouter un perçage"
+  ru: "Добавить операцию сверления"
 
 ui.error.bad_drill_tool:
   en: "Bad drill tool!"
   fr: "Outil de perçage invalide !"
+  ru: "Неверный инструмент сверления!"
 
 ui.error.bad_isolation_tool:
   en: "Bad isolation tool!"
   fr: "Outil d'isolation invalide !"
+  ru: "Неверный инструмент изоляции!"
 
 ui.error.bad_outline_tool:
   en: "Bad outline tool!"
   fr: "Outil de contour invalide !"
+  ru: "Неверный инструмент контура!"
 
 ui.error.fail_write_drill:
   en: "Failed to write drill gcode file: %{e}"
   fr: "Échec de l'écriture du fichier G-code de perçage : %{e}"
+  ru: "Не удалось записать файл G-кода сверления: %{e}"
 
 ui.error.fail_write_isolation:
   en: "Failed to write isolation gcode file: %{e}"
   fr: "Échec de l'écriture du fichier G-code d'isolation : %{e}"
+  ru: "Не удалось записать файл G-кода изоляции: %{e}"
 
 ui.error.fail_write_outline:
   en: "Failed to write outline gcode file: %{e}"
   fr: "Échec de l'écriture du fichier G-code de contour : %{e}"
+  ru: "Не удалось записать файл G-кода контура: %{e}"
 
 ui.excellon.error.fail_load:
   en: "Failed to load excellon file: %{e}"
   fr: "Échec du chargement du fichier Excellon : %{e}"
+  ru: "Не удалось загрузить файл Excellon: %{e}"
 
 ui.select_tool.drill:
   en: "Drill tool"
   fr: "Outil de perçage"
+  ru: "Инструмент сверления"
 
 ui.select_tool.isolation:
   en: "Isolation tool"
   fr: "Outil d'isolation"
+  ru: "Инструмент изоляции"
 
 ui.select_tool.outline:
   en: "Outline tool"
   fr: "Outil de contour"
+  ru: "Инструмент контура"
 
 ui.status_bar.mouse:
   en: "Mouse"
   fr: "Souris"
+  ru: "Мышь"
 
 ui.toolpath.error.fail_generate:
   en: "Fail to generator toolpath: %{e}"
   fr: "Échec de la génération des chemins d'outil : %{e}"
+  ru: "Не удалось сгенерировать траектории инструмента: %{e}"
 
 ui.toolpath.error.fail_load:
   en: "Failed to load gerber: %{e}"
   fr: "Échec du chargement du fichier Gerber : %{e}"
+  ru: "Не удалось загрузить Gerber: %{e}"
 
 ui.warn.fail_save_library:
   en: "Unable to save the tool library: %{e}"
   fr: "Impossible de sauvegarder la bibliothèque d'outils : %{e}"
+  ru: "Невозможно сохранить библиотеку инструментов: %{e}"

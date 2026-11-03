@@ -32,7 +32,8 @@ mod widget;
 pub(crate) use project::CommonParameters;
 
 const TOOLS_FILENAME: &str = "tools.toml";
-const AVAILABLE_LOCALE: [(&str, &str); 2] = [("en", "English"), ("fr", "Français")];
+const AVAILABLE_LOCALE: [(&str, &str); 3] =
+    [("en", "English"), ("fr", "Français"), ("ru", "Russian")];
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 struct ContextTools {

@@ -3,147 +3,184 @@ _version: 2
 ui.label.project:
   en: "Project"
   fr: "Projet"
+  ru: "Проект"
 
 ui.label.file:
   en: "File"
   fr: "Fichier"
+  ru: "Файл"
 
 ui.label.filename:
   en: "File name"
   fr: "Nom du fichier"
+  ru: "Имя файла"
 
 ui.label.operation.name:
   en: "Operation name"
   fr: "Nom de l'opération"
+  ru: "Название операции"
 
 ui.label.title_files_operations:
   en: "Files & Operations"
   fr: "Fichers & Opérations"
+  ru: "Файлы и операции"
 
 ui.label.click_to_enlarge:
   en: "Click to enlarge"
   fr: "Cliquer pour agrandir"
+  ru: "Нажмите для увеличения"
 
 ui.label.library.angle:
   en: "Angle"
   fr: "Angle"
+  ru: "Угол"
 
 ui.label.library.default_drill_name:
   en: "New drill"
   fr: "Nouveau foret"
+  ru: "Новое сверло"
 
 ui.label.library.default_end_mill_name:
   en: "New end-mill"
   fr: "Nouvelle fraise"
+  ru: "Новая концевая фреза"
 
 ui.label.library.default_vbit_name:
   en: "New V-Bit"
   fr: "Nouveau V-Bit"
+  ru: "Новая V-образная фреза"
 
 ui.label.library.diameter:
   en: "Diameter"
   fr: "Diamètre"
+  ru: "Диаметр"
 
 ui.label.library.drill:
   en: "Drill"
   fr: "Foret"
+  ru: "Сверло"
 
 ui.label.library.end_mill:
   en: "End-mill"
   fr: "Fraise"
+  ru: "Концевая фреза"
 
 ui.label.library.feed_rate:
   en: "Feed rate"
   fr: "Vitesse d'avance"
+  ru: "Скорость подачи"
 
 ui.label.library.max_depth:
   en: "Max depth"
   fr: "Prof. max."
+  ru: "Макс. глубина"
 
 ui.label.library.name:
   en: "Name"
   fr: "Nom"
+  ru: "Название"
 
 ui.label.library.plunge_rate:
   en: "Plunge rate"
   fr: "Vitesse de plongée"
+  ru: "Скорость погружения"
 
 ui.label.library.short_diameter:
   en: "dia."
   fr: "dia."
+  ru: "диам."
 
 ui.label.library.spindle_speed:
   en: "Spindle speed"
   fr: "Vitesse broche"
+  ru: "Скорость шпинделя"
 
 ui.label.library.tip:
   en: "Tip"
   fr: "Pointe"
+  ru: "Наконечник"
 
 ui.label.library.tip_diameter:
   en: "Tip diameter"
   fr: "Diamètre de pointe"
+  ru: "Диаметр наконечника"
 
 ui.label.library.vbit:
   en: "V-Bit"
   fr: "V-Bit"
+  ru: "V-образная фреза"
 
 ui.label.logs:
   en: "Logs"
   fr: "Logs"
+  ru: "Логи"
 
 ui.label.parameters.common.final_z:
   en: "Final Z"
   fr: "Z final"
+  ru: "Конечная Z"
 
 ui.label.parameters.common.safe_z:
   en: "Safe Z"
   fr: "Z sécurité"
+  ru: "Безопасная Z"
 
 ui.label.parameters.drill.drill_depth:
   en: "Drill depth"
   fr: "Profondeur de perçage"
+  ru: "Глубина сверления"
 
 ui.label.parameters.drill.drill_peck:
   en: "Drill peck step"
   fr: "Pas de débourrage"
+  ru: "Шаг прерывистого сверления"
 
 ui.label.parameters.drill.title:
   en: "Drill parameters"
   fr: "Paramètres de perçage"
+  ru: "Параметры сверления"
 
 ui.label.parameters.isolation.depth:
   en: "Isolation depth"
   fr: "Profondeur d'isolation"
+  ru: "Глубина изоляции"
 
 ui.label.parameters.isolation.depth_result:
   en: "Cutting width"
   fr: "Largeur de coupe"
+  ru: "Ширина резания"
 
 ui.label.parameters.isolation.total_width:
   en: "Total isolation width"
   fr: "Largeur totale d'isolation"
+  ru: "Общая ширина изоляции"
 
 ui.label.parameters.isolation.overlap:
   en: "Overlap"
   fr: "Recouvrement"
+  ru: "Перекрытие"
 
 ui.label.parameters.isolation.passes:
   en: "Passes"
   fr: "Passes"
+  ru: "Проходы"
 
 ui.label.parameters.isolation.offset:
   en: "Offset"
   fr: "Décalage"
+  ru: "Смещение"
 
 ui.label.parameters.isolation.title:
   en: "Isolation parameters"
   fr: "Paramètres d'isolation"
+  ru: "Параметры изоляции"
 
 ui.label.parameters.outline.depth:
   en: "Depth"
   fr: "Profondeur"
+  ru: "Глубина"
 
 ui.label.parameters.outline.title:
   en: "Outline parameters"
   fr: "Paramètres de contour"
+  ru: "Параметры контура"
