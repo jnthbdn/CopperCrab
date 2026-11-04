@@ -428,12 +428,37 @@ fn aperture_to_primitive(
             rotation: 0.0,
         })),
 
-        Aperture::Obround(_rectangular) => {
-            log::warn!(
-                "{}",
-                t!("gerber.warn.aperture_unsupported", function = "Obround")
-            );
-            None
+        // Aperture::Obround(_rectangular) => {
+        //     log::warn!(
+        //         "{}",
+        //         t!("gerber.warn.aperture_unsupported", function = "Obround")
+        //     );
+        //     None
+        // }
+        Aperture::Obround(rect) => {
+            let (x, y) = (rect.x, rect.y);
+
+
+            if (x - y).abs() < f64::EPSILON {
+                Some(Primitive::Circle(Circle {
+                    center: position.clone(),
+                    diameter: x,
+                }))
+            } else if x > y {
+                let half = (x - y) / 2.0;
+                Some(Primitive::Segment(Segment {
+                    start: Point2d::new(position.x - half, position.y),
+                    end:   Point2d::new(position.x + half, position.y),
+                    width: y,
+                }))
+            } else {
+                let half = (y - x) / 2.0;
+                Some(Primitive::Segment(Segment {
+                    start: Point2d::new(position.x, position.y - half),
+                    end:   Point2d::new(position.x, position.y + half),
+                    width: x,
+                }))
+            }
         }
 
         Aperture::Polygon(_polygon) => {

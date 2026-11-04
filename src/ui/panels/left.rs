@@ -88,7 +88,6 @@ impl CopperCrabApp {
         let btn_h = ui.spacing().interact_size.y;
 
         ui.vertical(|ui| {
-        
             if ui
                 .add_sized(
                     [ui.available_width(), btn_h],
@@ -132,7 +131,6 @@ impl CopperCrabApp {
                 }
             }
 
-        
             if ui
                 .add_sized(
                     [ui.available_width(), btn_h],
@@ -158,7 +156,7 @@ impl CopperCrabApp {
                                             .unwrap_or("Outline")
                                             .into(),
                                         SourceKind::Outline(generator),
-                                        Some(path), // ← добавлено
+                                        Some(path),
                                     ));
                                     self.center_view_to_board();
                                 }
@@ -176,7 +174,6 @@ impl CopperCrabApp {
                 }
             }
 
-        
             if ui
                 .add_sized(
                     [ui.available_width(), btn_h],
@@ -201,7 +198,7 @@ impl CopperCrabApp {
                                         .unwrap_or("Drill")
                                         .into(),
                                     SourceKind::Drill(layer),
-                                    Some(path), // ← добавлено
+                                    Some(path),
                                 ));
                                 self.center_view_to_board();
                             }
@@ -216,7 +213,6 @@ impl CopperCrabApp {
 
             ui.add_space(4.0);
 
-        
             if ui
                 .add_sized(
                     [ui.available_width(), btn_h],
@@ -273,9 +269,29 @@ impl CopperCrabApp {
             });
 
         builder.node(node);
+
         for (i, op) in file.operations.iter().enumerate() {
-            builder.leaf(FileOperationId::Operation(file_id, i), op.name.clone());
+            let op_id = FileOperationId::Operation(file_id, i);
+
+            let leaf = NodeBuilder::leaf(op_id.clone())
+                .label(op.name.clone())
+                .context_menu(|ui| {
+                    if ui
+                        .button(format!(
+                            "{} {}",
+                            egui_phosphor::regular::TRASH,
+                            t!("ui.button.delete_operation")
+                        ))
+                        .clicked()
+                    {
+                        actions.push(FileTreeActions::DeleteItem(op_id.clone()));
+                        ui.close();
+                    }
+                });
+
+            builder.node(leaf);
         }
+
         builder.close_dir();
     }
 
