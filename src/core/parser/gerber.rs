@@ -428,13 +428,13 @@ fn aperture_to_primitive(
             rotation: 0.0,
         })),
 
-        // Aperture::Obround(_rectangular) => {
-        //     log::warn!(
-        //         "{}",
-        //         t!("gerber.warn.aperture_unsupported", function = "Obround")
-        //     );
-        //     None
-        // }
+    
+    
+    
+    
+    
+    
+    
         Aperture::Obround(rect) => {
             let (x, y) = (rect.x, rect.y);
 

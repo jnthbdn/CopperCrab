@@ -67,7 +67,7 @@ impl CopperCrabApp {
                         .map_err(|e| format!("{}: {}", snap.path.display(), e))?;
                     let generator =
                         ToolpathGenerator::new(&layer, false).map_err(|e| e.to_string())?;
-                    SourceKind::Copper(generator)
+                    SourceKind::Copper { generator, layer }
                 }
                 SourceKindTag::Outline => {
                     let layer = load_gerber(&snap.path)
@@ -87,6 +87,10 @@ impl CopperCrabApp {
             file.is_visible = snap.is_visible;
             file.operations = snap.operations;
             file.next_id_operation = snap.next_id_operation;
+
+        
+            file.hidden_primitives = snap.hidden_primitives.into_iter().collect();
+
             self.files.push(file);
         }
 

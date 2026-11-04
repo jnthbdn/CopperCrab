@@ -1,8 +1,8 @@
 use crate::{
-    core::tools::CncTool,
+    core::{PcbLayer, PcbTrace, toolpath::ToolpathGenerator, tools::CncTool},
     ui::{
         CopperCrabApp,
-        project::{OperationKind, SelectedTool},
+        project::{OperationKind, SelectedTool, SourceKind},
     },
 };
 
@@ -41,13 +41,43 @@ impl CopperCrabApp {
                         };
 
                         if let Some(tool) = tool {
-                            op.toolpath = file.source.as_copper().unwrap().generate_toolpaths(
-                                tool,
-                                op.depth,
-                                passes,
-                                overlap / 100.0,
-                                offset,
-                            )
+                            if let SourceKind::Copper { layer, .. } = &file.source {
+                                let mut filtered_layer = PcbLayer {
+                                    unit: layer.unit.clone(),
+                                    traces: Vec::new(),
+                                    aperture_macro: layer.aperture_macro.clone(),
+                                };
+
+                                for (t_idx, trace) in layer.traces.iter().enumerate() {
+                                    let mut new_trace = PcbTrace {
+                                        primitives: Vec::new(),
+                                    };
+                                    for (p_idx, prim) in trace.primitives.iter().enumerate() {
+                                        if !file.hidden_primitives.contains(&(t_idx, p_idx)) {
+                                            new_trace.primitives.push(prim.clone());
+                                        }
+                                    }
+                                    if !new_trace.primitives.is_empty() {
+                                        filtered_layer.traces.push(new_trace);
+                                    }
+                                }
+
+                                if let Ok(generator) =
+                                    ToolpathGenerator::new(&filtered_layer, false)
+                                {
+                                    op.toolpath = generator.generate_toolpaths(
+                                        tool,
+                                        op.depth,
+                                        passes,
+                                        overlap / 100.0,
+                                        offset,
+                                    );
+                                } else {
+                                    op.toolpath = Vec::new();
+                                }
+                            } else {
+                                op.toolpath = Vec::new();
+                            }
                         } else {
                             op.toolpath = Vec::new();
                         }

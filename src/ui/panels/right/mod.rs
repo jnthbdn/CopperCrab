@@ -17,8 +17,12 @@ impl CopperCrabApp {
                     FileOperationId::Root => self.ui_right_project(ui),
                     FileOperationId::File(id) => action = self.ui_right_file(ui, id),
                     FileOperationId::Operation(id_file, id_op) => {
-                        action = self.ui_right_operation(ui, id_file, id_op)
+                    
+                        if id_op < 999_999 {
+                            action = self.ui_right_operation(ui, id_file, id_op);
+                        }
                     }
+                    FileOperationId::Hidden(_) => {}
                 }
             };
 

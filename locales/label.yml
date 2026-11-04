@@ -259,8 +259,33 @@ ui.menu.save_project_as:
   en: "Save Project As…"
   fr: "Enregistrer le projet sous…"
   ru: "Сохранить проект как…"
-  
+
 ui.menu.close_project:
   en: "Close Project"
   fr: "Fermer le projet"
   ru: "Закрыть проект"
+
+ui.label.hidden_primitives:
+  en: "Hidden"
+  fr: "Masqués"
+  ru: "Скрытые"
+
+ui.label.object:
+  en: "Object"
+  fr: "Objet"
+  ru: "Объект"
+
+ui.button.hide_primitive:
+  en: "Hide"
+  fr: "Masquer"
+  ru: "Скрыть"
+
+ui.button.restore:
+  en: "Restore"
+  fr: "Restaurer"
+  ru: "Вернуть"
+
+ui.button.clear_selection:
+  en: "Clear selection"
+  fr: "Effacer la sélection"
+  ru: "Снять выделение"

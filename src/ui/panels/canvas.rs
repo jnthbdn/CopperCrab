@@ -1,5 +1,6 @@
 use egui::{Color32, Vec2};
 use elegance::{Accent, Button};
+use rust_i18n::t;
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -10,7 +11,9 @@ use crate::{
         panels::left::FileOperationId,
         pcb_transform::PcbTransform,
         project::SourceKind,
-        widget::canvas::{draw_axes, draw_paths, draw_paths_stroke},
+        widget::canvas::{
+            draw_axes, draw_paths, draw_paths_stroke, draw_primitive, hit_test_primitive,
+        },
     },
 };
 
@@ -19,7 +22,14 @@ pub(crate) struct CanvasState {
     pub(crate) zoom: f32,
     pub(crate) offset: egui::Vec2,
     pub(crate) rect: egui::Rect,
+
+    #[serde(skip)]
+    pub(crate) hovered_primitive: Option<(usize, usize, usize)>, // (file_id, t_idx, p_idx)
+
+    #[serde(skip)]
+    pub(crate) context_menu_target: Option<(usize, usize, usize)>,
 }
+
 impl Default for CanvasState {
     fn default() -> Self {
         Self {
@@ -29,6 +39,8 @@ impl Default for CanvasState {
                 min: Default::default(),
                 max: Default::default(),
             },
+            hovered_primitive: None,
+            context_menu_target: None,
         }
     }
 }
@@ -47,6 +59,12 @@ impl CopperCrabApp {
 
         draw_axes(&painter, &transform);
 
+    
+        let mut show_hidden_file_id: Option<usize> = None;
+        if let Some(FileOperationId::Hidden(fid)) = self.tree_files_states.selected().first() {
+            show_hidden_file_id = Some(*fid);
+        }
+
         let (sel_file_id, sel_op_id) = self
             .tree_files_states
             .selected()
@@ -63,9 +81,29 @@ impl CopperCrabApp {
             }
 
             match &file.source {
-                SourceKind::Copper(copper) => {
-                    draw_paths(&painter, &copper.traces, &transform, COPPER, 1.0);
+                SourceKind::Copper { generator, layer } => {
+                
+                    for (t_idx, trace) in layer.traces.iter().enumerate() {
+                        for (p_idx, prim) in trace.primitives.iter().enumerate() {
+                            let key = (t_idx, p_idx);
+                            let is_selected = file.selected_primitives.contains(&key);
+                            let is_hidden = file.hidden_primitives.contains(&key);
 
+                            if is_hidden {
+                            
+                                if show_hidden_file_id == Some(file_id) {
+                                
+                                    draw_primitive(&painter, prim, &transform, Color32::RED);
+                                }
+                                continue; // Иначе просто пропускаем (не рисуем)
+                            }
+
+                            let color = if is_selected { SELECTED_PATH } else { COPPER };
+                            draw_primitive(&painter, prim, &transform, color);
+                        }
+                    }
+
+                
                     for (op_id, operation) in file.operations.iter().enumerate() {
                         let color = if file_id == sel_file_id && op_id == sel_op_id {
                             SELECTED_PATH
@@ -77,6 +115,8 @@ impl CopperCrabApp {
                             draw_paths_stroke(&painter, paths, &transform, color, 1.0);
                         }
                     }
+
+                    let _ = generator;
                 }
 
                 SourceKind::Outline(outline) => {
@@ -101,6 +141,117 @@ impl CopperCrabApp {
             }
         }
 
+    
+        self.canvas.hovered_primitive = None;
+        if let Some(pos) = response.hover_pos() {
+            let pcb_x = (pos.x - transform.rect.min.x - transform.offset.x) / transform.scale;
+            let pcb_y = -(pos.y - transform.rect.min.y - transform.offset.y) / transform.scale;
+            let tolerance = 5.0 / transform.scale as f64;
+
+            for (fid, file) in self.files.iter().enumerate() {
+                if !file.is_visible {
+                    continue;
+                }
+                if let SourceKind::Copper { layer, .. } = &file.source {
+                
+                    for (t_idx, trace) in layer.traces.iter().enumerate() {
+                        for (p_idx, prim) in trace.primitives.iter().enumerate() {
+                            if file.hidden_primitives.contains(&(t_idx, p_idx)) {
+                                continue;
+                            }
+
+                            if hit_test_primitive(prim, pcb_x as f64, pcb_y as f64, tolerance) {
+                                self.canvas.hovered_primitive = Some((fid, t_idx, p_idx));
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    
+        if response.clicked() {
+            if let Some(pos) = response.interact_pointer_pos() {
+                let pcb_x = (pos.x - transform.rect.min.x - transform.offset.x) / transform.scale;
+                let pcb_y = -(pos.y - transform.rect.min.y - transform.offset.y) / transform.scale;
+                let tolerance = 5.0 / transform.scale as f64;
+
+                let mut hit: Option<(usize, usize, usize)> = None;
+                'outer: for (fid, file) in self.files.iter().enumerate() {
+                    if !file.is_visible {
+                        continue;
+                    }
+                    if let SourceKind::Copper { layer, .. } = &file.source {
+                        for (t_idx, trace) in layer.traces.iter().enumerate() {
+                            for (p_idx, prim) in trace.primitives.iter().enumerate() {
+                                if file.hidden_primitives.contains(&(t_idx, p_idx)) {
+                                    continue;
+                                }
+
+                                if hit_test_primitive(prim, pcb_x as f64, pcb_y as f64, tolerance) {
+                                    hit = Some((fid, t_idx, p_idx));
+                                    break 'outer;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                let additive = ui.input(|i| i.modifiers.shift || i.modifiers.ctrl);
+
+                if let Some((fid, t_idx, p_idx)) = hit {
+                    let file = &mut self.files[fid];
+                    if !additive {
+                        file.selected_primitives.clear();
+                    }
+                    let key = (t_idx, p_idx);
+                    if !file.selected_primitives.remove(&key) {
+                        file.selected_primitives.insert(key);
+                    }
+                } else if !additive {
+                    for file in &mut self.files {
+                        file.selected_primitives.clear();
+                    }
+                }
+            }
+        }
+
+    
+        if response.secondary_clicked() {
+        
+            self.canvas.context_menu_target = self.canvas.hovered_primitive;
+        }
+
+        response.context_menu(|ui| {
+            if let Some((fid, t_idx, p_idx)) = self.canvas.context_menu_target {
+                if ui
+                    .button(format!(
+                        "{} {}",
+                        egui_phosphor::regular::EYE_SLASH,
+                        t!("ui.button.hide_primitive")
+                    ))
+                    .clicked()
+                {
+                    let file = &mut self.files[fid];
+                    file.selected_primitives.remove(&(t_idx, p_idx));
+                    file.hidden_primitives.insert((t_idx, p_idx));
+
+                    self.generate_file_toolpaths(fid);
+                    ui.close();
+                }
+                ui.separator();
+            }
+
+            if ui.button(t!("ui.button.clear_selection")).clicked() {
+                for file in &mut self.files {
+                    file.selected_primitives.clear();
+                }
+                ui.close();
+            }
+        });
+
+    
         if response.dragged() {
             self.canvas.offset += response.drag_delta();
         }
@@ -119,6 +270,7 @@ impl CopperCrabApp {
             self.status_bar.set_mouse_pcb(pcb_x, pcb_y);
         }
 
+    
         egui::Area::new(egui::Id::new("canvas_controls"))
             .fixed_pos(egui::pos2(rect.max.x - 110.0, rect.max.y - 40.0))
             .show(ui.ctx(), |ui| {
@@ -149,8 +301,8 @@ impl CopperCrabApp {
 
         for file in &self.files {
             match &file.source {
-                SourceKind::Copper(toolpath_generator) => {
-                    b_box.update_from_bounds(&toolpath_generator.traces.bounds())
+                SourceKind::Copper { generator, .. } => {
+                    b_box.update_from_bounds(&generator.traces.bounds())
                 }
                 SourceKind::Outline(toolpath_generator) => {
                     b_box.update_from_bounds(&toolpath_generator.traces.bounds())

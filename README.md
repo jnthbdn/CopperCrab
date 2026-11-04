@@ -105,7 +105,7 @@ Not supported: inch units, integer / implicit-decimal coordinates, routed slots 
 
 - **One tool per drill operation** — every hole of a drill file is drilled with the operation's bit, regardless of its diameter. Holes are not yet sorted or filtered by size.
 - **No outline tabs** — the board is cut free on the last pass.
-- **Single side** — only one copper side per operation; for double-sided boards, mirror the bottom layer and run it as a separate job.
+- **Single side** — only one copper side per operation; for double-sided boards, mirror the bottom Layer and run it as a separate job.
 - **GRBL only** — no LinuxCNC / Mach3 dialect yet.
 - **No tool change / spindle dwell** — each operation is a separate file; the spindle starts (`M3`) without a `G4` dwell.
 

@@ -21,12 +21,14 @@ pub(crate) enum FileTreeActions {
     DeleteItem(FileOperationId),
     AddOperation(usize),
     ToggleVisibility(usize),
+    RestorePrimitive(usize, (usize, usize)),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub(crate) enum FileOperationId {
     Root,
     File(usize),
+    Hidden(usize), // Папка со скрытыми примитивами для конкретного файла
     Operation(usize, usize),
 }
 
@@ -112,7 +114,7 @@ impl CopperCrabApp {
                                             .and_then(|f| f.to_str())
                                             .unwrap_or("Copper")
                                             .into(),
-                                        SourceKind::Copper(generator),
+                                        SourceKind::Copper { generator, layer },
                                         Some(path),
                                     ));
                                     self.center_view_to_board();
@@ -270,6 +272,47 @@ impl CopperCrabApp {
 
         builder.node(node);
 
+    
+        if let SourceKind::Copper { .. } = &file.source {
+            if !file.hidden_primitives.is_empty() {
+                let hidden_id = FileOperationId::Hidden(file_id);
+                let hidden_node = NodeBuilder::dir(hidden_id).label(format!(
+                    "{} {} ({})",
+                    egui_phosphor::regular::EYE_SLASH,
+                    t!("ui.label.hidden_primitives"),
+                    file.hidden_primitives.len()
+                ));
+                builder.node(hidden_node);
+
+            
+                for &(t_idx, p_idx) in &file.hidden_primitives {
+                
+                    let restore_id =
+                        FileOperationId::Operation(file_id, 999_999 + t_idx * 10_000 + p_idx);
+                    let restore_leaf = NodeBuilder::leaf(restore_id)
+                        .label(format!("{} #{}", t!("ui.label.object"), p_idx))
+                        .context_menu(|ui| {
+                            if ui
+                                .button(format!(
+                                    "{} {}",
+                                    egui_phosphor::regular::ARROW_U_UP_LEFT,
+                                    t!("ui.button.restore")
+                                ))
+                                .clicked()
+                            {
+                                actions.push(FileTreeActions::RestorePrimitive(
+                                    file_id,
+                                    (t_idx, p_idx),
+                                ));
+                                ui.close();
+                            }
+                        });
+                    builder.node(restore_leaf);
+                }
+                builder.close_dir();
+            }
+        }
+
         for (i, op) in file.operations.iter().enumerate() {
             let op_id = FileOperationId::Operation(file_id, i);
 
@@ -299,22 +342,25 @@ impl CopperCrabApp {
         match action {
             FileTreeActions::DeleteItem(file_operation_id) => match file_operation_id {
                 FileOperationId::Root => (),
+                FileOperationId::Hidden(_) => (),
                 FileOperationId::File(id) => {
                     self.files.remove(id);
                     self.tree_files_states = Default::default();
                 }
                 FileOperationId::Operation(id_file, id_op) => {
-                    if let Some(file) = self.files.get_mut(id_file) {
-                        file.operations.remove(id_op);
+                    if id_op < 999_999 {
+                        if let Some(file) = self.files.get_mut(id_file) {
+                            file.operations.remove(id_op);
+                        }
+                        self.tree_files_states = Default::default();
                     }
-                    self.tree_files_states = Default::default();
                 }
             },
             FileTreeActions::AddOperation(file_id) => {
                 if let Some(file) = self.files.get_mut(file_id) {
                     let name = file.next_operation_name();
                     match file.source {
-                        SourceKind::Copper(_) => {
+                        SourceKind::Copper { .. } => {
                             file.operations.push(Operation::new_isolation(name))
                         }
                         SourceKind::Outline(_) => {
@@ -327,6 +373,12 @@ impl CopperCrabApp {
             FileTreeActions::ToggleVisibility(file_id) => {
                 if let Some(file) = self.files.get_mut(file_id) {
                     file.is_visible = !file.is_visible;
+                }
+            }
+            FileTreeActions::RestorePrimitive(file_id, key) => {
+                if let Some(file) = self.files.get_mut(file_id) {
+                    file.hidden_primitives.remove(&key);
+                    self.generate_file_toolpaths(file_id);
                 }
             }
         };

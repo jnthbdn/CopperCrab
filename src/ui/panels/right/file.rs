@@ -127,8 +127,10 @@ impl CopperCrabApp {
             {
                 let mut bb = crate::core::bounding_box::BoundingBox::new();
                 match &file.source {
-                    crate::ui::project::SourceKind::Copper(g)
-                    | crate::ui::project::SourceKind::Outline(g) => {
+                    crate::ui::project::SourceKind::Copper { generator, .. } => {
+                        bb.update_from_bounds(&generator.traces.bounds());
+                    }
+                    crate::ui::project::SourceKind::Outline(g) => {
                         bb.update_from_bounds(&g.traces.bounds());
                     }
                     crate::ui::project::SourceKind::Drill(d) => {

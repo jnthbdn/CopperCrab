@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
@@ -8,7 +9,7 @@ mod project_file;
 mod source;
 
 pub(crate) use operation::{Operation, OperationKind, SelectedTool};
-pub(crate) use project_file::{ProjectFile, SourceFileSnapshot, SourceKindTag, PROJECT_VERSION};
+pub(crate) use project_file::{PROJECT_VERSION, ProjectFile, SourceFileSnapshot, SourceKindTag};
 pub(crate) use source::SourceKind;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -33,11 +34,13 @@ pub(crate) struct SourceFile {
     pub source: SourceKind,
     pub operations: Vec<Operation>,
 
-
     pub path: Option<PathBuf>,
 
-
     pub(crate) next_id_operation: usize,
+
+    pub(crate) selected_primitives: HashSet<(usize, usize)>,
+
+    pub(crate) hidden_primitives: HashSet<(usize, usize)>,
 }
 
 impl SourceFile {
@@ -49,6 +52,8 @@ impl SourceFile {
             operations: Default::default(),
             path,
             next_id_operation: 0,
+            selected_primitives: HashSet::new(),
+            hidden_primitives: HashSet::new(),
         }
     }
 
@@ -61,14 +66,20 @@ impl SourceFile {
         )
     }
 
-
     pub(crate) fn to_snapshot(&self) -> Option<SourceFileSnapshot> {
         let path = self.path.clone()?;
         let kind = match &self.source {
-            SourceKind::Copper(_) => SourceKindTag::Copper,
+            SourceKind::Copper { .. } => SourceKindTag::Copper,
             SourceKind::Outline(_) => SourceKindTag::Outline,
             SourceKind::Drill(_) => SourceKindTag::Drill,
         };
+
+    
+        let hidden_primitives_vec: Vec<(usize, usize)> = self
+            .hidden_primitives
+            .iter()
+            .copied()
+            .collect();
 
         Some(SourceFileSnapshot {
             name: self.name.clone(),
@@ -77,6 +88,7 @@ impl SourceFile {
             kind,
             next_id_operation: self.next_id_operation,
             operations: self.operations.clone(),
+            hidden_primitives: hidden_primitives_vec, // <-- Передаем
         })
     }
 }

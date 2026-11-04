@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::ui::project::{CommonParameters, Operation};
 
-/// Версия формата — для будущих миграций.
 pub(crate) const PROJECT_VERSION: u32 = 1;
 
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -14,7 +13,6 @@ pub(crate) enum SourceKindTag {
     Drill,
 }
 
-/// Сериализуемый «снимок» одного файла проекта.
 #[derive(Debug, Serialize, Deserialize)]
 pub(crate) struct SourceFileSnapshot {
     pub name: String,
@@ -23,9 +21,12 @@ pub(crate) struct SourceFileSnapshot {
     pub kind: SourceKindTag,
     pub next_id_operation: usize,
     pub operations: Vec<Operation>,
+
+
+    #[serde(default)]
+    pub hidden_primitives: Vec<(usize, usize)>,
 }
 
-/// Сериализуемый проект целиком.
 #[derive(Debug, Serialize, Deserialize)]
 pub(crate) struct ProjectFile {
     pub version: u32,
