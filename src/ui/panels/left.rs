@@ -33,7 +33,6 @@ pub(crate) enum FileOperationId {
 impl CopperCrabApp {
     pub(crate) fn ui_left(&mut self, ui: &mut egui::Ui) {
         let mut context_menu_actions = Vec::<FileTreeActions>::new();
-     
 
         self.add_file_buttons(ui);
 
@@ -94,7 +93,6 @@ impl CopperCrabApp {
     fn add_file_buttons(&mut self, ui: &mut Ui) {
         let btn_h = ui.spacing().interact_size.y;
 
-        // Ряд с тремя кнопками — каждая занимает треть доступной ширины
         let spacing = ui.spacing().item_spacing.x;
         let total_w = ui.available_width();
         let btn_w = (total_w - spacing * 2.0) / 3.0;
@@ -243,7 +241,6 @@ impl CopperCrabApp {
 
         ui.add_space(4.0);
 
-        // Кнопка "Open Tool library" на всю ширину
         if ui
             .add_sized(
                 [ui.available_width(), btn_h],
@@ -281,7 +278,11 @@ impl CopperCrabApp {
                 }
 
                 let visibility_text = if is_visible {
-                    format!("{} {}", egui_phosphor::regular::EYE_SLASH, t!("ui.button.hide"))
+                    format!(
+                        "{} {}",
+                        egui_phosphor::regular::EYE_SLASH,
+                        t!("ui.button.hide")
+                    )
                 } else {
                     format!("{} {}", egui_phosphor::regular::EYE, t!("ui.button.show"))
                 };

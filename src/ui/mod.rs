@@ -1,14 +1,12 @@
-// src/ui/mod.rs
-
 use std::{
     collections::VecDeque,
     path::PathBuf,
     sync::{Arc, Mutex},
 };
 
-use rust_i18n::t;
 use egui_ltreeview::TreeViewState;
 use elegance::Theme;
+use rust_i18n::t;
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -48,15 +46,11 @@ struct ContextTools {
 pub struct CopperCrabApp {
     files: Vec<SourceFile>,
     tree_files_states: TreeViewState<FileOperationId>,
-
     tools: ContextTools,
     canvas: CanvasState,
     tool_library_ui: ToolLibraryUi,
-
     status_bar: StatusBar,
-
     log_buffer: Arc<Mutex<VecDeque<LogEntry>>>,
-
     app_config: AppConfig,
 }
 
@@ -96,7 +90,6 @@ impl CopperCrabApp {
             .max_size(28.0)
             .show(ui, |ui| {
                 egui::MenuBar::new().ui(ui, |ui| {
-                    // Явно преобразуем Cow<str> в String, чтобы избежать проблем с контекстом меню
                     let file_label = t!("ui.menu.file").to_string();
                     let view_label = t!("ui.menu.view").to_string();
                     let new_project_label = t!("ui.menu.new_project").to_string();
@@ -147,10 +140,7 @@ impl eframe::App for CopperCrabApp {
         self.app_config.window_width = screen_rect.width();
         self.app_config.window_height = screen_rect.height();
 
-        // 1. Верхняя панель меню
         self.ui_top_menu(ui);
-
-        // 2. Нижняя панель (логи)
         self.status_bar.show(
             ui,
             &mut self.app_config.app_locale,
@@ -158,7 +148,6 @@ impl eframe::App for CopperCrabApp {
         );
         panel_logs(ui, &self.log_buffer);
 
-        // 3. Левая панель
         egui::Panel::left("left_panel")
             .resizable(true)
             .default_size(300.0)
@@ -168,7 +157,6 @@ impl eframe::App for CopperCrabApp {
                 self.ui_left(ui);
             });
 
-        // 4. Правая панель
         egui::Panel::right("right_panel")
             .resizable(true)
             .default_size(280.0)
@@ -178,12 +166,10 @@ impl eframe::App for CopperCrabApp {
                 self.ui_right(ui);
             });
 
-        // 5. Центральная панель (канвас)
         egui::CentralPanel::default().show(ui, |ui| {
             self.ui_canvas(ui);
         });
 
-        // 6. Модальные окна
         self.tool_library_ui.show(
             ui.ctx(),
             &mut self.tools.tool_library_open,
