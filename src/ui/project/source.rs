@@ -1,6 +1,10 @@
 use rust_i18n::t;
 
-use crate::core::{DrillLayer, PcbLayer, geometry::Point2d, toolpath::ToolpathGenerator};
+use crate::core::{
+    DrillLayer, PcbLayer, bounding_box::BoundingBox, geometry::Point2d, toolpath::ToolpathGenerator,
+};
+
+use super::project_file::SourceTransform;
 
 #[derive(Debug)]
 pub(crate) enum SourceKind {
@@ -102,6 +106,38 @@ impl SourceKind {
             }
             SourceKind::Outline(toolpath_generator) => toolpath_generator.translate(offset),
             SourceKind::Drill(drill_layer) => drill_layer.translate(offset),
+        }
+    }
+
+    /// Считает bounding box по текущему состоянию источника.
+    pub(crate) fn update_bounding_box(&self, bb: &mut BoundingBox) {
+        match self {
+            SourceKind::Copper { generator, .. } => {
+                bb.update_from_bounds(&generator.traces.bounds());
+            }
+            SourceKind::Outline(generator) => {
+                bb.update_from_bounds(&generator.traces.bounds());
+            }
+            SourceKind::Drill(layer) => {
+                for h in &layer.holes {
+                    bb.update_from_point(h.x, h.y);
+                }
+            }
+        }
+    }
+
+    /// Применяет сохранённую трансформацию к свежезагруженному источнику.
+    /// Порядок: сначала зеркала (вокруг сохранённых центров в исходной системе),
+    /// затем сдвиг. Это воспроизводит состояние, которое было при сохранении.
+    pub(crate) fn apply_saved_transform(&mut self, t: &SourceTransform) {
+        if let Some(cx) = t.mirror_x_center {
+            self.mirror_x(Some(cx));
+        }
+        if let Some(cy) = t.mirror_y_center {
+            self.mirror_y(Some(cy));
+        }
+        if t.translate_x != 0.0 || t.translate_y != 0.0 {
+            self.translate(Point2d::new(t.translate_x, t.translate_y));
         }
     }
 }

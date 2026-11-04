@@ -2,6 +2,7 @@ use std::path::Path;
 
 use crate::{
     core::{
+        geometry::Point2d,
         parser::{excellon::load_excellon, gerber::load_gerber},
         toolpath::ToolpathGenerator,
     },
@@ -18,6 +19,7 @@ impl CopperCrabApp {
         self.app_config.common_parameters = Default::default();
         self.current_project_path = None;
     }
+
     pub(crate) fn close_project(&mut self) {
         if self.files.is_empty() {
             self.current_project_path = None;
@@ -32,6 +34,7 @@ impl CopperCrabApp {
 
         log::info!("Project closed");
     }
+
     pub(crate) fn save_project_to(&self, path: &Path) -> Result<(), String> {
         let mut files = Vec::new();
         for f in &self.files {
@@ -61,7 +64,7 @@ impl CopperCrabApp {
         self.tree_files_states = Default::default();
 
         for snap in project.files {
-            let source = match snap.kind {
+            let mut source = match snap.kind {
                 SourceKindTag::Copper => {
                     let layer = load_gerber(&snap.path)
                         .map_err(|e| format!("{}: {}", snap.path.display(), e))?;
@@ -83,13 +86,17 @@ impl CopperCrabApp {
                 }
             };
 
+            // Применяем сохранённую трансформацию к свежезагруженному источнику
+            if !snap.transform.is_identity() {
+                source.apply_saved_transform(&snap.transform);
+            }
+
             let mut file = SourceFile::new(snap.name, source, Some(snap.path));
             file.is_visible = snap.is_visible;
             file.operations = snap.operations;
             file.next_id_operation = snap.next_id_operation;
-
-        
             file.hidden_primitives = snap.hidden_primitives.into_iter().collect();
+            file.transform = snap.transform;
 
             self.files.push(file);
         }

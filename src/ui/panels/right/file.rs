@@ -41,7 +41,7 @@ impl CopperCrabApp {
                     )
                     .clicked()
                 {
-                    file.source.mirror_x(None);
+                    file.mirror_x(None);
                     has_changed = true;
                 }
 
@@ -56,7 +56,7 @@ impl CopperCrabApp {
                     )
                     .clicked()
                 {
-                    file.source.mirror_y(None);
+                    file.mirror_y(None);
                     has_changed = true;
                 }
             });
@@ -72,7 +72,7 @@ impl CopperCrabApp {
                     )
                     .clicked()
                 {
-                    file.source.translate(Point2d::new(-1.0, 0.0));
+                    file.translate(Point2d::new(-1.0, 0.0));
                     has_changed = true;
                 }
                 if ui
@@ -82,7 +82,7 @@ impl CopperCrabApp {
                     )
                     .clicked()
                 {
-                    file.source.translate(Point2d::new(1.0, 0.0));
+                    file.translate(Point2d::new(1.0, 0.0));
                     has_changed = true;
                 }
             });
@@ -97,7 +97,7 @@ impl CopperCrabApp {
                     )
                     .clicked()
                 {
-                    file.source.translate(Point2d::new(0.0, -1.0));
+                    file.translate(Point2d::new(0.0, -1.0));
                     has_changed = true;
                 }
                 if ui
@@ -107,7 +107,7 @@ impl CopperCrabApp {
                     )
                     .clicked()
                 {
-                    file.source.translate(Point2d::new(0.0, 1.0));
+                    file.translate(Point2d::new(0.0, 1.0));
                     has_changed = true;
                 }
             });
@@ -126,22 +126,10 @@ impl CopperCrabApp {
                 .clicked()
             {
                 let mut bb = crate::core::bounding_box::BoundingBox::new();
-                match &file.source {
-                    crate::ui::project::SourceKind::Copper { generator, .. } => {
-                        bb.update_from_bounds(&generator.traces.bounds());
-                    }
-                    crate::ui::project::SourceKind::Outline(g) => {
-                        bb.update_from_bounds(&g.traces.bounds());
-                    }
-                    crate::ui::project::SourceKind::Drill(d) => {
-                        for h in &d.holes {
-                            bb.update_from_point(h.x, h.y);
-                        }
-                    }
-                }
+                file.source.update_bounding_box(&mut bb);
                 if !bb.is_infinite() {
                     let c = bb.get_center();
-                    file.source.translate(Point2d::new(-c.x, -c.y));
+                    file.translate(Point2d::new(-c.x, -c.y));
                     has_changed = true;
                 }
             }
@@ -168,7 +156,7 @@ impl CopperCrabApp {
                 )
                 .clicked()
             {
-                file.source.translate(Point2d::new(pos_x, pos_y));
+                file.translate(Point2d::new(pos_x, pos_y));
                 has_changed = true;
             }
 

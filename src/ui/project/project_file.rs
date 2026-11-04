@@ -4,13 +4,49 @@ use serde::{Deserialize, Serialize};
 
 use crate::ui::project::{CommonParameters, Operation};
 
-pub(crate) const PROJECT_VERSION: u32 = 1;
+pub(crate) const PROJECT_VERSION: u32 = 2;
 
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub(crate) enum SourceKindTag {
     Copper,
     Outline,
     Drill,
+}
+
+/// Накопленная трансформация исходного файла (сдвиг + зеркала).
+/// Хранится в координатах ИСХОДНОГО файла (до сдвига).
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub(crate) struct SourceTransform {
+    pub translate_x: f64,
+    pub translate_y: f64,
+
+    /// Центр зеркала по X в координатах исходного файла (None — зеркала не было).
+    #[serde(default)]
+    pub mirror_x_center: Option<f64>,
+
+    /// Центр зеркала по Y в координатах исходного файла (None — зеркала не было).
+    #[serde(default)]
+    pub mirror_y_center: Option<f64>,
+}
+
+impl Default for SourceTransform {
+    fn default() -> Self {
+        Self {
+            translate_x: 0.0,
+            translate_y: 0.0,
+            mirror_x_center: None,
+            mirror_y_center: None,
+        }
+    }
+}
+
+impl SourceTransform {
+    pub(crate) fn is_identity(&self) -> bool {
+        self.translate_x == 0.0
+            && self.translate_y == 0.0
+            && self.mirror_x_center.is_none()
+            && self.mirror_y_center.is_none()
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -22,9 +58,11 @@ pub(crate) struct SourceFileSnapshot {
     pub next_id_operation: usize,
     pub operations: Vec<Operation>,
 
-
     #[serde(default)]
     pub hidden_primitives: Vec<(usize, usize)>,
+
+    #[serde(default)]
+    pub transform: SourceTransform,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
