@@ -154,8 +154,7 @@ impl CopperCrabApp {
                         egui_phosphor::regular::TRASH,
                         t!("ui.button.delete_operation")
                     ))
-                    .full_width()
-                    .accent(Accent::Red),
+                    .full_width(),
                 )
                 .clicked()
             {

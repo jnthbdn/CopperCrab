@@ -33,7 +33,7 @@ impl CopperCrabApp {
                 if ui
                     .add_sized(
                         btn_size,
-                        Button::new(format!(
+                        egui::Button::new(format!(
                             "{} {}",
                             egui_phosphor::regular::FLIP_HORIZONTAL,
                             t!("ui.button.mirror_x")
@@ -48,7 +48,7 @@ impl CopperCrabApp {
                 if ui
                     .add_sized(
                         btn_size,
-                        Button::new(format!(
+                        egui::Button::new(format!(
                             "{} {}",
                             egui_phosphor::regular::FLIP_VERTICAL,
                             t!("ui.button.mirror_y")
@@ -68,7 +68,7 @@ impl CopperCrabApp {
                 if ui
                     .add_sized(
                         btn_size,
-                        Button::new(format!("{} X-", egui_phosphor::regular::ARROW_LEFT)),
+                        egui::Button::new(format!("{} X-", egui_phosphor::regular::ARROW_LEFT)),
                     )
                     .clicked()
                 {
@@ -78,7 +78,7 @@ impl CopperCrabApp {
                 if ui
                     .add_sized(
                         btn_size,
-                        Button::new(format!("{} X+", egui_phosphor::regular::ARROW_RIGHT)),
+                        egui::Button::new(format!("{} X+", egui_phosphor::regular::ARROW_RIGHT)),
                     )
                     .clicked()
                 {
@@ -93,7 +93,7 @@ impl CopperCrabApp {
                 if ui
                     .add_sized(
                         btn_size,
-                        Button::new(format!("{} Y-", egui_phosphor::regular::ARROW_DOWN)),
+                        egui::Button::new(format!("{} Y-", egui_phosphor::regular::ARROW_DOWN)),
                     )
                     .clicked()
                 {
@@ -103,7 +103,7 @@ impl CopperCrabApp {
                 if ui
                     .add_sized(
                         btn_size,
-                        Button::new(format!("{} Y+", egui_phosphor::regular::ARROW_UP)),
+                        egui::Button::new(format!("{} Y+", egui_phosphor::regular::ARROW_UP)),
                     )
                     .clicked()
                 {
@@ -117,7 +117,7 @@ impl CopperCrabApp {
             if ui
                 .add_sized(
                     [btn_size[0] * 2.0 + 8.0, btn_size[1]],
-                    Button::new(format!(
+                    egui::Button::new(format!(
                         "{} {}",
                         egui_phosphor::regular::CROSSHAIR,
                         t!("ui.button.center_origin")
@@ -162,8 +162,7 @@ impl CopperCrabApp {
             if ui
                 .add_sized(
                     [btn_size[0] * 2.0 + 8.0, btn_size[1]],
-                    Button::new(format!("{} Apply", egui_phosphor::regular::CHECK))
-                        .accent(Accent::Green),
+                    egui::Button::new(format!("{} Apply", egui_phosphor::regular::CHECK)),
                 )
                 .clicked()
             {
@@ -177,12 +176,11 @@ impl CopperCrabApp {
             if ui
                 .add_sized(
                     [btn_size[0] * 2.0 + 8.0, btn_size[1]],
-                    Button::new(&format!(
+                    egui::Button::new(&format!(
                         "{} {}",
                         egui_phosphor::regular::PLUS_CIRCLE,
                         add_op_text
-                    ))
-                    .accent(Accent::Green),
+                    )),
                 )
                 .clicked()
             {
@@ -194,12 +192,11 @@ impl CopperCrabApp {
             if ui
                 .add_sized(
                     [btn_size[0] * 2.0 + 8.0, btn_size[1]],
-                    Button::new(&format!(
+                    egui::Button::new(&format!(
                         "{} {}",
                         egui_phosphor::regular::TRASH,
                         t!("ui.button.delete_file")
-                    ))
-                    .accent(Accent::Red),
+                    )),
                 )
                 .clicked()
             {

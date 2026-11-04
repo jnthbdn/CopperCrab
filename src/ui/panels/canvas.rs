@@ -123,22 +123,13 @@ impl CopperCrabApp {
             .fixed_pos(egui::pos2(rect.max.x - 110.0, rect.max.y - 40.0))
             .show(ui.ctx(), |ui| {
                 ui.horizontal(|ui| {
-                    if ui
-                        .add(Button::icon('−', "").accent(Accent::Purple))
-                        .clicked()
-                    {
+                    if ui.add(Button::icon('−', "")).clicked() {
                         self.zoom_on_position(0.95, Vec2::ZERO);
                     }
-                    if ui
-                        .add(Button::icon('+', "").accent(Accent::Purple))
-                        .clicked()
-                    {
+                    if ui.add(Button::icon('+', "")).clicked() {
                         self.zoom_on_position(1.05, Vec2::ZERO);
                     }
-                    if ui
-                        .add(Button::icon('⊡', "").accent(Accent::Purple))
-                        .clicked()
-                    {
+                    if ui.add(Button::icon('⊡', "")).clicked() {
                         self.center_view_to_board();
                     }
                 });

@@ -1,13 +1,13 @@
+use eframe::epaint::CornerRadius;
+use egui_ltreeview::TreeViewState;
+use elegance::Theme;
+use rust_i18n::t;
+use serde::{Deserialize, Serialize};
 use std::{
     collections::VecDeque,
     path::PathBuf,
     sync::{Arc, Mutex},
 };
-
-use egui_ltreeview::TreeViewState;
-use elegance::Theme;
-use rust_i18n::t;
-use serde::{Deserialize, Serialize};
 
 use crate::{
     core::tools::library::ToolLibrary,
@@ -64,9 +64,7 @@ impl CopperCrabApp {
         let mut tools_file = PathBuf::from(&config_folder);
         tools_file.push(TOOLS_FILENAME);
 
-        cc.egui_ctx.global_style_mut(|style| {
-            style.spacing.button_padding = egui::vec2(10.0, 4.0);
-        });
+        apply_theme(&cc.egui_ctx, &app_config.app_theme);
 
         Self {
             files: Default::default(),
@@ -129,12 +127,7 @@ impl CopperCrabApp {
 
 impl eframe::App for CopperCrabApp {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
-        match self.app_config.app_theme {
-            app_config::AppTheme::Slate => Theme::slate().install(ui.ctx()),
-            app_config::AppTheme::Charcoal => Theme::charcoal().install(ui.ctx()),
-            app_config::AppTheme::Frost => Theme::frost().install(ui.ctx()),
-            app_config::AppTheme::Paper => Theme::paper().install(ui.ctx()),
-        };
+        apply_theme(ui.ctx(), &self.app_config.app_theme);
 
         let screen_rect = ui.ctx().viewport_rect();
         self.app_config.window_width = screen_rect.width();
@@ -180,4 +173,44 @@ impl eframe::App for CopperCrabApp {
     fn on_exit(&mut self) {
         self.app_config.save();
     }
+}
+fn apply_theme(ctx: &egui::Context, app_theme: &app_config::AppTheme) {
+    let mut theme = match app_theme {
+        app_config::AppTheme::Slate => Theme::slate(),
+        app_config::AppTheme::Charcoal => Theme::charcoal(),
+        app_config::AppTheme::Frost => Theme::frost(),
+        app_config::AppTheme::Paper => Theme::paper(),
+    };
+
+    let btn_bg = egui::Color32::from_rgb(38, 38, 38);
+    let btn_hover = egui::Color32::from_rgb(51, 51, 51);
+
+    theme.palette.blue = btn_bg;
+    theme.palette.blue_hover = btn_hover;
+    theme.palette.green = btn_bg;
+    theme.palette.green_hover = btn_hover;
+    theme.palette.red = btn_bg;
+    theme.palette.red_hover = btn_hover;
+    theme.palette.purple = btn_bg;
+    theme.palette.purple_hover = btn_hover;
+    theme.palette.amber = btn_bg;
+    theme.palette.amber_hover = btn_hover;
+    theme.card_radius = 20.0;
+
+    theme.install(ctx);
+
+    ctx.global_style_mut(|style| {
+        for visuals in [
+            &mut style.visuals.widgets.noninteractive,
+            &mut style.visuals.widgets.inactive,
+            &mut style.visuals.widgets.hovered,
+            &mut style.visuals.widgets.active,
+            &mut style.visuals.widgets.open,
+        ] {
+            visuals.bg_fill = btn_bg;
+            visuals.weak_bg_fill = btn_bg;
+            visuals.bg_stroke = egui::Stroke::NONE;
+            visuals.corner_radius = 8u8.into();
+        }
+    });
 }
