@@ -29,7 +29,6 @@ impl CopperCrabApp {
             ui.add(TextInput::new(&mut file.name).label(t!("ui.label.filename")));
             ui.add_space(8.0);
 
-            // --- Mirror X / Y в одном ряду ---
             ui.horizontal(|ui| {
                 if ui
                     .add_sized(
@@ -65,7 +64,6 @@ impl CopperCrabApp {
             ui.add_space(8.0);
             ui.separator();
 
-            // --- Move X / Y (положительное и отрицательное) ---
             ui.horizontal(|ui| {
                 if ui
                     .add_sized(
@@ -149,27 +147,16 @@ impl CopperCrabApp {
             ui.add_space(8.0);
             ui.separator();
 
-            // --- Ручной ввод позиции ---
             title_label(ui, &t!("ui.label.position"), false);
 
-            // Здесь храним последние введённые значения, чтобы при нажатии
-            // применить сдвиг. Используем локальные переменные.
             let mut pos_x = 0.0;
             let mut pos_y = 0.0;
 
             ui.horizontal(|ui| {
                 ui.label("X:");
-                ui.add(
-                    DragValue::new(&mut pos_x)
-                        .speed(0.1)
-                        .suffix(" mm"),
-                );
+                ui.add(DragValue::new(&mut pos_x).speed(0.1).suffix(" mm"));
                 ui.label("Y:");
-                ui.add(
-                    DragValue::new(&mut pos_y)
-                        .speed(0.1)
-                        .suffix(" mm"),
-                );
+                ui.add(DragValue::new(&mut pos_y).speed(0.1).suffix(" mm"));
             });
 
             if ui
@@ -187,7 +174,6 @@ impl CopperCrabApp {
             ui.add_space(8.0);
             ui.separator();
 
-            // --- Add operation ---
             if ui
                 .add_sized(
                     [btn_size[0] * 2.0 + 8.0, btn_size[1]],
@@ -196,7 +182,7 @@ impl CopperCrabApp {
                         egui_phosphor::regular::PLUS_CIRCLE,
                         add_op_text
                     ))
-                        .accent(Accent::Green),
+                    .accent(Accent::Green),
                 )
                 .clicked()
             {
@@ -213,7 +199,7 @@ impl CopperCrabApp {
                         egui_phosphor::regular::TRASH,
                         t!("ui.button.delete_file")
                     ))
-                        .accent(Accent::Red),
+                    .accent(Accent::Red),
                 )
                 .clicked()
             {
