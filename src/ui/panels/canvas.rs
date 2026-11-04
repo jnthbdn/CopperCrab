@@ -16,11 +16,10 @@ use crate::{
 
 #[derive(Debug, Serialize, Deserialize)]
 pub(crate) struct CanvasState {
-    zoom: f32,
-    offset: egui::Vec2,
-    rect: egui::Rect,
+    pub(crate) zoom: f32,
+    pub(crate) offset: egui::Vec2,
+    pub(crate) rect: egui::Rect,
 }
-
 impl Default for CanvasState {
     fn default() -> Self {
         Self {
@@ -40,6 +39,7 @@ impl CopperCrabApp {
             ui.allocate_painter(ui.available_size(), egui::Sense::click_and_drag());
 
         let rect = response.rect;
+        self.canvas.rect = rect;
 
         painter.rect_filled(rect, 0.0, egui::Color32::from_rgb(13, 26, 13));
 
@@ -101,7 +101,6 @@ impl CopperCrabApp {
             }
         }
 
-        // zoom/pan
         if response.dragged() {
             self.canvas.offset += response.drag_delta();
         }
@@ -118,7 +117,6 @@ impl CopperCrabApp {
             let pcb_x = (pos.x - transform.rect.min.x - transform.offset.x) / transform.scale;
             let pcb_y = -(pos.y - transform.rect.min.y - transform.offset.y) / transform.scale;
             self.status_bar.set_mouse_pcb(pcb_x, pcb_y);
-            self.canvas.rect = rect;
         }
 
         egui::Area::new(egui::Id::new("canvas_controls"))
@@ -141,7 +139,6 @@ impl CopperCrabApp {
                         .add(Button::icon('⊡', "").accent(Accent::Purple))
                         .clicked()
                     {
-                        // Reset zoom et offset
                         self.center_view_to_board();
                     }
                 });

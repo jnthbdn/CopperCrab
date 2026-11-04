@@ -71,12 +71,13 @@ fn main() {
                 eframe::icon_data::from_png_bytes(include_bytes!(
                     "../img/icons/png/coppercrab-300.png"
                 ))
-                .unwrap(),
+                    .unwrap(),
             )
-            .with_inner_size([app_config.window_width, app_config.window_height]),
-        // .with_inner_size([1200.0, 700.0]),
+            .with_inner_size([app_config.window_width, app_config.window_height])
+            .with_maximized(true),
         ..eframe::NativeOptions::default()
     };
+
     let _ = eframe::run_native(
         "CopperCrab",
         native_options,

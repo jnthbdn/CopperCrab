@@ -20,11 +20,6 @@ ui.label.operation.name:
   fr: "Nom de l'opération"
   ru: "Название операции"
 
-ui.label.title_files_operations:
-  en: "Files & Operations"
-  fr: "Fichers & Opérations"
-  ru: "Файлы и операции"
-
 ui.label.click_to_enlarge:
   en: "Click to enlarge"
   fr: "Cliquer pour agrandir"
@@ -184,3 +179,73 @@ ui.label.parameters.outline.title:
   en: "Outline parameters"
   fr: "Paramètres de contour"
   ru: "Параметры контура"
+
+ui.label.move_object:
+  en: "Move object"
+  fr: "Déplacer l'objet"
+  ru: "Переместить объект"
+
+ui.button.move_x:
+  en: "Move X +1"
+  fr: "Déplacer X +1"
+  ru: "Сдвиг X +1"
+
+ui.button.move_y:
+  en: "Move Y +1"
+  fr: "Déplacer Y +1"
+  ru: "Сдвиг Y +1"
+
+ui.button.center_origin:
+  en: "Center to origin"
+  fr: "Centrer à l'origine"
+  ru: "Центрировать в (0,0)"
+
+ui.label.position:
+  en: "Position (Test)"
+  fr: "Position (Test)"
+  ru: "Позиция (Test)"
+
+ui.button.hide:
+  en: "Hide"
+  fr: "Masquer"
+  ru: "Скрыть"
+
+ui.button.show:
+  en: "Show"
+  fr: "Afficher"
+  ru: "Показать"
+
+ui.menu.file:
+  en: "File"
+  fr: "Fichier"
+  ru: "Файл"
+
+ui.menu.view:
+  en: "View"
+  fr: "Affichage"
+  ru: "Вид"
+
+ui.menu.new_project:
+  en: "New Project"
+  fr: "Nouveau projet"
+  ru: "Новый проект"
+
+ui.menu.open_project:
+  en: "Open Project"
+  fr: "Ouvrir le projet"
+  ru: "Открыть проект"
+
+ui.menu.exit:
+  en: "Exit"
+  fr: "Quitter"
+  ru: "Выход"
+
+ui.menu.reset_zoom:
+  en: "Reset Zoom"
+  fr: "Réinitialiser le zoom"
+  ru: "Сбросить масштаб"
+
+ui.menu.center_board:
+  en: "Center Board"
+  fr: "Centrer la carte"
+  ru: "Центрировать плату"

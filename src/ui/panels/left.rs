@@ -20,6 +20,7 @@ use crate::{
 pub(crate) enum FileTreeActions {
     DeleteItem(FileOperationId),
     AddOperation(usize),
+    ToggleVisibility(usize),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -32,16 +33,9 @@ pub(crate) enum FileOperationId {
 impl CopperCrabApp {
     pub(crate) fn ui_left(&mut self, ui: &mut egui::Ui) {
         let mut context_menu_actions = Vec::<FileTreeActions>::new();
-        title_label(ui, &t!("ui.label.title_files_operations"), false);
+     
 
         self.add_file_buttons(ui);
-
-        if ui
-            .add(Button::new(t!("ui.button.tool_library")).full_width())
-            .clicked()
-        {
-            self.tools.tool_library_open = true;
-        }
 
         ui.with_layout(Layout::bottom_up(Align::Center), |ui| {
             ui.set_height(ui.available_height());
@@ -49,10 +43,9 @@ impl CopperCrabApp {
             ui.add_space(8.0);
 
             if ui
-                .add(
-                    Button::new(t!("ui.button.export_files"))
-                        .accent(Accent::Green)
-                        .full_width(),
+                .add_sized(
+                    [ui.available_width(), ui.spacing().interact_size.y],
+                    Button::new(t!("ui.button.export_files")).accent(Accent::Green),
                 )
                 .clicked()
             {
@@ -99,15 +92,22 @@ impl CopperCrabApp {
     }
 
     fn add_file_buttons(&mut self, ui: &mut Ui) {
-        ui.columns(3, |cols| {
-            if cols[0]
-                .add(
-                    elegance::Button::new(format!(
+        let btn_h = ui.spacing().interact_size.y;
+
+        // Ряд с тремя кнопками — каждая занимает треть доступной ширины
+        let spacing = ui.spacing().item_spacing.x;
+        let total_w = ui.available_width();
+        let btn_w = (total_w - spacing * 2.0) / 3.0;
+
+        ui.horizontal(|ui| {
+            if ui
+                .add_sized(
+                    [btn_w, btn_h],
+                    Button::new(format!(
                         "{} {}",
                         egui_phosphor::regular::PLUS,
                         t!("ui.button.copper")
-                    ))
-                    .full_width(),
+                    )),
                 )
                 .clicked()
             {
@@ -151,14 +151,14 @@ impl CopperCrabApp {
                 }
             }
 
-            if cols[1]
-                .add(
-                    elegance::Button::new(format!(
+            if ui
+                .add_sized(
+                    [btn_w, btn_h],
+                    Button::new(format!(
                         "{} {}",
                         egui_phosphor::regular::PLUS,
                         t!("ui.button.outline")
-                    ))
-                    .full_width(),
+                    )),
                 )
                 .clicked()
             {
@@ -202,14 +202,14 @@ impl CopperCrabApp {
                 }
             }
 
-            if cols[2]
-                .add(
-                    elegance::Button::new(format!(
+            if ui
+                .add_sized(
+                    [btn_w, btn_h],
+                    Button::new(format!(
                         "{} {}",
                         egui_phosphor::regular::PLUS,
                         t!("ui.button.drill")
-                    ))
-                    .full_width(),
+                    )),
                 )
                 .clicked()
             {
@@ -240,6 +240,19 @@ impl CopperCrabApp {
                 }
             }
         });
+
+        ui.add_space(4.0);
+
+        // Кнопка "Open Tool library" на всю ширину
+        if ui
+            .add_sized(
+                [ui.available_width(), btn_h],
+                Button::new(t!("ui.button.tool_library")),
+            )
+            .clicked()
+        {
+            self.tools.tool_library_open = true;
+        }
     }
 
     fn build_tree_file_node(
@@ -250,6 +263,8 @@ impl CopperCrabApp {
     ) {
         let icon = file.source.icon();
         let add_label = file.source.add_operation_label();
+
+        let is_visible = file.is_visible;
 
         let id = FileOperationId::File(file_id);
         let node = NodeBuilder::dir(id.clone())
@@ -264,6 +279,17 @@ impl CopperCrabApp {
                     actions.push(FileTreeActions::AddOperation(file_id));
                     ui.close();
                 }
+
+                let visibility_text = if is_visible {
+                    format!("{} {}", egui_phosphor::regular::EYE_SLASH, t!("ui.button.hide"))
+                } else {
+                    format!("{} {}", egui_phosphor::regular::EYE, t!("ui.button.show"))
+                };
+                if ui.button(visibility_text).clicked() {
+                    actions.push(FileTreeActions::ToggleVisibility(file_id));
+                    ui.close();
+                }
+
                 ui.separator();
                 if ui.button(t!("ui.button.delete_file")).clicked() {
                     actions.push(FileTreeActions::DeleteItem(id.clone()));
@@ -310,6 +336,12 @@ impl CopperCrabApp {
                             file.operations.push(Operation::new_drill(name));
                         }
                     }
+                }
+            }
+
+            FileTreeActions::ToggleVisibility(file_id) => {
+                if let Some(file) = self.files.get_mut(file_id) {
+                    file.is_visible = !file.is_visible;
                 }
             }
         };
