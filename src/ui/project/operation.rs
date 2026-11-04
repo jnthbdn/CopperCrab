@@ -12,7 +12,7 @@ pub(crate) enum SelectedTool {
     None,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub(crate) enum OperationKind {
     Isolation {
         passes: u32,
@@ -25,12 +25,16 @@ pub(crate) enum OperationKind {
     },
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub(crate) struct Operation {
     pub(crate) name: String,
     pub(crate) tool: SelectedTool,
     pub(crate) depth: f64,
+
+  
+    #[serde(skip)]
     pub(crate) toolpath: Vec<Paths>,
+
     pub(crate) kind: OperationKind,
 }
 

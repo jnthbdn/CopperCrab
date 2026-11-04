@@ -249,3 +249,13 @@ ui.menu.center_board:
   en: "Center Board"
   fr: "Centrer la carte"
   ru: "Центрировать плату"
+
+ui.menu.save_project:
+  en: "Save Project"
+  fr: "Enregistrer le projet"
+  ru: "Сохранить проект"
+
+ui.menu.save_project_as:
+  en: "Save Project As…"
+  fr: "Enregistrer le projet sous…"
+  ru: "Сохранить проект как…"

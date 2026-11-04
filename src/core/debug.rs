@@ -9,7 +9,7 @@ use std::path::Path;
 pub fn export_svg(layer: &PcbLayer, path: &Path) -> std::io::Result<()> {
     let mut svg = String::new();
 
-    // On calcule le bounding box pour le viewBox
+
     let (min_x, min_y, max_x, max_y) = bounding_box(layer);
     let w = max_x - min_x;
     let h = max_y - min_y;
@@ -25,7 +25,7 @@ pub fn export_svg(layer: &PcbLayer, path: &Path) -> std::io::Result<()> {
     )
     .unwrap();
 
-    // Fond PCB
+
     writeln!(
         svg,
         r##"<rect x="{}" y="{}" width="{}" height="{}" fill="#1a3a1a"/>"##,
@@ -67,7 +67,7 @@ pub fn export_svg(layer: &PcbLayer, path: &Path) -> std::io::Result<()> {
                     .unwrap();
                 }
                 Primitive::Arc(a) => {
-                    // SVG arc path
+                
                     writeln!(svg,
                                     r##"<path d="M {} {} A {} {} 0 0 {} {} {}" fill="none" stroke="#B87333" stroke-width="{}"/>"##,
                                     a.start.x, a.start.y,
@@ -133,7 +133,7 @@ fn bounding_box(layer: &PcbLayer) -> (f64, f64, f64, f64) {
 }
 
 pub fn paths_to_svg(paths: &Paths, output: &Path) -> std::io::Result<()> {
-    // Bounding box
+
     let mut min_x = f64::MAX;
     let mut min_y = f64::MAX;
     let mut max_x = f64::MIN;

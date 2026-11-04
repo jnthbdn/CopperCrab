@@ -144,7 +144,7 @@ impl ToolLibraryUi {
                     egui::ScrollArea::vertical().show(ui, |ui| {
                         ui.set_min_height(ui.available_height());
                         ui.columns(3, |columns| {
-                            // V-Bits
+                        
                             columns[0].label(t!("ui.label.library.vbit"));
                             columns[0].separator();
 
@@ -189,7 +189,7 @@ impl ToolLibraryUi {
                                 tool_library.vbits.remove(i);
                             }
 
-                            // End Mills
+                        
                             columns[1].label(t!("ui.label.library.end_mill"));
                             columns[1].separator();
 
@@ -233,7 +233,7 @@ impl ToolLibraryUi {
                                 tool_library.end_mills.remove(i);
                             }
 
-                            // Drill Bits
+                        
                             columns[2].label(t!("ui.label.library.drill"));
                             columns[2].separator();
 

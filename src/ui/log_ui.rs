@@ -15,7 +15,7 @@ pub fn panel_logs(ui: &mut egui::Ui, log_buffer: &Arc<Mutex<VecDeque<LogEntry>>>
         .default_size(120.0)
         .show(ui, |ui| {
             ui.horizontal(|ui| {
-                // title_label(ui, "Logs", false);
+            
                 title_label(ui, &t!("ui.label.logs").to_string(), false);
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     if ui.add(Button::new(t!("ui.button.clear_logs"))).clicked() {

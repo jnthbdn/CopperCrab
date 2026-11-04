@@ -27,6 +27,7 @@ mod log_ui;
 mod panels;
 mod pcb_transform;
 mod project;
+mod project_io;
 mod toolpaths;
 mod widget;
 
@@ -52,6 +53,7 @@ pub struct CopperCrabApp {
     status_bar: StatusBar,
     log_buffer: Arc<Mutex<VecDeque<LogEntry>>>,
     app_config: AppConfig,
+    current_project_path: Option<PathBuf>,
 }
 
 impl CopperCrabApp {
@@ -78,9 +80,73 @@ impl CopperCrabApp {
             status_bar: Default::default(),
             log_buffer,
             app_config,
+            current_project_path: None,
+        }
+    }
+    pub(crate) fn handle_shortcuts(&mut self, ctx: &egui::Context) {
+        let save_pressed = ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::S));
+        if save_pressed {
+            self.save_project_interactive();
+        }
+
+        let save_as_pressed = ctx.input_mut(|i| {
+            i.consume_key(
+                egui::Modifiers::COMMAND | egui::Modifiers::SHIFT,
+                egui::Key::S,
+            )
+        });
+        if save_as_pressed {
+            self.save_project_as_interactive();
+        }
+
+        let open_pressed = ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::O));
+        if open_pressed {
+            self.open_project_interactive();
+        }
+
+        let new_pressed = ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::N));
+        if new_pressed {
+            self.new_project();
         }
     }
 
+    pub(crate) fn save_project_interactive(&mut self) {
+        if let Some(path) = self.current_project_path.clone() {
+            if let Err(e) = self.save_project_to(&path) {
+                log::error!("Failed to save project: {}", e);
+            } else {
+                log::info!("Project saved to {}", path.display());
+            }
+        } else {
+            self.save_project_as_interactive();
+        }
+    }
+
+    pub(crate) fn save_project_as_interactive(&mut self) {
+        if let Some(path) = rfd::FileDialog::new()
+            .add_filter("CopperCrab Project", &["toml"])
+            .set_file_name("project.toml")
+            .save_file()
+        {
+            if let Err(e) = self.save_project_to(&path) {
+                log::error!("Failed to save project: {}", e);
+            } else {
+                self.current_project_path = Some(path);
+            }
+        }
+    }
+
+    pub(crate) fn open_project_interactive(&mut self) {
+        if let Some(path) = rfd::FileDialog::new()
+            .add_filter("CopperCrab Project", &["toml"])
+            .pick_file()
+        {
+            match self.load_project_from(&path) {
+                Ok(()) => self.current_project_path = Some(path),
+                Err(e) => log::error!("Failed to load project: {}", e),
+            }
+        }
+    }
     fn ui_top_menu(&mut self, ui: &mut egui::Ui) {
         egui::Panel::top("top_menu_panel")
             .resizable(false)
@@ -92,34 +158,74 @@ impl CopperCrabApp {
                     let view_label = t!("ui.menu.view").to_string();
                     let new_project_label = t!("ui.menu.new_project").to_string();
                     let open_project_label = t!("ui.menu.open_project").to_string();
+                    let save_project_label = t!("ui.menu.save_project").to_string();
+                    let save_project_as_label = t!("ui.menu.save_project_as").to_string();
                     let exit_label = t!("ui.menu.exit").to_string();
-                    let reset_zoom_label = t!("ui.menu.reset_zoom").to_string();
-                    let center_board_label = t!("ui.menu.center_board").to_string();
-
+                    let _reset_zoom_label = t!("ui.menu.reset_zoom").to_string();
+                    let _center_board_label = t!("ui.menu.center_board").to_string();
+                    log::info!("save label = {:?}", save_project_label);
                     ui.menu_button(file_label, |ui| {
                         if ui.button(new_project_label).clicked() {
+                            self.new_project();
                             ui.close();
                         }
+
                         if ui.button(open_project_label).clicked() {
+                            if let Some(path) = rfd::FileDialog::new()
+                                .add_filter("CopperCrab Project", &["toml"])
+                                .pick_file()
+                            {
+                                match self.load_project_from(&path) {
+                                    Ok(()) => self.current_project_path = Some(path),
+                                    Err(e) => log::error!("Failed to load project: {}", e),
+                                }
+                            }
                             ui.close();
                         }
+
+                        ui.separator();
+
+                        if ui.button(save_project_label).clicked() {
+                            if let Some(path) = self.current_project_path.clone() {
+                                if let Err(e) = self.save_project_to(&path) {
+                                    log::error!("Failed to save project: {}", e);
+                                }
+                            } else if let Some(path) = rfd::FileDialog::new()
+                                .add_filter("CopperCrab Project", &["toml"])
+                                .set_file_name("project.toml")
+                                .save_file()
+                            {
+                                if let Err(e) = self.save_project_to(&path) {
+                                    log::error!("Failed to save project: {}", e);
+                                } else {
+                                    self.current_project_path = Some(path);
+                                }
+                            }
+                            ui.close();
+                        }
+
+                        if ui.button(save_project_as_label).clicked() {
+                            if let Some(path) = rfd::FileDialog::new()
+                                .add_filter("CopperCrab Project", &["toml"])
+                                .set_file_name("project.toml")
+                                .save_file()
+                            {
+                                if let Err(e) = self.save_project_to(&path) {
+                                    log::error!("Failed to save project: {}", e);
+                                } else {
+                                    self.current_project_path = Some(path);
+                                }
+                            }
+                            ui.close();
+                        }
+
                         ui.separator();
                         if ui.button(exit_label).clicked() {
                             ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close);
                         }
                     });
 
-                    ui.menu_button(view_label, |ui| {
-                        if ui.button(reset_zoom_label).clicked() {
-                            self.canvas.zoom = 1.0;
-                            self.canvas.offset = egui::Vec2::ZERO;
-                            ui.close();
-                        }
-                        if ui.button(center_board_label).clicked() {
-                            self.center_view_to_board();
-                            ui.close();
-                        }
-                    });
+                    ui.menu_button(view_label, |_ui| {});
                 });
             });
     }
@@ -127,6 +233,8 @@ impl CopperCrabApp {
 
 impl eframe::App for CopperCrabApp {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
+        self.handle_shortcuts(ui.ctx());
+
         apply_theme(ui.ctx(), &self.app_config.app_theme);
 
         let screen_rect = ui.ctx().viewport_rect();

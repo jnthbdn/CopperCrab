@@ -1,7 +1,6 @@
 use egui::{Align, Id, Layout, Ui};
 use egui_ltreeview::{NodeBuilder, TreeView, TreeViewBuilder};
 use elegance::{Accent, Button, Switch};
-// use egui::Button;
 use log::info;
 use rust_i18n::t;
 
@@ -88,9 +87,8 @@ impl CopperCrabApp {
     fn add_file_buttons(&mut self, ui: &mut Ui) {
         let btn_h = ui.spacing().interact_size.y;
 
-        // Три кнопки по одной на строке, распределены по доступной ширине
         ui.vertical(|ui| {
-            // Copper
+        
             if ui
                 .add_sized(
                     [ui.available_width(), btn_h],
@@ -116,6 +114,7 @@ impl CopperCrabApp {
                                             .unwrap_or("Copper")
                                             .into(),
                                         SourceKind::Copper(generator),
+                                        Some(path),
                                     ));
                                     self.center_view_to_board();
                                 }
@@ -133,7 +132,7 @@ impl CopperCrabApp {
                 }
             }
 
-            // Outline
+        
             if ui
                 .add_sized(
                     [ui.available_width(), btn_h],
@@ -159,6 +158,7 @@ impl CopperCrabApp {
                                             .unwrap_or("Outline")
                                             .into(),
                                         SourceKind::Outline(generator),
+                                        Some(path), // ← добавлено
                                     ));
                                     self.center_view_to_board();
                                 }
@@ -176,7 +176,7 @@ impl CopperCrabApp {
                 }
             }
 
-            // Drill
+        
             if ui
                 .add_sized(
                     [ui.available_width(), btn_h],
@@ -201,6 +201,7 @@ impl CopperCrabApp {
                                         .unwrap_or("Drill")
                                         .into(),
                                     SourceKind::Drill(layer),
+                                    Some(path), // ← добавлено
                                 ));
                                 self.center_view_to_board();
                             }
@@ -215,7 +216,7 @@ impl CopperCrabApp {
 
             ui.add_space(4.0);
 
-            // Tool library
+        
             if ui
                 .add_sized(
                     [ui.available_width(), btn_h],
@@ -284,11 +285,13 @@ impl CopperCrabApp {
                 FileOperationId::Root => (),
                 FileOperationId::File(id) => {
                     self.files.remove(id);
+                    self.tree_files_states = Default::default();
                 }
                 FileOperationId::Operation(id_file, id_op) => {
                     if let Some(file) = self.files.get_mut(id_file) {
                         file.operations.remove(id_op);
                     }
+                    self.tree_files_states = Default::default();
                 }
             },
             FileTreeActions::AddOperation(file_id) => {

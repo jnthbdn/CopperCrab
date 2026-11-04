@@ -78,7 +78,7 @@ fn generate_layer(gerber_doc: &GerberDoc, layer: &mut PcbLayer) -> Result<(), Pa
                                 | InterpolationMode::CounterclockwiseCircular => {
                                     if let Some(coord) = coordinate_offset {
                                         if coord.x.is_none() || coord.y.is_none() {
-                                            // return Err(ParseError::Gerber("Offset position is mandatory with (Counter) Clockwise interpolation mode".to_string()));
+                                        
                                         } else {
                                             if is_region_mode {
                                                 log::warn!(
@@ -205,7 +205,7 @@ fn generate_layer(gerber_doc: &GerberDoc, layer: &mut PcbLayer) -> Result<(), Pa
 fn parse_extended_command(cmd: &ExtendedCode, layer: &mut PcbLayer) {
     match cmd {
         ExtendedCode::CoordinateFormat(_) => {
-            // Nothing to do...
+        
         }
         ExtendedCode::Unit(unit) => {
             layer.unit = match unit {
@@ -215,7 +215,7 @@ fn parse_extended_command(cmd: &ExtendedCode, layer: &mut PcbLayer) {
         }
 
         ExtendedCode::ApertureDefinition(_) => {
-            // Nothing to do...
+        
         }
 
         ExtendedCode::ApertureMacro(aperture) => {

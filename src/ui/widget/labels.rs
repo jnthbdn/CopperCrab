@@ -7,7 +7,7 @@ pub fn title_label(ui: &mut egui::Ui, label: &str, add_space: bool) -> egui::Res
     }
     let theme = elegance::Theme::current(ui.ctx());
 
-    // ui.label(RichText::new(label).color(COPPER_LIGHT).size(16.0))
+
     ui.label(theme.heading_text(label))
 }
 

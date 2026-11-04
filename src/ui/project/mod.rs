@@ -1,10 +1,14 @@
+use std::path::PathBuf;
+
 use serde::{Deserialize, Serialize};
 
 mod export;
 mod operation;
+mod project_file;
 mod source;
 
 pub(crate) use operation::{Operation, OperationKind, SelectedTool};
+pub(crate) use project_file::{ProjectFile, SourceFileSnapshot, SourceKindTag, PROJECT_VERSION};
 pub(crate) use source::SourceKind;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -29,16 +33,21 @@ pub(crate) struct SourceFile {
     pub source: SourceKind,
     pub operations: Vec<Operation>,
 
-    next_id_operation: usize,
+
+    pub path: Option<PathBuf>,
+
+
+    pub(crate) next_id_operation: usize,
 }
 
 impl SourceFile {
-    pub(crate) fn new(name: String, source: SourceKind) -> Self {
+    pub(crate) fn new(name: String, source: SourceKind, path: Option<PathBuf>) -> Self {
         Self {
             name,
             is_visible: true,
             source,
             operations: Default::default(),
+            path,
             next_id_operation: 0,
         }
     }
@@ -50,5 +59,24 @@ impl SourceFile {
             self.source.operation_prefix(),
             self.next_id_operation
         )
+    }
+
+
+    pub(crate) fn to_snapshot(&self) -> Option<SourceFileSnapshot> {
+        let path = self.path.clone()?;
+        let kind = match &self.source {
+            SourceKind::Copper(_) => SourceKindTag::Copper,
+            SourceKind::Outline(_) => SourceKindTag::Outline,
+            SourceKind::Drill(_) => SourceKindTag::Drill,
+        };
+
+        Some(SourceFileSnapshot {
+            name: self.name.clone(),
+            is_visible: self.is_visible,
+            path,
+            kind,
+            next_id_operation: self.next_id_operation,
+            operations: self.operations.clone(),
+        })
     }
 }
