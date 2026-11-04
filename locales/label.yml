@@ -259,3 +259,8 @@ ui.menu.save_project_as:
   en: "Save Project As…"
   fr: "Enregistrer le projet sous…"
   ru: "Сохранить проект как…"
+  
+ui.menu.close_project:
+  en: "Close Project"
+  fr: "Fermer le projet"
+  ru: "Закрыть проект"

@@ -6,8 +6,8 @@ use crate::{
         toolpath::ToolpathGenerator,
     },
     ui::{
-        project::{ProjectFile, SourceFile, SourceKind, SourceKindTag, PROJECT_VERSION},
         CopperCrabApp,
+        project::{PROJECT_VERSION, ProjectFile, SourceFile, SourceKind, SourceKindTag},
     },
 };
 
@@ -18,7 +18,20 @@ impl CopperCrabApp {
         self.app_config.common_parameters = Default::default();
         self.current_project_path = None;
     }
+    pub(crate) fn close_project(&mut self) {
+        if self.files.is_empty() {
+            self.current_project_path = None;
+            return;
+        }
 
+        self.files.clear();
+        self.tree_files_states = Default::default();
+        self.current_project_path = None;
+
+        self.canvas = Default::default();
+
+        log::info!("Project closed");
+    }
     pub(crate) fn save_project_to(&self, path: &Path) -> Result<(), String> {
         let mut files = Vec::new();
         for f in &self.files {
@@ -77,7 +90,6 @@ impl CopperCrabApp {
             self.files.push(file);
         }
 
-    
         for id in 0..self.files.len() {
             self.generate_file_toolpaths(id);
         }

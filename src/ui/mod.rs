@@ -108,6 +108,11 @@ impl CopperCrabApp {
         if new_pressed {
             self.new_project();
         }
+        let close_pressed =
+            ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::W));
+        if close_pressed {
+            self.close_project();
+        }
     }
 
     pub(crate) fn save_project_interactive(&mut self) {
@@ -123,9 +128,16 @@ impl CopperCrabApp {
     }
 
     pub(crate) fn save_project_as_interactive(&mut self) {
+        let default_name = if self.current_project_path.is_none() {
+            let date = chrono::Local::now().format("%Y-%m-%d");
+            format!("{date}_project.toml")
+        } else {
+            "project.toml".to_string()
+        };
+
         if let Some(path) = rfd::FileDialog::new()
             .add_filter("CopperCrab Project", &["toml"])
-            .set_file_name("project.toml")
+            .set_file_name(&default_name)
             .save_file()
         {
             if let Err(e) = self.save_project_to(&path) {
@@ -163,7 +175,7 @@ impl CopperCrabApp {
                     let exit_label = t!("ui.menu.exit").to_string();
                     let _reset_zoom_label = t!("ui.menu.reset_zoom").to_string();
                     let _center_board_label = t!("ui.menu.center_board").to_string();
-                    log::info!("save label = {:?}", save_project_label);
+                    let close_project_label = t!("ui.menu.close_project").to_string();
                     ui.menu_button(file_label, |ui| {
                         if ui.button(new_project_label).clicked() {
                             self.new_project();
@@ -218,7 +230,10 @@ impl CopperCrabApp {
                             }
                             ui.close();
                         }
-
+                        if ui.button(close_project_label).clicked() {
+                            self.close_project();
+                            ui.close();
+                        }
                         ui.separator();
                         if ui.button(exit_label).clicked() {
                             ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close);

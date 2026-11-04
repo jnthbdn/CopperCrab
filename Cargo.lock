@@ -924,6 +924,7 @@ dependencies = [
 name = "coppercrab"
 version = "0.6.0"
 dependencies = [
+ "chrono",
  "clipper2",
  "directories",
  "eframe",
