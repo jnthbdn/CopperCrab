@@ -109,7 +109,7 @@ impl SourceKind {
         }
     }
 
-    /// Считает bounding box по текущему состоянию источника.
+
     pub(crate) fn update_bounding_box(&self, bb: &mut BoundingBox) {
         match self {
             SourceKind::Copper { generator, .. } => {
@@ -126,9 +126,9 @@ impl SourceKind {
         }
     }
 
-    /// Применяет сохранённую трансформацию к свежезагруженному источнику.
-    /// Порядок: сначала зеркала (вокруг сохранённых центров в исходной системе),
-    /// затем сдвиг. Это воспроизводит состояние, которое было при сохранении.
+
+
+
     pub(crate) fn apply_saved_transform(&mut self, t: &SourceTransform) {
         if let Some(cx) = t.mirror_x_center {
             self.mirror_x(Some(cx));

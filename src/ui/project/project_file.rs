@@ -20,11 +20,11 @@ pub(crate) struct SourceTransform {
     pub translate_x: f64,
     pub translate_y: f64,
 
-    /// Центр зеркала по X в координатах исходного файла (None — зеркала не было).
+
     #[serde(default)]
     pub mirror_x_center: Option<f64>,
 
-    /// Центр зеркала по Y в координатах исходного файла (None — зеркала не было).
+
     #[serde(default)]
     pub mirror_y_center: Option<f64>,
 }

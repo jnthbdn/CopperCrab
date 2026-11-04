@@ -86,7 +86,7 @@ impl CopperCrabApp {
                 }
             };
 
-            // Применяем сохранённую трансформацию к свежезагруженному источнику
+        
             if !snap.transform.is_identity() {
                 source.apply_saved_transform(&snap.transform);
             }

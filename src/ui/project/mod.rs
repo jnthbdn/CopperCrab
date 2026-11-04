@@ -46,7 +46,7 @@ pub(crate) struct SourceFile {
 
     pub(crate) hidden_primitives: HashSet<(usize, usize)>,
 
-    /// Накопленная трансформация относительно исходного файла.
+
     pub(crate) transform: SourceTransform,
 }
 
@@ -74,14 +74,14 @@ impl SourceFile {
         )
     }
 
-    /// Сдвиг. Координаты offset — в текущей (уже трансформированной) системе.
+
     pub(crate) fn translate(&mut self, offset: Point2d) {
         self.source.translate(offset.clone());
         self.transform.translate_x += offset.x;
         self.transform.translate_y += offset.y;
     }
 
-    /// Зеркало по X. center_x — в текущей системе; если None — берётся центр bbox.
+
     pub(crate) fn mirror_x(&mut self, center_x: Option<f64>) {
         let cx_current = match center_x {
             Some(c) => c,
@@ -95,47 +95,47 @@ impl SourceFile {
             }
         };
 
-        // Применяем к source в текущей системе
+    
         self.source.mirror_x(Some(cx_current));
 
-        // Переводим центр в координаты исходного файла и композируем с уже накопленным зеркалом.
-        // Пусть p — точка исходного файла. После накопленной трансформации:
-        //   x_cur = mirror(prev_center, p.x) + translate_x
-        // После нового зеркала вокруг cx_current:
-        //   x_new = 2*cx_current - x_cur
-        //        = 2*cx_current - mirror(prev_center, p.x) - translate_x
-        // Хотим выразить как mirror(new_center, p.x) + translate_x:
-        //   mirror(c, p) = 2c - p
-        //   2*new_center - p + translate_x = 2*cx_current - (2*prev_center - p) - translate_x
-        //   2*new_center - p = 2*cx_current - 2*prev_center + p - 2*translate_x
-        //   ... (см. ниже упрощение через последовательные зеркала)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
         //
-        // Проще: два зеркала вокруг c1 и c2 эквивалентны сдвигу на 2*(c2 - c1).
-        // Здесь c1 = prev_center (в исходной системе, с учётом translate), c2 = cx_current.
-        // Центр нового зеркала в исходной системе:
+    
+    
+    
         let cx_original = cx_current - self.transform.translate_x;
 
         self.transform.mirror_x_center = match self.transform.mirror_x_center {
             None => Some(cx_original),
             Some(prev) => {
-                // Повторное зеркало: композиция. Результат — сдвиг.
-                // mirror(prev) затем mirror(cx_original) = сдвиг на 2*(cx_original - prev).
-                // Чтобы не плодить специальные случаи, схлопываем в новое «эквивалентное» зеркало
-                // относительно исходной системы: результирующее преобразование — отражение,
-                // его можно выразить как одно зеркало с центром (prev + cx_original)/2 ... но
-                // это верно только без промежуточного сдвига. Учитывая, что translate_x уже
-                // учтён в cx_original, получаем:
+            
+            
+            
+            
+            
+            
+            
                 Some(prev + (cx_original - prev))
             }
         };
 
-        // На практике повторное зеркало после сдвига — редкий случай.
-        // Если он возникнет, пользователь увидит корректный результат в текущей сессии;
-        // сохранение/загрузка воспроизведёт его только если центры композируются точно.
-        // Для типичного сценария (одно зеркало + сдвиги) всё работает корректно.
+    
+    
+    
+    
     }
 
-    /// Зеркало по Y. center_y — в текущей системе; если None — берётся центр bbox.
+
     pub(crate) fn mirror_y(&mut self, center_y: Option<f64>) {
         let cy_current = match center_y {
             Some(c) => c,
