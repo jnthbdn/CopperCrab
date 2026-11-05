@@ -4,7 +4,7 @@ use crate::core::{
     DrillLayer, PcbLayer, bounding_box::BoundingBox, geometry::Point2d, toolpath::ToolpathGenerator,
 };
 
-use super::project_file::SourceTransform;
+use super::project_file::{SourceTransform, TransformOp};
 
 #[derive(Debug)]
 pub(crate) enum SourceKind {
@@ -109,7 +109,6 @@ impl SourceKind {
         }
     }
 
-
     pub(crate) fn update_bounding_box(&self, bb: &mut BoundingBox) {
         match self {
             SourceKind::Copper { generator, .. } => {
@@ -129,15 +128,21 @@ impl SourceKind {
 
 
 
+
+
     pub(crate) fn apply_saved_transform(&mut self, t: &SourceTransform) {
-        if let Some(cx) = t.mirror_x_center {
-            self.mirror_x(Some(cx));
-        }
-        if let Some(cy) = t.mirror_y_center {
-            self.mirror_y(Some(cy));
-        }
-        if t.translate_x != 0.0 || t.translate_y != 0.0 {
-            self.translate(Point2d::new(t.translate_x, t.translate_y));
+        for op in &t.ops {
+            match op {
+                TransformOp::Translate { dx, dy } => {
+                    self.translate(Point2d::new(*dx, *dy));
+                }
+                TransformOp::MirrorX { cx } => {
+                    self.mirror_x(Some(*cx));
+                }
+                TransformOp::MirrorY { cy } => {
+                    self.mirror_y(Some(*cy));
+                }
+            }
         }
     }
 }

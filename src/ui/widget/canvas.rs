@@ -5,79 +5,103 @@ use lyon::math::point;
 use lyon::path::Path;
 use lyon::tessellation::*;
 
+use crate::core::Primitive;
 use crate::core::toolpath::helpers::{
     arc_to_path, circle_to_path, complex_to_path, polygon_to_paths, rectangle_to_path,
     segment_to_path,
 };
-use crate::core::Primitive;
 use crate::ui::pcb_transform::PcbTransform;
 
-const GRID_STEP_MM: f64 = 5.0;
 const GRID_MIN_PIXELS: f32 = 8.0;
 
+/// Рисует только сетку с заданным шагом (мм).
+///
+/// Если при текущем масштабе шаг в пикселях меньше `GRID_MIN_PIXELS`,
+/// шаг удваивается до тех пор, пока линии не станут различимыми.
+/// Это гарантирует видимость сетки при любом зуме, включая стартовый (zoom = 1.0).
+pub fn draw_grid(painter: &egui::Painter, transform: &PcbTransform, step_mm: f64) {
+    if step_mm <= 0.0 {
+        return;
+    }
+
+    let rect = transform.rect;
+    if rect.width() <= 0.0 || rect.height() <= 0.0 {
+        return;
+    }
+
+
+    let mut step = step_mm;
+    while (step as f32) * transform.scale < GRID_MIN_PIXELS {
+        step *= 2.0;
+        if step > 10_000.0 {
+        
+            return;
+        }
+    }
+
+    let grid_color = egui::Color32::from_rgba_unmultiplied(120, 120, 120, 60);
+    let grid_stroke = egui::Stroke::new(1.0, grid_color);
+
+
+    let mut x_mm = 0.0;
+    while transform.to_screen(-x_mm, 0.0).x > rect.min.x {
+        let screen_x = transform.to_screen(-x_mm, 0.0).x;
+        painter.line_segment(
+            [
+                egui::pos2(screen_x, rect.min.y),
+                egui::pos2(screen_x, rect.max.y),
+            ],
+            grid_stroke,
+        );
+        x_mm += step;
+    }
+    x_mm = step;
+    while transform.to_screen(x_mm, 0.0).x < rect.max.x {
+        let screen_x = transform.to_screen(x_mm, 0.0).x;
+        painter.line_segment(
+            [
+                egui::pos2(screen_x, rect.min.y),
+                egui::pos2(screen_x, rect.max.y),
+            ],
+            grid_stroke,
+        );
+        x_mm += step;
+    }
+
+
+    let mut y_mm = 0.0;
+    while transform.to_screen(0.0, -y_mm).y < rect.max.y {
+        let screen_y = transform.to_screen(0.0, -y_mm).y;
+        painter.line_segment(
+            [
+                egui::pos2(rect.min.x, screen_y),
+                egui::pos2(rect.max.x, screen_y),
+            ],
+            grid_stroke,
+        );
+        y_mm += step;
+    }
+    y_mm = step;
+    while transform.to_screen(0.0, y_mm).y > rect.min.y {
+        let screen_y = transform.to_screen(0.0, y_mm).y;
+        painter.line_segment(
+            [
+                egui::pos2(rect.min.x, screen_y),
+                egui::pos2(rect.max.x, screen_y),
+            ],
+            grid_stroke,
+        );
+        y_mm += step;
+    }
+}
+
+/// Рисует только оси X (красная) и Y (зелёная).
 pub fn draw_axes(painter: &egui::Painter, transform: &PcbTransform) {
     let origin = transform.to_screen(0.0, 0.0);
     let rect = transform.rect;
 
     if rect.width() <= 0.0 || rect.height() <= 0.0 {
         return;
-    }
-
-    let grid_color = egui::Color32::from_rgba_unmultiplied(120, 120, 120, 60);
-    let grid_stroke = egui::Stroke::new(1.0, grid_color);
-
-    let step_px = (GRID_STEP_MM as f32) * transform.scale;
-
-    if step_px >= GRID_MIN_PIXELS {
-        let mut x_mm = 0.0;
-        while transform.to_screen(-x_mm, 0.0).x > rect.min.x {
-            let screen_x = transform.to_screen(-x_mm, 0.0).x;
-            painter.line_segment(
-                [
-                    egui::pos2(screen_x, rect.min.y),
-                    egui::pos2(screen_x, rect.max.y),
-                ],
-                grid_stroke,
-            );
-            x_mm += GRID_STEP_MM;
-        }
-        x_mm = GRID_STEP_MM;
-        while transform.to_screen(x_mm, 0.0).x < rect.max.x {
-            let screen_x = transform.to_screen(x_mm, 0.0).x;
-            painter.line_segment(
-                [
-                    egui::pos2(screen_x, rect.min.y),
-                    egui::pos2(screen_x, rect.max.y),
-                ],
-                grid_stroke,
-            );
-            x_mm += GRID_STEP_MM;
-        }
-
-        let mut y_mm = 0.0;
-        while transform.to_screen(0.0, -y_mm).y < rect.max.y {
-            let screen_y = transform.to_screen(0.0, -y_mm).y;
-            painter.line_segment(
-                [
-                    egui::pos2(rect.min.x, screen_y),
-                    egui::pos2(rect.max.x, screen_y),
-                ],
-                grid_stroke,
-            );
-            y_mm += GRID_STEP_MM;
-        }
-        y_mm = GRID_STEP_MM;
-        while transform.to_screen(0.0, y_mm).y > rect.min.y {
-            let screen_y = transform.to_screen(0.0, y_mm).y;
-            painter.line_segment(
-                [
-                    egui::pos2(rect.min.x, screen_y),
-                    egui::pos2(rect.max.x, screen_y),
-                ],
-                grid_stroke,
-            );
-            y_mm += GRID_STEP_MM;
-        }
     }
 
     painter.line_segment(
@@ -165,8 +189,6 @@ pub fn draw_primitive(
     transform: &PcbTransform,
     color: egui::Color32,
 ) {
-
-
     let paths = match primitive {
         Primitive::Segment(s) => segment_to_path(s),
         Primitive::Arc(a) => arc_to_path(a, 32),

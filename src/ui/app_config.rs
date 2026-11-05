@@ -32,6 +32,16 @@ pub struct AppConfig {
     #[serde(default = "default_theme")]
     pub app_theme: AppTheme,
 
+    #[serde(default = "default_true")]
+    pub show_grid: bool,
+
+    #[serde(default = "default_true")]
+    pub show_axes: bool,
+
+
+    #[serde(default = "default_grid_step")]
+    pub grid_step_mm: f64,
+
     pub common_parameters: CommonParameters,
 }
 
@@ -74,6 +84,9 @@ impl Default for AppConfig {
             app_locale: sys_locale::get_locale().unwrap_or("en".to_string()),
             common_parameters: Default::default(),
             app_theme: Default::default(),
+            show_grid: true,
+            show_axes: true,
+            grid_step_mm: default_grid_step(),
         }
     }
 }
@@ -93,3 +106,14 @@ fn default_locale() -> String {
 fn default_theme() -> AppTheme {
     AppTheme::default()
 }
+
+fn default_true() -> bool {
+    true
+}
+
+fn default_grid_step() -> f64 {
+    5.0
+}
+
+/// Доступные шаги сетки (мм)
+pub const GRID_STEPS: &[f64] = &[1.0, 2.5, 5.0, 10.0, 25.0];

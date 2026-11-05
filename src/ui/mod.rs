@@ -13,7 +13,7 @@ use crate::{
     core::tools::library::ToolLibrary,
     logger::LogEntry,
     ui::{
-        app_config::AppConfig,
+        app_config::{AppConfig, GRID_STEPS},
         log_ui::panel_logs,
         panels::{CanvasState, FileOperationId},
         project::SourceFile,
@@ -83,6 +83,7 @@ impl CopperCrabApp {
             current_project_path: None,
         }
     }
+
     pub(crate) fn handle_shortcuts(&mut self, ctx: &egui::Context) {
         let save_pressed = ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::S));
         if save_pressed {
@@ -112,6 +113,36 @@ impl CopperCrabApp {
             ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::W));
         if close_pressed {
             self.close_project();
+        }
+
+    
+        let zoom_in = ctx.input_mut(|i| {
+            i.consume_key(egui::Modifiers::COMMAND, egui::Key::Plus)
+                || i.consume_key(egui::Modifiers::COMMAND, egui::Key::Equals)
+        });
+        if zoom_in {
+            self.zoom_in();
+        }
+
+        let zoom_out = ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::Minus));
+        if zoom_out {
+            self.zoom_out();
+        }
+
+        let home = ctx.input_mut(|i| i.consume_key(egui::Modifiers::NONE, egui::Key::Home));
+        if home {
+            self.center_view_to_board();
+        }
+
+        let reset_view =
+            ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::Num0));
+        if reset_view {
+            self.canvas.reset_view();
+        }
+
+        let zoom_100 = ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::Num1));
+        if zoom_100 {
+            self.zoom_one_to_one();
         }
     }
 
@@ -159,6 +190,7 @@ impl CopperCrabApp {
             }
         }
     }
+
     fn ui_top_menu(&mut self, ui: &mut egui::Ui) {
         egui::Panel::top("top_menu_panel")
             .resizable(false)
@@ -173,9 +205,8 @@ impl CopperCrabApp {
                     let save_project_label = t!("ui.menu.save_project").to_string();
                     let save_project_as_label = t!("ui.menu.save_project_as").to_string();
                     let exit_label = t!("ui.menu.exit").to_string();
-                    let _reset_zoom_label = t!("ui.menu.reset_zoom").to_string();
-                    let _center_board_label = t!("ui.menu.center_board").to_string();
                     let close_project_label = t!("ui.menu.close_project").to_string();
+
                     ui.menu_button(file_label, |ui| {
                         if ui.button(new_project_label).clicked() {
                             self.new_project();
@@ -240,7 +271,116 @@ impl CopperCrabApp {
                         }
                     });
 
-                    ui.menu_button(view_label, |_ui| {});
+                    ui.menu_button(view_label, |ui| {
+                        if ui
+                            .button(format!(
+                                "{} {}",
+                                egui_phosphor::regular::MAGNIFYING_GLASS_PLUS,
+                                t!("ui.menu.zoom_in")
+                            ))
+                            .clicked()
+                        {
+                            self.zoom_in();
+                            ui.close();
+                        }
+                        if ui
+                            .button(format!(
+                                "{} {}",
+                                egui_phosphor::regular::MAGNIFYING_GLASS_MINUS,
+                                t!("ui.menu.zoom_out")
+                            ))
+                            .clicked()
+                        {
+                            self.zoom_out();
+                            ui.close();
+                        }
+                        if ui
+                            .button(format!(
+                                "{} {}",
+                                egui_phosphor::regular::ARROWS_OUT_CARDINAL,
+                                t!("ui.menu.zoom_one_to_one")
+                            ))
+                            .clicked()
+                        {
+                            self.zoom_one_to_one();
+                            ui.close();
+                        }
+                        if ui
+                            .button(format!(
+                                "{} {}",
+                                egui_phosphor::regular::ARROWS_OUT,
+                                t!("ui.menu.center_board")
+                            ))
+                            .clicked()
+                        {
+                            self.center_view_to_board();
+                            ui.close();
+                        }
+                        if ui
+                            .button(format!(
+                                "{} {}",
+                                egui_phosphor::regular::ARROW_COUNTER_CLOCKWISE,
+                                t!("ui.menu.reset_view")
+                            ))
+                            .clicked()
+                        {
+                            self.canvas.reset_view();
+                            ui.close();
+                        }
+
+                        ui.separator();
+                        ui.checkbox(&mut self.app_config.show_grid, t!("ui.menu.show_grid"));
+                        ui.checkbox(&mut self.app_config.show_axes, t!("ui.menu.show_axes"));
+
+                    
+                    
+                    
+                    
+                        ui.menu_button(
+                            format!(
+                                "{}: {} mm",
+                                t!("ui.menu.grid_step"),
+                                self.app_config.grid_step_mm
+                            ),
+                            |ui| {
+                                ui.set_min_width(120.0);
+                                for &step in GRID_STEPS {
+                                    let selected =
+                                        (self.app_config.grid_step_mm - step).abs() < f64::EPSILON;
+                                    if ui
+                                        .selectable_label(selected, format!("{} mm", step))
+                                        .clicked()
+                                    {
+                                        self.app_config.grid_step_mm = step;
+                                    }
+                                }
+                            },
+                        );
+
+                        ui.separator();
+                        if ui
+                            .button(format!(
+                                "{} {}",
+                                egui_phosphor::regular::EYE,
+                                t!("ui.menu.show_all_layers")
+                            ))
+                            .clicked()
+                        {
+                            self.show_all_layers();
+                            ui.close();
+                        }
+                        if ui
+                            .button(format!(
+                                "{} {}",
+                                egui_phosphor::regular::EYE_SLASH,
+                                t!("ui.menu.hide_all_layers")
+                            ))
+                            .clicked()
+                        {
+                            self.hide_all_layers();
+                            ui.close();
+                        }
+                    });
                 });
             });
     }
@@ -297,6 +437,7 @@ impl eframe::App for CopperCrabApp {
         self.app_config.save();
     }
 }
+
 fn apply_theme(ctx: &egui::Context, app_theme: &app_config::AppTheme) {
     let mut theme = match app_theme {
         app_config::AppTheme::Slate => Theme::slate(),
@@ -318,7 +459,6 @@ fn apply_theme(ctx: &egui::Context, app_theme: &app_config::AppTheme) {
     theme.palette.purple_hover = btn_hover;
     theme.palette.amber = btn_bg;
     theme.palette.amber_hover = btn_hover;
-    theme.card_radius = 20.0;
 
     theme.install(ctx);
 
@@ -335,5 +475,7 @@ fn apply_theme(ctx: &egui::Context, app_theme: &app_config::AppTheme) {
             visuals.bg_stroke = egui::Stroke::NONE;
             visuals.corner_radius = 8u8.into();
         }
+
+        style.spacing.menu_margin = egui::Margin::symmetric(10, 6);
     });
 }

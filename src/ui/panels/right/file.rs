@@ -3,7 +3,7 @@ use elegance::{Accent, Button, TextInput};
 use rust_i18n::t;
 
 use crate::{
-    core::geometry::Point2d,
+    core::{bounding_box::BoundingBox, geometry::Point2d},
     ui::{
         CopperCrabApp,
         panels::left::{FileOperationId, FileTreeActions},
@@ -64,6 +64,21 @@ impl CopperCrabApp {
             ui.add_space(8.0);
             ui.separator();
 
+        
+            ui.horizontal(|ui| {
+                ui.label(t!("ui.label.parameters.common.move_step"));
+                ui.add(
+                    DragValue::new(&mut self.app_config.common_parameters.move_step)
+                        .speed(0.1)
+                        .range(0.001..=1000.0)
+                        .suffix(" mm"),
+                )
+                .on_hover_text(t!("ui.tooltip.parameters.common.move_step"));
+            });
+            ui.add_space(8.0);
+
+            let step = self.app_config.common_parameters.move_step;
+
             ui.horizontal(|ui| {
                 if ui
                     .add_sized(
@@ -72,7 +87,7 @@ impl CopperCrabApp {
                     )
                     .clicked()
                 {
-                    file.translate(Point2d::new(-1.0, 0.0));
+                    file.translate(Point2d::new(-step, 0.0));
                     has_changed = true;
                 }
                 if ui
@@ -82,7 +97,7 @@ impl CopperCrabApp {
                     )
                     .clicked()
                 {
-                    file.translate(Point2d::new(1.0, 0.0));
+                    file.translate(Point2d::new(step, 0.0));
                     has_changed = true;
                 }
             });
@@ -97,7 +112,7 @@ impl CopperCrabApp {
                     )
                     .clicked()
                 {
-                    file.translate(Point2d::new(0.0, -1.0));
+                    file.translate(Point2d::new(0.0, -step));
                     has_changed = true;
                 }
                 if ui
@@ -107,7 +122,7 @@ impl CopperCrabApp {
                     )
                     .clicked()
                 {
-                    file.translate(Point2d::new(0.0, 1.0));
+                    file.translate(Point2d::new(0.0, step));
                     has_changed = true;
                 }
             });
@@ -125,7 +140,7 @@ impl CopperCrabApp {
                 )
                 .clicked()
             {
-                let mut bb = crate::core::bounding_box::BoundingBox::new();
+                let mut bb = BoundingBox::new();
                 file.source.update_bounding_box(&mut bb);
                 if !bb.is_infinite() {
                     let c = bb.get_center();
@@ -139,24 +154,33 @@ impl CopperCrabApp {
 
             title_label(ui, &t!("ui.label.position"), false);
 
-            let mut pos_x = 0.0;
-            let mut pos_y = 0.0;
+        
+            let mut bb = BoundingBox::new();
+            file.source.update_bounding_box(&mut bb);
+
+            let (mut pos_x, mut pos_y) = if bb.is_infinite() {
+                (0.0, 0.0)
+            } else {
+                let c = bb.get_center();
+                (c.x, c.y)
+            };
+
+            let mut pos_changed = false;
 
             ui.horizontal(|ui| {
                 ui.label("X:");
-                ui.add(DragValue::new(&mut pos_x).speed(0.1).suffix(" mm"));
+                let resp = ui.add(DragValue::new(&mut pos_x).speed(0.1).suffix(" mm"));
+                pos_changed |= resp.changed();
+
                 ui.label("Y:");
-                ui.add(DragValue::new(&mut pos_y).speed(0.1).suffix(" mm"));
+                let resp = ui.add(DragValue::new(&mut pos_y).speed(0.1).suffix(" mm"));
+                pos_changed |= resp.changed();
             });
 
-            if ui
-                .add_sized(
-                    [btn_size[0] * 2.0 + 8.0, btn_size[1]],
-                    egui::Button::new(format!("{} Apply", egui_phosphor::regular::CHECK)),
-                )
-                .clicked()
-            {
-                file.translate(Point2d::new(pos_x, pos_y));
+        
+            if pos_changed && !bb.is_infinite() {
+                let c = bb.get_center();
+                file.translate(Point2d::new(pos_x - c.x, pos_y - c.y));
                 has_changed = true;
             }
 

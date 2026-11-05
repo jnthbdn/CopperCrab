@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::ui::project::{CommonParameters, Operation};
 
-pub(crate) const PROJECT_VERSION: u32 = 2;
+pub(crate) const PROJECT_VERSION: u32 = 3;
 
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub(crate) enum SourceKindTag {
@@ -13,39 +13,50 @@ pub(crate) enum SourceKindTag {
     Drill,
 }
 
-/// Накопленная трансформация исходного файла (сдвиг + зеркала).
-/// Хранится в координатах ИСХОДНОГО файла (до сдвига).
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub(crate) struct SourceTransform {
-    pub translate_x: f64,
-    pub translate_y: f64,
-
-
-    #[serde(default)]
-    pub mirror_x_center: Option<f64>,
-
-
-    #[serde(default)]
-    pub mirror_y_center: Option<f64>,
+/// Одна операция трансформации исходного файла.
+/// Хранится в координатах ТЕКУЩЕГО (уже трансформированного) слоя
+/// на момент применения — это позволяет воспроизвести операции 1-в-1.
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+pub(crate) enum TransformOp {
+    Translate { dx: f64, dy: f64 },
+    MirrorX { cx: f64 },
+    MirrorY { cy: f64 },
 }
 
-impl Default for SourceTransform {
-    fn default() -> Self {
-        Self {
-            translate_x: 0.0,
-            translate_y: 0.0,
-            mirror_x_center: None,
-            mirror_y_center: None,
-        }
-    }
+/// Накопленная трансформация исходного файла — упорядоченный список операций.
+/// Пустой список = тождество.
+#[derive(Debug, Serialize, Deserialize, Clone, Default, PartialEq)]
+pub(crate) struct SourceTransform {
+    #[serde(default)]
+    pub ops: Vec<TransformOp>,
 }
 
 impl SourceTransform {
     pub(crate) fn is_identity(&self) -> bool {
-        self.translate_x == 0.0
-            && self.translate_y == 0.0
-            && self.mirror_x_center.is_none()
-            && self.mirror_y_center.is_none()
+        self.ops.is_empty()
+    }
+
+    pub(crate) fn push(&mut self, op: TransformOp) {
+    
+    
+        if let Some(last) = self.ops.last() {
+            match (last, &op) {
+                (TransformOp::MirrorX { cx: a }, TransformOp::MirrorX { cx: b })
+                    if (a - b).abs() < f64::EPSILON =>
+                {
+                    self.ops.pop();
+                    return;
+                }
+                (TransformOp::MirrorY { cy: a }, TransformOp::MirrorY { cy: b })
+                    if (a - b).abs() < f64::EPSILON =>
+                {
+                    self.ops.pop();
+                    return;
+                }
+                _ => {}
+            }
+        }
+        self.ops.push(op);
     }
 }
 

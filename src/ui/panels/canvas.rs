@@ -12,7 +12,7 @@ use crate::{
         pcb_transform::PcbTransform,
         project::SourceKind,
         widget::canvas::{
-            draw_axes, draw_paths, draw_paths_stroke, draw_primitive, hit_test_primitive,
+            draw_axes, draw_grid, draw_paths, draw_paths_stroke, draw_primitive, hit_test_primitive,
         },
     },
 };
@@ -22,6 +22,12 @@ pub(crate) struct CanvasState {
     pub(crate) zoom: f32,
     pub(crate) offset: egui::Vec2,
     pub(crate) rect: egui::Rect,
+
+
+
+
+    #[serde(skip)]
+    pub(crate) pending_center: bool,
 
     #[serde(skip)]
     pub(crate) hovered_primitive: Option<(usize, usize, usize)>, // (file_id, t_idx, p_idx)
@@ -39,9 +45,17 @@ impl Default for CanvasState {
                 min: Default::default(),
                 max: Default::default(),
             },
+            pending_center: false,
             hovered_primitive: None,
             context_menu_target: None,
         }
+    }
+}
+
+impl CanvasState {
+    pub(crate) fn reset_view(&mut self) {
+        self.zoom = 1.0;
+        self.offset = egui::Vec2::ZERO;
     }
 }
 
@@ -53,11 +67,22 @@ impl CopperCrabApp {
         let rect = response.rect;
         self.canvas.rect = rect;
 
+    
+        if self.canvas.pending_center {
+            self.center_view_to_board();
+        }
+
         painter.rect_filled(rect, 0.0, egui::Color32::from_rgb(13, 26, 13));
 
         let transform = PcbTransform::new(rect, self.canvas.zoom, self.canvas.offset);
 
-        draw_axes(&painter, &transform);
+    
+        if self.app_config.show_grid {
+            draw_grid(&painter, &transform, self.app_config.grid_step_mm);
+        }
+        if self.app_config.show_axes {
+            draw_axes(&painter, &transform);
+        }
 
     
         let mut show_hidden_file_id: Option<usize> = None;
@@ -90,12 +115,10 @@ impl CopperCrabApp {
                             let is_hidden = file.hidden_primitives.contains(&key);
 
                             if is_hidden {
-                            
                                 if show_hidden_file_id == Some(file_id) {
-                                
                                     draw_primitive(&painter, prim, &transform, Color32::RED);
                                 }
-                                continue; // Иначе просто пропускаем (не рисуем)
+                                continue;
                             }
 
                             let color = if is_selected { SELECTED_PATH } else { COPPER };
@@ -153,7 +176,6 @@ impl CopperCrabApp {
                     continue;
                 }
                 if let SourceKind::Copper { layer, .. } = &file.source {
-                
                     for (t_idx, trace) in layer.traces.iter().enumerate() {
                         for (p_idx, prim) in trace.primitives.iter().enumerate() {
                             if file.hidden_primitives.contains(&(t_idx, p_idx)) {
@@ -219,7 +241,6 @@ impl CopperCrabApp {
 
     
         if response.secondary_clicked() {
-        
             self.canvas.context_menu_target = self.canvas.hovered_primitive;
         }
 
@@ -276,10 +297,10 @@ impl CopperCrabApp {
             .show(ui.ctx(), |ui| {
                 ui.horizontal(|ui| {
                     if ui.add(Button::icon('−', "")).clicked() {
-                        self.zoom_on_position(0.95, Vec2::ZERO);
+                        self.zoom_out();
                     }
                     if ui.add(Button::icon('+', "")).clicked() {
-                        self.zoom_on_position(1.05, Vec2::ZERO);
+                        self.zoom_in();
                     }
                     if ui.add(Button::icon('⊡', "")).clicked() {
                         self.center_view_to_board();
@@ -288,7 +309,31 @@ impl CopperCrabApp {
             });
     }
 
-    fn zoom_on_position(&mut self, zoom_factor: f32, position: Vec2) {
+    pub(crate) fn zoom_in(&mut self) {
+        self.zoom_on_position(1.05, Vec2::ZERO);
+    }
+
+    pub(crate) fn zoom_out(&mut self) {
+        self.zoom_on_position(0.95, Vec2::ZERO);
+    }
+
+    pub(crate) fn zoom_one_to_one(&mut self) {
+        self.canvas.zoom = 1.0;
+    }
+
+    pub(crate) fn show_all_layers(&mut self) {
+        for f in &mut self.files {
+            f.is_visible = true;
+        }
+    }
+
+    pub(crate) fn hide_all_layers(&mut self) {
+        for f in &mut self.files {
+            f.is_visible = false;
+        }
+    }
+
+    pub(crate) fn zoom_on_position(&mut self, zoom_factor: f32, position: Vec2) {
         let old_zoom = self.canvas.zoom;
         self.canvas.zoom *= zoom_factor;
 
@@ -324,7 +369,17 @@ impl CopperCrabApp {
         b_box
     }
 
+
+
+
+
+
     pub(crate) fn center_view_to_board(&mut self) {
+        if self.canvas.rect.width() <= 0.0 || self.canvas.rect.height() <= 0.0 {
+            self.canvas.pending_center = true;
+            return;
+        }
+
         let b_box = self.get_bounding_box();
 
         if b_box.is_infinite() {
@@ -350,5 +405,7 @@ impl CopperCrabApp {
             self.canvas.offset.x = -pcb_cx * self.canvas.zoom;
             self.canvas.offset.y = pcb_cy * self.canvas.zoom;
         }
+
+        self.canvas.pending_center = false;
     }
 }

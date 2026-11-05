@@ -1,5 +1,6 @@
 _version: 2
 
+
 ui.label.project:
   en: "Project"
   fr: "Projet"
@@ -20,10 +21,31 @@ ui.label.operation.name:
   fr: "Nom de l'opération"
   ru: "Название операции"
 
+ui.label.position:
+  en: "Position"
+  fr: "Position"
+  ru: "Позиция"
+
 ui.label.click_to_enlarge:
   en: "Click to enlarge"
   fr: "Cliquer pour agrandir"
   ru: "Нажмите для увеличения"
+
+ui.label.logs:
+  en: "Logs"
+  fr: "Logs"
+  ru: "Логи"
+
+ui.label.hidden_primitives:
+  en: "Hidden"
+  fr: "Masqués"
+  ru: "Скрытые"
+
+ui.label.object:
+  en: "Object"
+  fr: "Objet"
+  ru: "Объект"
+
 
 ui.label.library.angle:
   en: "Angle"
@@ -105,20 +127,31 @@ ui.label.library.vbit:
   fr: "V-Bit"
   ru: "V-образная фреза"
 
-ui.label.logs:
-  en: "Logs"
-  fr: "Logs"
-  ru: "Логи"
+
+ui.label.parameters.common.safe_z:
+  en: "Safe Z"
+  fr: "Z sécurité"
+  ru: "Безопасная Z"
 
 ui.label.parameters.common.final_z:
   en: "Final Z"
   fr: "Z final"
   ru: "Конечная Z"
 
-ui.label.parameters.common.safe_z:
-  en: "Safe Z"
-  fr: "Z sécurité"
-  ru: "Безопасная Z"
+ui.label.parameters.common.move_step:
+  en: "Move step"
+  fr: "Pas de déplacement"
+  ru: "Шаг смещения"
+
+ui.tooltip.parameters.common.move_step:
+  en: "Distance used by the X± / Y± translate buttons"
+  fr: "Distance utilisée par les boutons X± / Y±"
+  ru: "Величина сдвига для кнопок X± / Y±"
+
+ui.label.parameters.drill.title:
+  en: "Drill parameters"
+  fr: "Paramètres de perçage"
+  ru: "Параметры сверления"
 
 ui.label.parameters.drill.drill_depth:
   en: "Drill depth"
@@ -130,10 +163,10 @@ ui.label.parameters.drill.drill_peck:
   fr: "Pas de débourrage"
   ru: "Шаг прерывистого сверления"
 
-ui.label.parameters.drill.title:
-  en: "Drill parameters"
-  fr: "Paramètres de perçage"
-  ru: "Параметры сверления"
+ui.label.parameters.isolation.title:
+  en: "Isolation parameters"
+  fr: "Paramètres d'isolation"
+  ru: "Параметры изоляции"
 
 ui.label.parameters.isolation.depth:
   en: "Isolation depth"
@@ -165,45 +198,173 @@ ui.label.parameters.isolation.offset:
   fr: "Décalage"
   ru: "Смещение"
 
-ui.label.parameters.isolation.title:
-  en: "Isolation parameters"
-  fr: "Paramètres d'isolation"
-  ru: "Параметры изоляции"
+ui.label.parameters.outline.title:
+  en: "Outline parameters"
+  fr: "Paramètres de contour"
+  ru: "Параметры контура"
 
 ui.label.parameters.outline.depth:
   en: "Depth"
   fr: "Profondeur"
   ru: "Глубина"
 
-ui.label.parameters.outline.title:
-  en: "Outline parameters"
-  fr: "Paramètres de contour"
-  ru: "Параметры контура"
 
-ui.label.move_object:
-  en: "Move object"
-  fr: "Déplacer l'objet"
-  ru: "Переместить объект"
+ui.tooltip.parameters.common.safe_z:
+  en: "Z height for rapid moves between operations"
+  fr: "Hauteur Z pour les déplacements rapides entre opérations"
+  ru: "Высота Z для быстрых перемещений между операциями"
 
-ui.button.move_x:
-  en: "Move X +1"
-  fr: "Déplacer X +1"
-  ru: "Сдвиг X +1"
+ui.tooltip.parameters.common.final_z:
+  en: "Z height at the end of the program"
+  fr: "Hauteur Z à la fin du programme"
+  ru: "Высота Z в конце программы"
 
-ui.button.move_y:
-  en: "Move Y +1"
-  fr: "Déplacer Y +1"
-  ru: "Сдвиг Y +1"
+ui.tooltip.parameters.drill_depth:
+  en: "Drilling depth"
+  fr: "Profondeur de perçage"
+  ru: "Глубина сверления"
+
+ui.tooltip.parameters.drill_peck:
+  en: "Depth increment for peck drilling"
+  fr: "Incrément de profondeur pour le débourrage"
+  ru: "Приращение глубины при прерывистом сверлении"
+
+ui.tooltip.parameters.isolation.depth:
+  en: "Isolation depth"
+  fr: "Profondeur d'isolation"
+  ru: "Глубина изоляции"
+
+ui.tooltip.parameters.isolation.passes:
+  en: "Number of isolation passes"
+  fr: "Nombre de passes d'isolation"
+  ru: "Количество проходов изоляции"
+
+ui.tooltip.parameters.isolation.overlap:
+  en: "Overlap between consecutive passes"
+  fr: "Recouvrement entre passes consécutives"
+  ru: "Перекрытие между соседними проходами"
+
+ui.tooltip.parameters.isolation.offset:
+  en: "Offset from the copper edge"
+  fr: "Décalage par rapport au bord du cuivre"
+  ru: "Смещение от края меди"
+
+ui.tooltip.parameters.outline.depth:
+  en: "Cutting depth"
+  fr: "Profondeur de coupe"
+  ru: "Глубина резания"
+
+
+ui.tooltip.library.name:
+  en: "Tool name"
+  fr: "Nom de l'outil"
+  ru: "Название инструмента"
+
+ui.tooltip.library.angle:
+  en: "V-bit angle"
+  fr: "Angle du V-Bit"
+  ru: "Угол V-образной фрезы"
+
+ui.tooltip.library.tip_diameter:
+  en: "Flat tip diameter"
+  fr: "Diamètre de la pointe plate"
+  ru: "Диаметр плоского наконечника"
+
+ui.tooltip.library.diameter:
+  en: "Tool diameter"
+  fr: "Diamètre de l'outil"
+  ru: "Диаметр инструмента"
+
+ui.tooltip.library.max_depth:
+  en: "Maximum cutting depth per pass"
+  fr: "Profondeur de coupe maximale par passe"
+  ru: "Максимальная глубина резания за проход"
+
+ui.tooltip.library.feed_rate:
+  en: "Lateral feed rate"
+  fr: "Vitesse d'avance latérale"
+  ru: "Скорость подачи по XY"
+
+ui.tooltip.library.plunge_rate:
+  en: "Vertical plunge rate"
+  fr: "Vitesse de plongée verticale"
+  ru: "Скорость погружения по Z"
+
+ui.tooltip.library.spindle_speed:
+  en: "Spindle rotation speed"
+  fr: "Vitesse de rotation de la broche"
+  ru: "Скорость вращения шпинделя"
+
+
+ui.button.copper:
+  en: "Copper"
+  fr: "Cuivre"
+  ru: "Медь"
+
+ui.button.outline:
+  en: "Outline"
+  fr: "Contour"
+  ru: "Контур"
+
+ui.button.drill:
+  en: "Drill"
+  fr: "Perçage"
+  ru: "Сверление"
+
+ui.button.tool_library:
+  en: "Tool library"
+  fr: "Bibliothèque d'outils"
+  ru: "Библиотека инструментов"
+
+ui.button.export_files:
+  en: "Export G-code"
+  fr: "Exporter le G-code"
+  ru: "Экспорт G-code"
 
 ui.button.center_origin:
   en: "Center to origin"
   fr: "Centrer à l'origine"
   ru: "Центрировать в (0,0)"
 
-ui.label.position:
-  en: "Position (Test)"
-  fr: "Position (Test)"
-  ru: "Позиция (Test)"
+ui.button.move_origin:
+  en: "Move origin to min"
+  fr: "Origine au minimum"
+  ru: "Начало в минимум"
+
+ui.button.mirror_x:
+  en: "Mirror X"
+  fr: "Miroir X"
+  ru: "Отразить X"
+
+ui.button.mirror_y:
+  en: "Mirror Y"
+  fr: "Miroir Y"
+  ru: "Отразить Y"
+
+ui.button.add_isolation_operation:
+  en: "Add isolation"
+  fr: "Ajouter une isolation"
+  ru: "Добавить изоляцию"
+
+ui.button.add_outline_operation:
+  en: "Add outline"
+  fr: "Ajouter un contour"
+  ru: "Добавить контур"
+
+ui.button.add_drill_operation:
+  en: "Add drill"
+  fr: "Ajouter un perçage"
+  ru: "Добавить сверление"
+
+ui.button.delete_file:
+  en: "Delete file"
+  fr: "Supprimer le fichier"
+  ru: "Удалить файл"
+
+ui.button.delete_operation:
+  en: "Delete operation"
+  fr: "Supprimer l'opération"
+  ru: "Удалить операцию"
 
 ui.button.hide:
   en: "Hide"
@@ -214,6 +375,73 @@ ui.button.show:
   en: "Show"
   fr: "Afficher"
   ru: "Показать"
+
+ui.button.hide_primitive:
+  en: "Hide"
+  fr: "Masquer"
+  ru: "Скрыть"
+
+ui.button.restore:
+  en: "Restore"
+  fr: "Restaurer"
+  ru: "Вернуть"
+
+ui.button.clear_selection:
+  en: "Clear selection"
+  fr: "Effacer la sélection"
+  ru: "Снять выделение"
+
+ui.button.clear_logs:
+  en: "Clear"
+  fr: "Effacer"
+  ru: "Очистить"
+
+ui.button.save:
+  en: "Save"
+  fr: "Enregistrer"
+  ru: "Сохранить"
+
+ui.button.cancel:
+  en: "Cancel"
+  fr: "Annuler"
+  ru: "Отмена"
+
+ui.button.close:
+  en: "Close"
+  fr: "Fermer"
+  ru: "Закрыть"
+
+ui.button.library.add_vbit:
+  en: "Add V-Bit"
+  fr: "Ajouter un V-Bit"
+  ru: "Добавить V-фрезу"
+
+ui.button.library.add_end_mill:
+  en: "Add end-mill"
+  fr: "Ajouter une fraise"
+  ru: "Добавить фрезу"
+
+ui.button.library.add_drill:
+  en: "Add drill"
+  fr: "Ajouter un foret"
+  ru: "Добавить сверло"
+
+
+ui.select_tool.isolation:
+  en: "Isolation tool"
+  fr: "Outil d'isolation"
+  ru: "Инструмент изоляции"
+
+ui.select_tool.outline:
+  en: "Outline tool"
+  fr: "Outil de contour"
+  ru: "Инструмент контура"
+
+ui.select_tool.drill:
+  en: "Drill bit"
+  fr: "Foret"
+  ru: "Сверло"
+
 
 ui.menu.file:
   en: "File"
@@ -235,21 +463,6 @@ ui.menu.open_project:
   fr: "Ouvrir le projet"
   ru: "Открыть проект"
 
-ui.menu.exit:
-  en: "Exit"
-  fr: "Quitter"
-  ru: "Выход"
-
-ui.menu.reset_zoom:
-  en: "Reset Zoom"
-  fr: "Réinitialiser le zoom"
-  ru: "Сбросить масштаб"
-
-ui.menu.center_board:
-  en: "Center Board"
-  fr: "Centrer la carte"
-  ru: "Центрировать плату"
-
 ui.menu.save_project:
   en: "Save Project"
   fr: "Enregistrer le projet"
@@ -265,27 +478,251 @@ ui.menu.close_project:
   fr: "Fermer le projet"
   ru: "Закрыть проект"
 
-ui.label.hidden_primitives:
-  en: "Hidden"
-  fr: "Masqués"
-  ru: "Скрытые"
+ui.menu.exit:
+  en: "Exit"
+  fr: "Quitter"
+  ru: "Выход"
 
-ui.label.object:
-  en: "Object"
-  fr: "Objet"
-  ru: "Объект"
+ui.menu.zoom_in:
+  en: "Zoom In"
+  fr: "Zoom avant"
+  ru: "Увеличить"
 
-ui.button.hide_primitive:
-  en: "Hide"
-  fr: "Masquer"
-  ru: "Скрыть"
+ui.menu.zoom_out:
+  en: "Zoom Out"
+  fr: "Zoom arrière"
+  ru: "Уменьшить"
 
-ui.button.restore:
-  en: "Restore"
-  fr: "Restaurer"
-  ru: "Вернуть"
+ui.menu.zoom_one_to_one:
+  en: "Zoom 1:1"
+  fr: "Zoom 1:1"
+  ru: "Масштаб 1:1"
 
-ui.button.clear_selection:
-  en: "Clear selection"
-  fr: "Effacer la sélection"
-  ru: "Снять выделение"
+ui.menu.center_board:
+  en: "Center Board"
+  fr: "Centrer la carte"
+  ru: "Центрировать плату"
+
+ui.menu.reset_view:
+  en: "Reset View"
+  fr: "Réinitialiser la vue"
+  ru: "Сбросить вид"
+
+ui.menu.show_grid:
+  en: "Show grid"
+  fr: "Afficher la grille"
+  ru: "Показать сетку"
+
+ui.menu.show_axes:
+  en: "Show axes"
+  fr: "Afficher les axes"
+  ru: "Показать оси"
+
+ui.menu.grid_step:
+  en: "Grid step"
+  fr: "Pas de la grille"
+  ru: "Шаг сетки"
+
+ui.menu.show_all_layers:
+  en: "Show all layers"
+  fr: "Afficher tous les calques"
+  ru: "Показать все слои"
+
+ui.menu.hide_all_layers:
+  en: "Hide all layers"
+  fr: "Masquer tous les calques"
+  ru: "Скрыть все слои"
+
+
+ui.status_bar.mouse:
+  en: "Mouse"
+  fr: "Souris"
+  ru: "Курсор"
+
+
+ui.toolpath.error.fail_generate:
+  en: "Failed to generate toolpath: %{e}"
+  fr: "Échec de la génération du parcours d'outil : %{e}"
+  ru: "Не удалось построить траекторию: %{e}"
+
+ui.toolpath.error.fail_load:
+  en: "Failed to load file: %{e}"
+  fr: "Échec du chargement du fichier : %{e}"
+  ru: "Не удалось загрузить файл: %{e}"
+
+ui.excellon.error.fail_load:
+  en: "Failed to load Excellon file: %{e}"
+  fr: "Échec du chargement du fichier Excellon : %{e}"
+  ru: "Не удалось загрузить файл Excellon: %{e}"
+
+ui.error.bad_isolation_tool:
+  en: "Invalid tool for isolation operation"
+  fr: "Outil invalide pour l'opération d'isolation"
+  ru: "Недопустимый инструмент для операции изоляции"
+
+ui.error.bad_outline_tool:
+  en: "Invalid tool for outline operation"
+  fr: "Outil invalide pour l'opération de contour"
+  ru: "Недопустимый инструмент для операции контура"
+
+ui.error.bad_drill_tool:
+  en: "Invalid tool for drill operation"
+  fr: "Outil invalide pour l'opération de perçage"
+  ru: "Недопустимый инструмент для операции сверления"
+
+ui.error.fail_write_isolation:
+  en: "Failed to write isolation G-code: %{e}"
+  fr: "Échec de l'écriture du G-code d'isolation : %{e}"
+  ru: "Не удалось записать G-code изоляции: %{e}"
+
+ui.error.fail_write_outline:
+  en: "Failed to write outline G-code: %{e}"
+  fr: "Échec de l'écriture du G-code de contour : %{e}"
+  ru: "Не удалось записать G-code контура: %{e}"
+
+ui.error.fail_write_drill:
+  en: "Failed to write drill G-code: %{e}"
+  fr: "Échec de l'écriture du G-code de perçage : %{e}"
+  ru: "Не удалось записать G-code сверления: %{e}"
+
+ui.warn.fail_save_library:
+  en: "Failed to save tool library: %{e}"
+  fr: "Échec de l'enregistrement de la bibliothèque d'outils : %{e}"
+  ru: "Не удалось сохранить библиотеку инструментов: %{e}"
+
+
+app_config.info.saved:
+  en: "Configuration saved to %{path}"
+  fr: "Configuration enregistrée dans %{path}"
+  ru: "Конфигурация сохранена в %{path}"
+
+app_config.error.fail_save:
+  en: "Failed to save configuration: %{e}"
+  fr: "Échec de l'enregistrement de la configuration : %{e}"
+  ru: "Не удалось сохранить конфигурацию: %{e}"
+
+
+library.info.saved:
+  en: "Tool library saved"
+  fr: "Bibliothèque d'outils enregistrée"
+  ru: "Библиотека инструментов сохранена"
+
+library.warn.no_library:
+  en: "No tool library found, starting with empty one"
+  fr: "Aucune bibliothèque trouvée, démarrage avec une bibliothèque vide"
+  ru: "Библиотека инструментов не найдена, начинаем с пустой"
+
+library.debug.save_path:
+  en: "Saving tool library to %{path}"
+  fr: "Enregistrement de la bibliothèque dans %{path}"
+  ru: "Сохранение библиотеки инструментов в %{path}"
+
+library.debug.loaded:
+  en: "Tool library loaded from %{path}"
+  fr: "Bibliothèque chargée depuis %{path}"
+  ru: "Библиотека инструментов загружена из %{path}"
+
+
+main.info.config_dir:
+  en: "Config directory: %{path}"
+  fr: "Répertoire de configuration : %{path}"
+  ru: "Каталог конфигурации: %{path}"
+
+main.info.create_config_folder:
+  en: "Config directory created"
+  fr: "Répertoire de configuration créé"
+  ru: "Каталог конфигурации создан"
+
+main.error.get_config_folder:
+  en: "Failed to get config folder"
+  fr: "Impossible d'obtenir le répertoire de configuration"
+  ru: "Не удалось получить каталог конфигурации"
+
+main.error.create_config_folder:
+  en: "Failed to create config folder: %{e}"
+  fr: "Impossible de créer le répertoire de configuration : %{e}"
+  ru: "Не удалось создать каталог конфигурации: %{e}"
+
+
+excellon.info.load_file:
+  en: "Loading Excellon file: %{path}"
+  fr: "Chargement du fichier Excellon : %{path}"
+  ru: "Загрузка файла Excellon: %{path}"
+
+excellon.info.loaded:
+  en: "Excellon loaded: %{holes} holes"
+  fr: "Excellon chargé : %{holes} trous"
+  ru: "Excellon загружен: отверстий — %{holes}"
+
+gerber.info.load_file:
+  en: "Loading Gerber file: %{path}"
+  fr: "Chargement du fichier Gerber : %{path}"
+  ru: "Загрузка файла Gerber: %{path}"
+
+gerber.info.generate_layer:
+  en: "Generating layer from Gerber data"
+  fr: "Génération du calque à partir des données Gerber"
+  ru: "Формирование слоя из данных Gerber"
+
+gerber.info.loaded:
+  en: "Gerber loaded"
+  fr: "Gerber chargé"
+  ru: "Gerber загружен"
+
+gerber.error.offset_circule_mode:
+  en: "Circular interpolation requires an offset (I/J)"
+  fr: "L'interpolation circulaire nécessite un décalage (I/J)"
+  ru: "Круговая интерполяция требует смещения (I/J)"
+
+gerber.error.no_macro_aperture_name:
+  en: "No aperture macro named '%{name}' found"
+  fr: "Aucune macro d'ouverture nommée '%{name}'"
+  ru: "Макрос апертуры с именем '%{name}' не найден"
+
+gerber.error.macro_variable_not_number:
+  en: "Macro variable $%{var} is not a number"
+  fr: "La variable macro $%{var} n'est pas un nombre"
+  ru: "Переменная макроса $%{var} не является числом"
+
+gerber.error.macro_variable_not_found:
+  en: "Macro variable $%{var} not found"
+  fr: "Variable macro $%{var} introuvable"
+  ru: "Переменная макроса $%{var} не найдена"
+
+gerber.error.macro_expression_error:
+  en: "Error evaluating macro expression '%{expr}': %{err}"
+  fr: "Erreur d'évaluation de l'expression macro '%{expr}' : %{err}"
+  ru: "Ошибка вычисления выражения макроса '%{expr}': %{err}"
+
+gerber.warn.deprecated:
+  en: "Deprecated Gerber function ignored: %{function}"
+  fr: "Fonction Gerber obsolète ignorée : %{function}"
+  ru: "Устаревшая функция Gerber проигнорирована: %{function}"
+
+gerber.warn.G_unsupported:
+  en: "Unsupported G-code: %{function}"
+  fr: "G-code non pris en charge : %{function}"
+  ru: "Неподдерживаемый G-code: %{function}"
+
+gerber.warn.extended_unsupported:
+  en: "Unsupported extended command: %{function}"
+  fr: "Commande étendue non prise en charge : %{function}"
+  ru: "Неподдерживаемая расширенная команда: %{function}"
+
+gerber.warn.aperture_unsupported:
+  en: "Unsupported aperture type: %{function}"
+  fr: "Type d'ouverture non pris en charge : %{function}"
+  ru: "Неподдерживаемый тип апертуры: %{function}"
+
+gerber.warn.macro_aperture_parameter_not_number:
+  en: "Macro aperture parameter is not a number"
+  fr: "Le paramètre de macro d'ouverture n'est pas un nombre"
+  ru: "Параметр макроса апертуры не является числом"
+
+
+toolpath.info.build_path:
+  en: "Building toolpath"
+  fr: "Construction du parcours d'outil"
+  ru: "Построение траектории инструмента"
+
+
