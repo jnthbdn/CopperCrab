@@ -1,5 +1,5 @@
 use egui::DragValue;
-use elegance::{Accent, Button, TextInput};
+use elegance::TextInput;
 use rust_i18n::t;
 
 use crate::{
@@ -64,7 +64,6 @@ impl CopperCrabApp {
             ui.add_space(8.0);
             ui.separator();
 
-        
             ui.horizontal(|ui| {
                 ui.label(t!("ui.label.parameters.common.move_step"));
                 ui.add(
@@ -154,7 +153,6 @@ impl CopperCrabApp {
 
             title_label(ui, &t!("ui.label.position"), false);
 
-        
             let mut bb = BoundingBox::new();
             file.source.update_bounding_box(&mut bb);
 
@@ -177,7 +175,6 @@ impl CopperCrabApp {
                 pos_changed |= resp.changed();
             });
 
-        
             if pos_changed && !bb.is_infinite() {
                 let c = bb.get_center();
                 file.translate(Point2d::new(pos_x - c.x, pos_y - c.y));

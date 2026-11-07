@@ -1,5 +1,5 @@
 use egui::{Color32, Vec2};
-use elegance::{Accent, Button};
+use elegance::Button;
 use rust_i18n::t;
 use serde::{Deserialize, Serialize};
 
@@ -23,14 +23,11 @@ pub(crate) struct CanvasState {
     pub(crate) offset: egui::Vec2,
     pub(crate) rect: egui::Rect,
 
-
-
-
     #[serde(skip)]
     pub(crate) pending_center: bool,
 
     #[serde(skip)]
-    pub(crate) hovered_primitive: Option<(usize, usize, usize)>, // (file_id, t_idx, p_idx)
+    pub(crate) hovered_primitive: Option<(usize, usize, usize)>,
 
     #[serde(skip)]
     pub(crate) context_menu_target: Option<(usize, usize, usize)>,
@@ -67,7 +64,6 @@ impl CopperCrabApp {
         let rect = response.rect;
         self.canvas.rect = rect;
 
-    
         if self.canvas.pending_center {
             self.center_view_to_board();
         }
@@ -76,7 +72,6 @@ impl CopperCrabApp {
 
         let transform = PcbTransform::new(rect, self.canvas.zoom, self.canvas.offset);
 
-    
         if self.app_config.show_grid {
             draw_grid(&painter, &transform, self.app_config.grid_step_mm);
         }
@@ -84,7 +79,6 @@ impl CopperCrabApp {
             draw_axes(&painter, &transform);
         }
 
-    
         let mut show_hidden_file_id: Option<usize> = None;
         if let Some(FileOperationId::Hidden(fid)) = self.tree_files_states.selected().first() {
             show_hidden_file_id = Some(*fid);
@@ -107,7 +101,6 @@ impl CopperCrabApp {
 
             match &file.source {
                 SourceKind::Copper { generator, layer } => {
-                
                     for (t_idx, trace) in layer.traces.iter().enumerate() {
                         for (p_idx, prim) in trace.primitives.iter().enumerate() {
                             let key = (t_idx, p_idx);
@@ -126,7 +119,6 @@ impl CopperCrabApp {
                         }
                     }
 
-                
                     for (op_id, operation) in file.operations.iter().enumerate() {
                         let color = if file_id == sel_file_id && op_id == sel_op_id {
                             SELECTED_PATH
@@ -164,7 +156,6 @@ impl CopperCrabApp {
             }
         }
 
-    
         self.canvas.hovered_primitive = None;
         if let Some(pos) = response.hover_pos() {
             let pcb_x = (pos.x - transform.rect.min.x - transform.offset.x) / transform.scale;
@@ -192,7 +183,6 @@ impl CopperCrabApp {
             }
         }
 
-    
         if response.clicked() {
             if let Some(pos) = response.interact_pointer_pos() {
                 let pcb_x = (pos.x - transform.rect.min.x - transform.offset.x) / transform.scale;
@@ -239,7 +229,6 @@ impl CopperCrabApp {
             }
         }
 
-    
         if response.secondary_clicked() {
             self.canvas.context_menu_target = self.canvas.hovered_primitive;
         }
@@ -272,7 +261,6 @@ impl CopperCrabApp {
             }
         });
 
-    
         if response.dragged() {
             self.canvas.offset += response.drag_delta();
         }
@@ -291,7 +279,6 @@ impl CopperCrabApp {
             self.status_bar.set_mouse_pcb(pcb_x, pcb_y);
         }
 
-    
         egui::Area::new(egui::Id::new("canvas_controls"))
             .fixed_pos(egui::pos2(rect.max.x - 110.0, rect.max.y - 40.0))
             .show(ui.ctx(), |ui| {
@@ -368,11 +355,6 @@ impl CopperCrabApp {
 
         b_box
     }
-
-
-
-
-
 
     pub(crate) fn center_view_to_board(&mut self) {
         if self.canvas.rect.width() <= 0.0 || self.canvas.rect.height() <= 0.0 {

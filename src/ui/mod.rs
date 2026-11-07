@@ -1,4 +1,3 @@
-use eframe::epaint::CornerRadius;
 use egui_ltreeview::TreeViewState;
 use elegance::Theme;
 use rust_i18n::t;
@@ -16,7 +15,7 @@ use crate::{
         app_config::{AppConfig, GRID_STEPS},
         log_ui::panel_logs,
         panels::{CanvasState, FileOperationId},
-        project::SourceFile,
+        project::{ExportSettings, SourceFile},
         widget::{status_bar::StatusBar, tool_library::ToolLibraryUi},
     },
 };
@@ -33,7 +32,6 @@ mod widget;
 
 pub(crate) use project::CommonParameters;
 
-const TOOLS_FILENAME: &str = "tools.toml";
 const AVAILABLE_LOCALE: [(&str, &str); 3] =
     [("en", "English"), ("fr", "Français"), ("ru", "Russian")];
 
@@ -54,6 +52,8 @@ pub struct CopperCrabApp {
     log_buffer: Arc<Mutex<VecDeque<LogEntry>>>,
     app_config: AppConfig,
     current_project_path: Option<PathBuf>,
+    pub(crate) export_settings: ExportSettings,
+    pub(crate) export_settings_open: bool,
 }
 
 impl CopperCrabApp {
@@ -63,9 +63,6 @@ impl CopperCrabApp {
         app_config: AppConfig,
         config_folder: PathBuf,
     ) -> Self {
-        let mut tools_file = PathBuf::from(&config_folder);
-        tools_file.push(TOOLS_FILENAME);
-
         apply_theme(&cc.egui_ctx, &app_config.app_theme);
 
         Self {
@@ -81,6 +78,8 @@ impl CopperCrabApp {
             log_buffer,
             app_config,
             current_project_path: None,
+            export_settings: ExportSettings::default(),
+            export_settings_open: false,
         }
     }
 
@@ -115,7 +114,6 @@ impl CopperCrabApp {
             self.close_project();
         }
 
-    
         let zoom_in = ctx.input_mut(|i| {
             i.consume_key(egui::Modifiers::COMMAND, egui::Key::Plus)
                 || i.consume_key(egui::Modifiers::COMMAND, egui::Key::Equals)
@@ -332,10 +330,6 @@ impl CopperCrabApp {
                         ui.checkbox(&mut self.app_config.show_grid, t!("ui.menu.show_grid"));
                         ui.checkbox(&mut self.app_config.show_axes, t!("ui.menu.show_axes"));
 
-                    
-                    
-                    
-                    
                         ui.menu_button(
                             format!(
                                 "{}: {} mm",
@@ -431,6 +425,8 @@ impl eframe::App for CopperCrabApp {
             &mut self.tools.tool_library_open,
             &mut self.tools.tool_library,
         );
+
+        self.ui_export_settings(ui.ctx());
     }
 
     fn on_exit(&mut self) {

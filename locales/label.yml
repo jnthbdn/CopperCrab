@@ -719,10 +719,28 @@ gerber.warn.macro_aperture_parameter_not_number:
   fr: "Le paramètre de macro d'ouverture n'est pas un nombre"
   ru: "Параметр макроса апертуры не является числом"
 
-
 toolpath.info.build_path:
   en: "Building toolpath"
   fr: "Construction du parcours d'outil"
   ru: "Построение траектории инструмента"
 
+ui.label.export_settings.title:
+  en: "Export settings"
+  fr: "Paramètres d'exportation"
+  ru: "Настройки экспорта"
+
+ui.label.export_settings.format:
+  en: "Format"
+  fr: "Format"
+  ru: "Формат"
+
+ui.label.export_settings.header:
+  en: "Header"
+  fr: "En-tête"
+  ru: "Заголовок"
+
+ui.label.export_settings.footer:
+  en: "Footer"
+  fr: "Pied de page"
+  ru: "Подвал"
 

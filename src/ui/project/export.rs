@@ -8,7 +8,7 @@ use crate::{
         toolpath::{generate_drill_gcode, generate_isolation_gcode},
         tools::{CncTool, library::ToolLibrary},
     },
-    ui::project::{CommonParameters, OperationKind, SelectedTool, SourceFile},
+    ui::project::{CommonParameters, ExportSettings, OperationKind, SelectedTool, SourceFile},
 };
 
 impl SourceFile {
@@ -17,6 +17,7 @@ impl SourceFile {
         folder: &PathBuf,
         tool_library: &ToolLibrary,
         common: &CommonParameters,
+        export: &ExportSettings,
     ) {
         for op in self.operations.iter() {
             let gcode_file = folder.join(sanitize_filename::sanitize_with_options(
@@ -27,12 +28,8 @@ impl SourceFile {
                 },
             ));
 
-            match op.kind {
-                OperationKind::Isolation {
-                    passes: _,
-                    overlap: _,
-                    offset: _,
-                } => {
+            let gcode = match op.kind {
+                OperationKind::Isolation { .. } => {
                     let tool = match op.tool {
                         SelectedTool::VBit(id) => {
                             tool_library.vbits.get(id).map(|t| t as &dyn CncTool)
@@ -48,17 +45,13 @@ impl SourceFile {
                         continue;
                     }
 
-                    let gcode = generate_isolation_gcode(
+                    generate_isolation_gcode(
                         &op.toolpath,
                         tool.unwrap(),
                         op.depth,
                         common.z_safe,
                         common.z_finish,
-                    );
-
-                    if let Err(e) = std::fs::write(&gcode_file, gcode) {
-                        log::error!("{}", t!("ui.error.fail_write_isolation", e = e.to_string()))
-                    }
+                    )
                 }
 
                 OperationKind::Outline => {
@@ -74,17 +67,13 @@ impl SourceFile {
                         continue;
                     }
 
-                    let gcode = generate_isolation_gcode(
+                    generate_isolation_gcode(
                         &op.toolpath,
                         tool.unwrap(),
                         op.depth,
                         common.z_safe,
                         common.z_finish,
-                    );
-
-                    if let Err(e) = std::fs::write(&gcode_file, gcode) {
-                        log::error!("{}", t!("ui.error.fail_write_outline", e = e.to_string()))
-                    }
+                    )
                 }
 
                 OperationKind::Drill { peck_step } => {
@@ -102,19 +91,21 @@ impl SourceFile {
                         continue;
                     }
 
-                    let gcode = generate_drill_gcode(
-                        self.source.as_drill().as_ref().unwrap(),
+                    generate_drill_gcode(
+                        self.source.as_drill().unwrap(),
                         tool.unwrap(),
                         op.depth,
                         common.z_safe,
                         common.z_finish,
                         peck_step,
-                    );
-
-                    if let Err(e) = std::fs::write(&gcode_file, gcode) {
-                        log::error!("{}", t!("ui.error.fail_write_drill", e = e.to_string()))
-                    }
+                    )
                 }
+            };
+
+            let gcode = export.wrap(gcode);
+
+            if let Err(e) = std::fs::write(&gcode_file, gcode) {
+                log::error!("{}", t!("ui.error.fail_write_isolation", e = e.to_string()));
             }
         }
     }

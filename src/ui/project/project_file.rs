@@ -2,9 +2,9 @@ use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 
-use crate::ui::project::{CommonParameters, Operation};
+use crate::ui::project::{CommonParameters, ExportSettings, Operation};
 
-pub(crate) const PROJECT_VERSION: u32 = 3;
+pub(crate) const PROJECT_VERSION: u32 = 4;
 
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub(crate) enum SourceKindTag {
@@ -13,9 +13,6 @@ pub(crate) enum SourceKindTag {
     Drill,
 }
 
-/// Одна операция трансформации исходного файла.
-/// Хранится в координатах ТЕКУЩЕГО (уже трансформированного) слоя
-/// на момент применения — это позволяет воспроизвести операции 1-в-1.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub(crate) enum TransformOp {
     Translate { dx: f64, dy: f64 },
@@ -23,8 +20,6 @@ pub(crate) enum TransformOp {
     MirrorY { cy: f64 },
 }
 
-/// Накопленная трансформация исходного файла — упорядоченный список операций.
-/// Пустой список = тождество.
 #[derive(Debug, Serialize, Deserialize, Clone, Default, PartialEq)]
 pub(crate) struct SourceTransform {
     #[serde(default)]
@@ -37,8 +32,6 @@ impl SourceTransform {
     }
 
     pub(crate) fn push(&mut self, op: TransformOp) {
-    
-    
         if let Some(last) = self.ops.last() {
             match (last, &op) {
                 (TransformOp::MirrorX { cx: a }, TransformOp::MirrorX { cx: b })
@@ -79,7 +72,10 @@ pub(crate) struct SourceFileSnapshot {
 #[derive(Debug, Serialize, Deserialize)]
 pub(crate) struct ProjectFile {
     pub version: u32,
+    #[serde(default)]
     pub common_parameters: CommonParameters,
+    #[serde(default)]
+    pub export_settings: ExportSettings,
     pub files: Vec<SourceFileSnapshot>,
 }
 
@@ -92,7 +88,8 @@ impl ProjectFile {
 
     pub fn load(path: &Path) -> Result<Self, Box<dyn std::error::Error>> {
         let content = std::fs::read_to_string(path)?;
-        let project: ProjectFile = toml::from_str(&content)?;
+        let mut project: ProjectFile = toml::from_str(&content)?;
+        project.export_settings.migrate_legacy();
         if project.version != PROJECT_VERSION {
             log::warn!(
                 "Project version mismatch: file={}, app={}",

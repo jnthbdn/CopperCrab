@@ -41,27 +41,6 @@ impl SourceKind {
         }
     }
 
-    pub(crate) fn as_copper(&self) -> Option<&ToolpathGenerator> {
-        match self {
-            SourceKind::Copper { generator, .. } => Some(generator),
-            _ => None,
-        }
-    }
-
-    pub(crate) fn as_copper_mut(&mut self) -> Option<(&mut ToolpathGenerator, &mut PcbLayer)> {
-        match self {
-            SourceKind::Copper { generator, layer } => Some((generator, layer)),
-            _ => None,
-        }
-    }
-
-    pub(crate) fn copper_layer(&self) -> Option<&PcbLayer> {
-        match self {
-            SourceKind::Copper { layer, .. } => Some(layer),
-            _ => None,
-        }
-    }
-
     pub(crate) fn as_outline(&self) -> Option<&ToolpathGenerator> {
         match self {
             SourceKind::Outline(g) => Some(g),
@@ -124,11 +103,6 @@ impl SourceKind {
             }
         }
     }
-
-
-
-
-
 
     pub(crate) fn apply_saved_transform(&mut self, t: &SourceTransform) {
         for op in &t.ops {

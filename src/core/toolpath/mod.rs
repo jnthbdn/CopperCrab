@@ -219,7 +219,7 @@ pub fn generate_isolation_gcode(
                         "; ----- Depth step {} / {} -----",
                         current_depth, depth
                     )
-                        .unwrap();
+                    .unwrap();
 
                     writeln!(gcode, "G1 Z{:.4} F{}", -current_depth, tool.plunge_rate()).unwrap();
 
@@ -231,7 +231,7 @@ pub fn generate_isolation_gcode(
                             point.y(),
                             tool.feed_rate()
                         )
-                            .unwrap();
+                        .unwrap();
                     }
 
                     writeln!(gcode, "G1 X{:.4} Y{:.4}", first.x(), first.y()).unwrap();

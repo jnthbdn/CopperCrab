@@ -8,7 +8,9 @@ use crate::{
     },
     ui::{
         CopperCrabApp,
-        project::{PROJECT_VERSION, ProjectFile, SourceFile, SourceKind, SourceKindTag},
+        project::{
+            ExportSettings, PROJECT_VERSION, ProjectFile, SourceFile, SourceKind, SourceKindTag,
+        },
     },
 };
 
@@ -17,6 +19,7 @@ impl CopperCrabApp {
         self.files.clear();
         self.tree_files_states = Default::default();
         self.app_config.common_parameters = Default::default();
+        self.export_settings = ExportSettings::default();
         self.current_project_path = None;
     }
 
@@ -28,6 +31,7 @@ impl CopperCrabApp {
 
         self.files.clear();
         self.tree_files_states = Default::default();
+        self.export_settings = ExportSettings::default();
         self.current_project_path = None;
 
         self.canvas = Default::default();
@@ -50,6 +54,7 @@ impl CopperCrabApp {
         let project = ProjectFile {
             version: PROJECT_VERSION,
             common_parameters: self.app_config.common_parameters.clone(),
+            export_settings: self.export_settings.clone(),
             files,
         };
 
@@ -60,6 +65,7 @@ impl CopperCrabApp {
         let project = ProjectFile::load(path).map_err(|e| e.to_string())?;
 
         self.app_config.common_parameters = project.common_parameters;
+        self.export_settings = project.export_settings;
         self.files.clear();
         self.tree_files_states = Default::default();
 
@@ -86,7 +92,6 @@ impl CopperCrabApp {
                 }
             };
 
-        
             if !snap.transform.is_identity() {
                 source.apply_saved_transform(&snap.transform);
             }

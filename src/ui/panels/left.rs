@@ -1,6 +1,6 @@
 use egui::{Align, Id, Layout, Ui};
 use egui_ltreeview::{NodeBuilder, TreeView, TreeViewBuilder};
-use elegance::{Accent, Button, Switch};
+use elegance::Switch;
 use log::info;
 use rust_i18n::t;
 
@@ -12,7 +12,6 @@ use crate::{
     ui::{
         CopperCrabApp,
         project::{Operation, SourceFile, SourceKind},
-        widget::labels::title_label,
     },
 };
 
@@ -28,7 +27,7 @@ pub(crate) enum FileTreeActions {
 pub(crate) enum FileOperationId {
     Root,
     File(usize),
-    Hidden(usize), // Папка со скрытыми примитивами для конкретного файла
+    Hidden(usize),
     Operation(usize, usize),
 }
 
@@ -38,31 +37,53 @@ impl CopperCrabApp {
 
         self.add_file_buttons(ui);
 
-        ui.vertical(|ui| {
-            egui::ScrollArea::vertical().show(ui, |ui| {
-                TreeView::new(Id::new("files_operation_tree"))
-                    .override_striped(Some(true))
-                    .allow_drag_and_drop(false)
-                    .show_state(ui, &mut self.tree_files_states, |builder| {
-                        builder.dir(FileOperationId::Root, t!("ui.label.project"));
-                        for (id, file) in self.files.iter_mut().enumerate() {
-                            Self::build_tree_file_node(
-                                builder,
-                                id,
-                                file,
-                                &mut context_menu_actions,
-                            );
-                        }
-                        builder.close_dir();
-                    });
-            });
-        });
+        let buttons_height = ui.spacing().interact_size.y + 16.0;
 
-        ui.with_layout(Layout::bottom_up(Align::Center), |ui| {
-            ui.add_space(8.0);
+        let available_height = ui.available_height() - buttons_height;
+
+        ui.allocate_ui_with_layout(
+            egui::vec2(ui.available_width(), available_height),
+            Layout::top_down(Align::Min),
+            |ui| {
+                egui::ScrollArea::vertical().show(ui, |ui| {
+                    TreeView::new(Id::new("files_operation_tree"))
+                        .override_striped(Some(true))
+                        .allow_drag_and_drop(false)
+                        .show_state(ui, &mut self.tree_files_states, |builder| {
+                            builder.dir(FileOperationId::Root, t!("ui.label.project"));
+                            for (id, file) in self.files.iter_mut().enumerate() {
+                                Self::build_tree_file_node(
+                                    builder,
+                                    id,
+                                    file,
+                                    &mut context_menu_actions,
+                                );
+                            }
+                            builder.close_dir();
+                        });
+                });
+            },
+        );
+
+        ui.add_space(8.0);
+        ui.horizontal(|ui| {
+            let btn_h = ui.spacing().interact_size.y;
+
             if ui
                 .add_sized(
-                    [ui.available_width(), ui.spacing().interact_size.y],
+                    [btn_h, btn_h],
+                    egui::Button::new(egui_phosphor::regular::GEAR),
+                )
+                .on_hover_text(t!("ui.button.export_settings"))
+                .clicked()
+            {
+                self.export_settings_open = true;
+            }
+
+            let remaining = ui.available_width();
+            if ui
+                .add_sized(
+                    [remaining, btn_h],
                     egui::Button::new(t!("ui.button.export_files")),
                 )
                 .clicked()
@@ -75,11 +96,13 @@ impl CopperCrabApp {
                             &folder,
                             &self.tools.tool_library,
                             &self.app_config.common_parameters,
+                            &self.export_settings,
                         );
                     }
                 }
             }
         });
+        ui.add_space(28.0);
 
         for action in context_menu_actions {
             self.handle_action(action);
@@ -272,7 +295,6 @@ impl CopperCrabApp {
 
         builder.node(node);
 
-    
         if let SourceKind::Copper { .. } = &file.source {
             if !file.hidden_primitives.is_empty() {
                 let hidden_id = FileOperationId::Hidden(file_id);
@@ -284,9 +306,7 @@ impl CopperCrabApp {
                 ));
                 builder.node(hidden_node);
 
-            
                 for &(t_idx, p_idx) in &file.hidden_primitives {
-                
                     let restore_id =
                         FileOperationId::Operation(file_id, 999_999 + t_idx * 10_000 + p_idx);
                     let restore_leaf = NodeBuilder::leaf(restore_id)
