@@ -42,7 +42,7 @@ impl CopperCrabApp {
         let btn_h = ui.spacing().interact_size.y;
         let spacing = ui.spacing().item_spacing.y;
 
-        // Резервируем место под нижнюю строку экспорта.
+        
         let footer_height = btn_h + spacing + 8.0;
         let available_height = (ui.available_height() - footer_height).max(0.0);
 
