@@ -6,8 +6,10 @@ mod operation;
 mod project_file;
 mod source;
 mod source_file;
-
-pub(crate) use export_settings::{ExportFormat, ExportSettings};
+pub(crate) use export_settings::{
+    ColorExportSettings, ExportFormat, ExportImageFormat, ExportSettings, PNG_SCALE_FACTORS,
+    PngExportSettings, SvgExportSettings,
+};
 pub(crate) use operation::{Operation, OperationKind, SelectedTool};
 pub(crate) use project_file::{
     PROJECT_VERSION, ProjectFile, SourceFileSnapshot, SourceKindTag, SourceTransform, TransformOp,

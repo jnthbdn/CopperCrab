@@ -9,7 +9,8 @@ use crate::{
     ui::{
         CopperCrabApp,
         project::{
-            ExportSettings, PROJECT_VERSION, ProjectFile, SourceFile, SourceKind, SourceKindTag,
+            ExportImageFormat, ExportSettings, PROJECT_VERSION, ProjectFile, SourceFile,
+            SourceKind, SourceKindTag,
         },
     },
 };
@@ -37,6 +38,84 @@ impl CopperCrabApp {
         self.canvas = Default::default();
 
         log::info!("Project closed");
+    }
+
+    pub(crate) fn export_visible_svg(&self, path: &std::path::Path) -> Result<(), String> {
+        let bb = self.get_bounding_box();
+        if bb.is_infinite() {
+            return Err("Nothing to export".into());
+        }
+        let svg = crate::ui::export::svg::export_svg(
+            &self.files,
+            &bb,
+            &self.export_settings.svg,
+            &self.export_settings.color,
+        );
+        std::fs::write(path, svg).map_err(|e| e.to_string())
+    }
+
+    pub(crate) fn export_visible_png(&self, path: &std::path::Path) -> Result<(), String> {
+        let bb = self.get_bounding_box();
+        if bb.is_infinite() {
+            return Err("Nothing to export".into());
+        }
+        let bytes = crate::ui::export::png::export_png(
+            &self.files,
+            &bb,
+            &self.export_settings.png,
+            &self.export_settings.color,
+        )?;
+        std::fs::write(path, bytes).map_err(|e| e.to_string())
+    }
+
+    pub(crate) fn export_single_file(&self, file_id: usize) {
+        let Some(file) = self.files.get(file_id) else {
+            return;
+        };
+
+        let mut bb = crate::core::bounding_box::BoundingBox::new();
+        file.source.update_bounding_box(&mut bb);
+        if bb.is_infinite() {
+            log::warn!("Nothing to export");
+            return;
+        }
+
+        let format = self.export_settings.image_format;
+        let ext = format.extension();
+
+        let suggested = sanitize_filename::sanitize(&file.name);
+        let Some(path) = rfd::FileDialog::new()
+            .add_filter(format.label(), &[ext])
+            .set_file_name(format!("{suggested}.{ext}"))
+            .save_file()
+        else {
+            return;
+        };
+
+        let files_slice = std::slice::from_ref(file);
+        let result = match format {
+            ExportImageFormat::Svg => {
+                let svg = crate::ui::export::svg::export_svg(
+                    files_slice,
+                    &bb,
+                    &self.export_settings.svg,
+                    &self.export_settings.color,
+                );
+                std::fs::write(&path, svg).map_err(|e| e.to_string())
+            }
+            ExportImageFormat::Png => crate::ui::export::png::export_png(
+                files_slice,
+                &bb,
+                &self.export_settings.png,
+                &self.export_settings.color,
+            )
+            .and_then(|bytes| std::fs::write(&path, bytes).map_err(|e| e.to_string())),
+        };
+
+        match result {
+            Ok(()) => log::info!("Exported {}", path.display()),
+            Err(e) => log::error!("Export failed: {e}"),
+        }
     }
 
     pub(crate) fn save_project_to(&self, path: &Path) -> Result<(), String> {

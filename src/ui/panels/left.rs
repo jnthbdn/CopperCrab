@@ -21,6 +21,7 @@ pub(crate) enum FileTreeActions {
     AddOperation(usize),
     ToggleVisibility(usize),
     RestorePrimitive(usize, (usize, usize)),
+    ExportFile(usize),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -287,6 +288,18 @@ impl CopperCrabApp {
                     ui.close();
                 }
                 ui.separator();
+                if ui
+                    .button(format!(
+                        "{} {}",
+                        egui_phosphor::regular::EXPORT,
+                        t!("ui.button.export_file")
+                    ))
+                    .clicked()
+                {
+                    actions.push(FileTreeActions::ExportFile(file_id));
+                    ui.close();
+                }
+                ui.separator();
                 if ui.button(t!("ui.button.delete_file")).clicked() {
                     actions.push(FileTreeActions::DeleteItem(id.clone()));
                     ui.close();
@@ -400,6 +413,9 @@ impl CopperCrabApp {
                     file.hidden_primitives.remove(&key);
                     self.generate_file_toolpaths(file_id);
                 }
+            }
+            FileTreeActions::ExportFile(file_id) => {
+                self.export_single_file(file_id);
             }
         };
     }

@@ -744,3 +744,58 @@ ui.label.export_settings.footer:
   fr: "Pied de page"
   ru: "Подвал"
 
+ui.menu.export:
+  en: "Export..."
+  fr: "Exporter..."
+  ru: "Экспорт..."
+
+ui.label.export.title:
+  en: "Export"
+  fr: "Exporter"
+  ru: "Экспорт"
+
+ui.label.export.format:
+  en: "Format"
+  fr: "Format"
+  ru: "Формат"
+
+ui.label.export.png_scale:
+  en: "Scale"
+  fr: "Échelle"
+  ru: "Масштаб"
+
+ui.button.export:
+  en: "Export"
+  fr: "Exporter"
+  ru: "Экспортировать"
+
+ui.button.export_file:
+  en: "Export file..."
+  fr: "Exporter le fichier..."
+  ru: "Экспортировать файл..."
+
+ui.label.export.bw:
+  en: "Black & White"
+  fr: "Noir et blanc"
+  ru: "Ч/Б"
+
+ui.label.export.invert:
+  en: "Invert"
+  fr: "Inverser"
+  ru: "Инвертировать"
+
+ui.label.export.transparent_bg:
+  en: "No background"
+  fr: "Sans fond"
+  ru: "Без фона"
+
+ui.label.export.background_color:
+  en: "Background color"
+  fr: "Couleur de fond"
+  ru: "Цвет фона"
+
+ui.label.export.tracks_color:
+  en: "Tracks color"
+  fr: "Couleur des pistes"
+  ru: "Цвет дорожек"
+

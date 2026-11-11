@@ -74,7 +74,7 @@ fn main() {
                     .unwrap(),
             )
             .with_inner_size([app_config.window_width, app_config.window_height])
-            .with_maximized(true),
+            ,
         ..eframe::NativeOptions::default()
     };
 

@@ -22,6 +22,7 @@ use crate::{
 
 pub mod app_config;
 mod colors;
+mod export;
 mod log_ui;
 mod panels;
 mod pcb_transform;
@@ -54,6 +55,7 @@ pub struct CopperCrabApp {
     current_project_path: Option<PathBuf>,
     pub(crate) export_settings: ExportSettings,
     pub(crate) export_settings_open: bool,
+    pub(crate) export_dialog_open: bool,
 }
 
 impl CopperCrabApp {
@@ -80,6 +82,7 @@ impl CopperCrabApp {
             current_project_path: None,
             export_settings: ExportSettings::default(),
             export_settings_open: false,
+            export_dialog_open: false,
         }
     }
 
@@ -141,6 +144,12 @@ impl CopperCrabApp {
         let zoom_100 = ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::Num1));
         if zoom_100 {
             self.zoom_one_to_one();
+        }
+
+        let export_pressed =
+            ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::E));
+        if export_pressed {
+            self.export_dialog_open = true;
         }
     }
 
@@ -204,6 +213,7 @@ impl CopperCrabApp {
                     let save_project_as_label = t!("ui.menu.save_project_as").to_string();
                     let exit_label = t!("ui.menu.exit").to_string();
                     let close_project_label = t!("ui.menu.close_project").to_string();
+                    let export_label = t!("ui.menu.export").to_string();
 
                     ui.menu_button(file_label, |ui| {
                         if ui.button(new_project_label).clicked() {
@@ -261,6 +271,11 @@ impl CopperCrabApp {
                         }
                         if ui.button(close_project_label).clicked() {
                             self.close_project();
+                            ui.close();
+                        }
+                        ui.separator();
+                        if ui.button(export_label).clicked() {
+                            self.export_dialog_open = true;
                             ui.close();
                         }
                         ui.separator();
@@ -427,6 +442,7 @@ impl eframe::App for CopperCrabApp {
         );
 
         self.ui_export_settings(ui.ctx());
+        self.ui_export_dialog(ui.ctx());
     }
 
     fn on_exit(&mut self) {

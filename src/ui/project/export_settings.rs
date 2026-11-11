@@ -12,8 +12,7 @@ pub(crate) enum ExportFormat {
 }
 
 impl ExportFormat {
-    pub(crate) const ALL: &'static [ExportFormat] =
-        &[ExportFormat::GCode, ExportFormat::Mach3];
+    pub(crate) const ALL: &'static [ExportFormat] = &[ExportFormat::GCode, ExportFormat::Mach3];
 
     pub(crate) fn label(&self) -> &'static str {
         match self {
@@ -75,6 +74,136 @@ impl FormatPayload {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub(crate) enum ExportImageFormat {
+    #[default]
+    Svg,
+    Png,
+}
+
+impl ExportImageFormat {
+    pub(crate) const ALL: &'static [ExportImageFormat] =
+        &[ExportImageFormat::Svg, ExportImageFormat::Png];
+
+    pub(crate) fn label(&self) -> &'static str {
+        match self {
+            ExportImageFormat::Svg => "SVG",
+            ExportImageFormat::Png => "PNG",
+        }
+    }
+
+    pub(crate) fn extension(&self) -> &'static str {
+        match self {
+            ExportImageFormat::Svg => "svg",
+            ExportImageFormat::Png => "png",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+pub(crate) struct ColorExportSettings {
+    #[serde(default = "default_bw")]
+    pub bw: bool,
+    #[serde(default)]
+    pub invert: bool,
+    #[serde(default)]
+    pub transparent_bg: bool,
+    #[serde(default = "default_background_rgb")]
+    pub background: [u8; 3],
+    #[serde(default = "default_tracks_rgb")]
+    pub tracks: [u8; 3],
+}
+
+impl Default for ColorExportSettings {
+    fn default() -> Self {
+        Self {
+            bw: default_bw(),
+            invert: false,
+            transparent_bg: false,
+            background: default_background_rgb(),
+            tracks: default_tracks_rgb(),
+        }
+    }
+}
+
+fn default_bw() -> bool {
+    true
+}
+
+fn default_background_rgb() -> [u8; 3] {
+    [0x0d, 0x1a, 0x0d]
+}
+
+fn default_tracks_rgb() -> [u8; 3] {
+    [0x5c, 0x39, 0x19]
+}
+
+impl ColorExportSettings {
+    pub(crate) fn resolved(&self) -> (Option<[u8; 3]>, [u8; 3]) {
+        if self.bw {
+            let (bg, fg) = if self.invert {
+                ([0u8, 0, 0], [255u8, 255, 255])
+            } else {
+                ([255u8, 255, 255], [0u8, 0, 0])
+            };
+            let bg = if self.transparent_bg { None } else { Some(bg) };
+            (bg, fg)
+        } else {
+            let bg = if self.transparent_bg {
+                None
+            } else {
+                Some(self.background)
+            };
+            (bg, self.tracks)
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub(crate) struct SvgExportSettings {
+    #[serde(default = "default_svg_margin")]
+    pub margin_mm: f64,
+}
+
+impl Default for SvgExportSettings {
+    fn default() -> Self {
+        Self {
+            margin_mm: default_svg_margin(),
+        }
+    }
+}
+
+fn default_svg_margin() -> f64 {
+    1.0
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub(crate) struct PngExportSettings {
+    #[serde(default = "default_png_pixels_per_mm")]
+    pub pixels_per_mm: f64,
+    #[serde(default = "default_png_scale_factor")]
+    pub scale_factor: f64,
+}
+
+impl Default for PngExportSettings {
+    fn default() -> Self {
+        Self {
+            pixels_per_mm: default_png_pixels_per_mm(),
+            scale_factor: default_png_scale_factor(),
+        }
+    }
+}
+
+fn default_png_pixels_per_mm() -> f64 {
+    10.0
+}
+
+fn default_png_scale_factor() -> f64 {
+    1.0
+}
+
+pub(crate) const PNG_SCALE_FACTORS: &[f64] = &[1.0, 2.0, 4.0, 8.0];
+
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub(crate) struct ExportSettings {
     #[serde(default)]
@@ -88,6 +217,18 @@ pub(crate) struct ExportSettings {
 
     #[serde(default, skip_serializing_if = "String::is_empty")]
     pub legacy_footer: String,
+
+    #[serde(default)]
+    pub image_format: ExportImageFormat,
+
+    #[serde(default)]
+    pub svg: SvgExportSettings,
+
+    #[serde(default)]
+    pub png: PngExportSettings,
+
+    #[serde(default)]
+    pub color: ColorExportSettings,
 }
 
 impl ExportSettings {

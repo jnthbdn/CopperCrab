@@ -939,6 +939,7 @@ dependencies = [
  "image",
  "log",
  "lyon",
+ "png 0.17.16",
  "rfd",
  "rust-i18n",
  "sanitize-filename",
