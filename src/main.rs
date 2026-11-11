@@ -30,8 +30,7 @@ fn main() {
     log::set_boxed_logger(Box::new(logger)).unwrap();
     log::set_max_level(max_level);
 
-    rust_i18n::set_locale(&sys_locale::get_locale().unwrap_or("en".to_string()));
-
+    rust_i18n::set_locale("en");
     let config_folder = match get_config_dir() {
         Some(f) => f,
         None => {
@@ -71,10 +70,9 @@ fn main() {
                 eframe::icon_data::from_png_bytes(include_bytes!(
                     "../img/icons/png/coppercrab-300.png"
                 ))
-                    .unwrap(),
+                .unwrap(),
             )
-            .with_inner_size([app_config.window_width, app_config.window_height])
-            ,
+            .with_inner_size([app_config.window_width, app_config.window_height]),
         ..eframe::NativeOptions::default()
     };
 

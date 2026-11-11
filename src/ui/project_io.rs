@@ -59,6 +59,7 @@ impl CopperCrabApp {
         if bb.is_infinite() {
             return Err("Nothing to export".into());
         }
+       
         let bytes = crate::ui::export::png::export_png(
             &self.files,
             &bb,

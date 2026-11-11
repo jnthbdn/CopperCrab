@@ -36,11 +36,16 @@ impl CopperCrabApp {
     pub(crate) fn ui_left(&mut self, ui: &mut egui::Ui) {
         let mut context_menu_actions = Vec::<FileTreeActions>::new();
 
+
         self.add_file_buttons(ui);
 
-        let buttons_height = ui.spacing().interact_size.y + 16.0;
+        let btn_h = ui.spacing().interact_size.y;
+        let spacing = ui.spacing().item_spacing.y;
 
-        let available_height = ui.available_height() - buttons_height;
+        // Резервируем место под нижнюю строку экспорта.
+        let footer_height = btn_h + spacing + 8.0;
+        let available_height = (ui.available_height() - footer_height).max(0.0);
+
 
         ui.allocate_ui_with_layout(
             egui::vec2(ui.available_width(), available_height),
@@ -52,6 +57,7 @@ impl CopperCrabApp {
                         .allow_drag_and_drop(false)
                         .show_state(ui, &mut self.tree_files_states, |builder| {
                             builder.dir(FileOperationId::Root, t!("ui.label.project"));
+
                             for (id, file) in self.files.iter_mut().enumerate() {
                                 Self::build_tree_file_node(
                                     builder,
@@ -60,50 +66,55 @@ impl CopperCrabApp {
                                     &mut context_menu_actions,
                                 );
                             }
+
                             builder.close_dir();
                         });
                 });
             },
         );
 
-        ui.add_space(8.0);
-        ui.horizontal(|ui| {
-            let btn_h = ui.spacing().interact_size.y;
 
-            if ui
-                .add_sized(
-                    [btn_h, btn_h],
-                    egui::Button::new(egui_phosphor::regular::GEAR),
-                )
-                .on_hover_text(t!("ui.button.export_settings"))
-                .clicked()
-            {
-                self.export_settings_open = true;
-            }
+        ui.allocate_ui_with_layout(
+            egui::vec2(ui.available_width(), btn_h + 8.0),
+            Layout::left_to_right(Align::Center),
+            |ui| {
+                if ui
+                    .add_sized(
+                        [btn_h, btn_h],
+                        egui::Button::new(egui_phosphor::regular::GEAR),
+                    )
+                    .on_hover_text(t!("ui.button.export_settings"))
+                    .clicked()
+                {
+                    self.export_settings_open = true;
+                }
 
-            let remaining = ui.available_width();
-            if ui
-                .add_sized(
-                    [remaining, btn_h],
-                    egui::Button::new(t!("ui.button.export_files")),
-                )
-                .clicked()
-            {
-                if let Some(folder) = rfd::FileDialog::new().pick_folder() {
-                    info!("Start export to: '{}'", folder.to_string_lossy());
-                    for file in self.files.iter() {
-                        info!("Export '{}'", file.name);
-                        file.export_gcode(
-                            &folder,
-                            &self.tools.tool_library,
-                            &self.app_config.common_parameters,
-                            &self.export_settings,
-                        );
+                let remaining = ui.available_width();
+
+                if ui
+                    .add_sized(
+                        [remaining, btn_h],
+                        egui::Button::new(t!("ui.button.export_files")),
+                    )
+                    .clicked()
+                {
+                    if let Some(folder) = rfd::FileDialog::new().pick_folder() {
+                        info!("Start export to: '{}'", folder.to_string_lossy());
+
+                        for file in self.files.iter() {
+                            info!("Export '{}'", file.name);
+
+                            file.export_gcode(
+                                &folder,
+                                &self.tools.tool_library,
+                                &self.app_config.common_parameters,
+                                &self.export_settings,
+                            );
+                        }
                     }
                 }
-            }
-        });
-        ui.add_space(28.0);
+            },
+        );
 
         for action in context_menu_actions {
             self.handle_action(action);

@@ -81,9 +81,9 @@ impl Default for AppConfig {
             file_path: Default::default(),
             window_height: default_height(),
             window_width: default_width(),
-            app_locale: sys_locale::get_locale().unwrap_or("en".to_string()),
+            app_locale: default_locale(),
             common_parameters: Default::default(),
-            app_theme: Default::default(),
+            app_theme: default_theme(),
             show_grid: true,
             show_axes: true,
             grid_step_mm: default_grid_step(),
@@ -104,7 +104,7 @@ fn default_locale() -> String {
 }
 
 fn default_theme() -> AppTheme {
-    AppTheme::default()
+    AppTheme::Charcoal 
 }
 
 fn default_true() -> bool {
